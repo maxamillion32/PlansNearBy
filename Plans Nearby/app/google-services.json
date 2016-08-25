@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "119762574175",
+    "firebase_url": "https://places-with-friends-6942.firebaseio.com",
+    "project_id": "places-with-friends-6942",
+    "storage_bucket": "places-with-friends-6942.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119762574175:android:3d267472ec9f5ffb",
+        "android_client_info": {
+          "package_name": "com.arroyo.nolberto.placeswithfriends"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "119762574175-80lt3vh0oggic5kleg26npuap862hdue.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPidBCQ6IC8dTrtWn1PJwm_2Y-_9GtddE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
