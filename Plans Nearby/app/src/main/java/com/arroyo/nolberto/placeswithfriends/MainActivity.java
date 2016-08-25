@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -27,6 +28,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -90,6 +92,15 @@ public class MainActivity extends AppCompatActivity
         SearchView searchView =(SearchView)menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchableInfo);
 
+        MenuItem item = menu.findItem(R.id.spinner);
+        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.filter_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(adapter);
+
         return true;
 
     }
@@ -102,9 +113,6 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -137,9 +145,8 @@ public class MainActivity extends AppCompatActivity
 
     public void setPageView() {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("HOME"));
-        tabLayout.addTab(tabLayout.newTab().setText("SEARCH"));
         tabLayout.addTab(tabLayout.newTab().setText("EVENTS"));
+        tabLayout.addTab(tabLayout.newTab().setText("NEAR ME"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -147,7 +154,7 @@ public class MainActivity extends AppCompatActivity
                 (getSupportFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(2);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -186,10 +193,8 @@ public class MainActivity extends AppCompatActivity
             String query = intent.getStringExtra(SearchManager.QUERY);
             Toast.makeText(MainActivity.this, "Searching for " + query, Toast.LENGTH_SHORT).show();
             adapter.setQuery(query);
-            viewPager.setCurrentItem(2);
+            viewPager.setCurrentItem(1);
             Log.d("mainActivity query","result:"+query);
-
-
         }
 
     }
