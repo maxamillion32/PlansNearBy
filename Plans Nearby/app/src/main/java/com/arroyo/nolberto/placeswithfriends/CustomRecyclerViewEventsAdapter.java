@@ -110,6 +110,8 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
 
         if (dataItem.getLogo() != null) {
             Picasso.with(context).load(dataItem.getLogo().getUrl()).into(holder.itemImage);
+        }else{
+            itemImage.setImageResource(R.drawable.no_images);
         }
 
         itemTitle.setText(dataItem.getName().getText());

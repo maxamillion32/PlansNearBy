@@ -11,7 +11,7 @@ import android.util.Log;
 public class PagerAdapter extends FragmentStatePagerAdapter{
     int mNumOfTabs;
     String query;
-    EventsFragment tab3;
+    EventsFragment tab1;
 
 
     public PagerAdapter(FragmentManager fm, int NumOfTabs) {
@@ -24,17 +24,14 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
 
         switch (position) {
             case 0:
-                HomeFragment tab1 = new HomeFragment();
+                tab1 = new EventsFragment();
+                tab1.setResultQuery(query);
+                Log.d("pager query","result:"+query);
                 return tab1;
             case 1:
                 //calling setResultQuery to pass query to fragment
-                SearchFragment tab2 = new SearchFragment();
+                NearByFragment tab2 = new NearByFragment();
                 return tab2;
-            case 2:
-                tab3 = new EventsFragment();
-                tab3.setResultQuery(query);
-                Log.d("pager query","result:"+query);
-                return tab3;
             default:
                 return null;
         }

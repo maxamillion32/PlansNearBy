@@ -102,8 +102,9 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
 
                     if (event.getLogo() != null) {
                         Picasso.with(DetailsActivity.this).load(event.getLogo().getUrl()).into(eventImage);
+                    }else{
+                        eventImage.setImageResource(R.drawable.no_images);
                     }
-
 
                 }
 
