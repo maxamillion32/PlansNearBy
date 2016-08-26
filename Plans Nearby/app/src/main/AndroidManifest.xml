@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme">
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -35,7 +35,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDPidBCQ6IC8dTrtWn1PJwm_2Y-_9GtddE" />
 
-        <activity android:name=".DetailsActivity"></activity>
+        <activity android:name=".Activities.DetailsActivity"></activity>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.arroyo.nolberto.placeswithfriends;
+package com.arroyo.nolberto.placeswithfriends.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.location.places.GeoDataApi;
+import com.arroyo.nolberto.placeswithfriends.R;
 import com.google.android.gms.location.places.Place;
 
 import java.util.ArrayList;

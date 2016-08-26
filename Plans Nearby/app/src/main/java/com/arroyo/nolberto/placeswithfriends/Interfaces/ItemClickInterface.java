@@ -1,4 +1,4 @@
-package com.arroyo.nolberto.placeswithfriends;
+package com.arroyo.nolberto.placeswithfriends.Interfaces;
 
 /**
  * Created by nolbertoarroyo on 8/21/16.

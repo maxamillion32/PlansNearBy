@@ -1,6 +1,5 @@
-package com.arroyo.nolberto.placeswithfriends;
+package com.arroyo.nolberto.placeswithfriends.Fragments;
 
-import android.*;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -12,15 +11,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.arroyo.nolberto.placeswithfriends.Adapters.CustomRecyclerViewAdapter;
+import com.arroyo.nolberto.placeswithfriends.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -53,7 +49,7 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_home,container,false);
+        View root = inflater.inflate(com.arroyo.nolberto.placeswithfriends.R.layout.fragment_home,container,false);
         places = new ArrayList<>();
         recyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
         rvLayoutManager = new LinearLayoutManager(getActivity());
