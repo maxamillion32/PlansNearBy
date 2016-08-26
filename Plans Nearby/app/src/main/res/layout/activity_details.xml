@@ -52,22 +52,29 @@
             android:orientation="horizontal"
             android:padding="16dp">
 
-            <Button
+            <ImageView
                 android:id="@+id/activity_details_interested_bttn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:src="@drawable/ic_bookmark_black_48dp"
                 android:text="@string/details_interested" />
 
-            <Button
+            <ImageView
                 android:id="@+id/activity_details_share_bttn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:src="@drawable/ic_share_black_48dp"
                 android:text="@string/details_share" />
 
-            <Button
+            <ImageView
                 android:id="@+id/activity_details_directions_bttn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:elevation="4dp"
+                android:src="@drawable/ic_directions_black_48dp"
                 android:text="@string/details_directions" />
 
 
@@ -78,8 +85,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
+            android:background="@drawable/rounded_button"
+            android:elevation="4dp"
             android:text="@string/details_tickets" />
 
         <TextView

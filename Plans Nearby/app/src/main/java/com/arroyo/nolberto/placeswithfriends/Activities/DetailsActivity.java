@@ -38,9 +38,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DetailsActivity extends AppCompatActivity implements ItemClickInterface, View.OnClickListener {
     private static String baseURL = "https://www.eventbriteapi.com/";
-    private ImageView eventImage;
+    private ImageView eventImage,share, interested, directions;
+    private Button tickets;
     private TextView eventTitle, eventAddress, eventCategory, eventDescription;
-    private Button share, interested, directions, tickets;
     private Event event;
     private String eventId;
     private EventsServiceInterface eventsServiceInterface;
@@ -83,10 +83,10 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
         eventCategory = (TextView) findViewById(R.id.activity_details_category);
         eventAddress = (TextView) findViewById(R.id.activity_details_address);
         eventDescription = (TextView) findViewById(R.id.activity_details_description);
-        share = (Button) findViewById(R.id.activity_details_share_bttn);
+        share = (ImageView) findViewById(R.id.activity_details_share_bttn);
         tickets = (Button) findViewById(R.id.activity_details_tickets_bttn);
-        directions = (Button) findViewById(R.id.activity_details_directions_bttn);
-        interested = (Button) findViewById(R.id.activity_details_interested_bttn);
+        directions = (ImageView) findViewById(R.id.activity_details_directions_bttn);
+        interested = (ImageView) findViewById(R.id.activity_details_interested_bttn);
     }
 
     public void getEventFromId() {
