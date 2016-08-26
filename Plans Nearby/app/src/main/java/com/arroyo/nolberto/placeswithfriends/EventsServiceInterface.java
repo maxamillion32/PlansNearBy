@@ -26,7 +26,7 @@ public interface EventsServiceInterface {
     Call<Events> getEventsResults(@Query("q")String query,@Query("location.latitude")String lat, @Query("location.longitude")String lon);
 
     @GET ("events/search/?expand=venue,category,ticket_classes&sort_by=date&token=BCE2TXE45OB66VQPNBJ3")
-    Call<Events> getEventsResults(@Query("venue.city")String city, @Query("free")Boolean isFree);
+    Call<Events> getEventsResults(@Query("venue.city")String city, @Query("q")String query);
 
 
 

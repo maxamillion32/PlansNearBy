@@ -51,6 +51,7 @@ public class EventsFragment extends Fragment implements LocationListener {
     private String provider;
     private String lon;
     private String lat;
+    private String city;
 
 
     @Override
@@ -73,13 +74,6 @@ public class EventsFragment extends Fragment implements LocationListener {
         return root;
     }
 
-    public void setResultQuery(String resultQuery) {
-        this.resultQuery = resultQuery;
-        Log.d("fragment query", "result:" + resultQuery);
-
-
-    }
-
     public void getEventsList() {
         ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -90,7 +84,7 @@ public class EventsFragment extends Fragment implements LocationListener {
                     .build();
             eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
 
-            eventsServiceInterface.getEventsResults(resultQuery,lat,lon).enqueue(new Callback<Events>() {
+            eventsServiceInterface.getEventsResults(resultQuery, lat, lon).enqueue(new Callback<Events>() {
                 @Override
                 public void onResponse(Call<Events> call, Response<Events> response) {
                     //getting article from api and inserting to database favorites table
@@ -111,7 +105,7 @@ public class EventsFragment extends Fragment implements LocationListener {
 
         } else {
             // the connection is not available
-            Toast.makeText(getActivity(),"connection not available",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "connection not available", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -154,6 +148,15 @@ public class EventsFragment extends Fragment implements LocationListener {
         } else {
             Toast.makeText(getActivity(), "Location not available", Toast.LENGTH_SHORT).show();
         }
+
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+    public void setResultQuery(String resultQuery) {
+        this.resultQuery = resultQuery;
+        Log.d("fragment query", "result:" + resultQuery);
 
     }
 }
