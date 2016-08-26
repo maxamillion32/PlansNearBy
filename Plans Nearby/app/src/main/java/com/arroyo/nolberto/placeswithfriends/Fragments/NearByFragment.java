@@ -60,43 +60,43 @@ public class NearByFragment extends Fragment implements GoogleApiClient.OnConnec
     @Override
     public void onActivityResult(int requestCode,
                                  int resultCode, Intent data) {
+        if (requestCode != PLACE_PICKER_REQUEST
+                || resultCode != Activity.RESULT_OK){
 
-        if (requestCode == PLACE_PICKER_REQUEST
-                && resultCode == Activity.RESULT_OK) {
-
-            final Place place = PlacePicker.getPlace(getContext(), data);
-            String placeId = place.getId();
-            placePhotosAsync(placeId);
-            final CharSequence name = place.getName();
-            final CharSequence address = place.getAddress();
-            final CharSequence number = place.getPhoneNumber();
-
-            String category = String.valueOf(place.getPlaceTypes().get(0));
-            float rating = place.getRating();
-            String attributions = (String) place.getAttributions();
-            if (attributions == null) {
-                attributions = "";
-            }
-            if (rating > 0) {
-                placeRatingBar.setVisibility(View.VISIBLE);
-                placeRating.setVisibility(View.VISIBLE);
-                placeRatingBar.setRating(rating);
-                placeRating.setText(rating + " ");
-            }
-            placeName.setText(name);
-            placeAddress.setText(address);
-            googleAttributions.setText(Html.fromHtml(attributions));
-            placeCategory.setText(category);
-            placePhone.setText(number);
-            placeUrl.setClickable(true);
-            placeUrl.setMovementMethod(LinkMovementMethod.getInstance());
-            String text = place.getWebsiteUri().toString();
-            placeUrl.setText(Html.fromHtml(text));
-
-
-        } else {
             super.onActivityResult(requestCode, resultCode, data);
+            return;
         }
+
+        final Place place = PlacePicker.getPlace(getContext(), data);
+        String placeId = place.getId();
+        placePhotosAsync(placeId);
+        final CharSequence name = place.getName();
+        final CharSequence address = place.getAddress();
+        final CharSequence number = place.getPhoneNumber();
+
+        String category = String.valueOf(place.getPlaceTypes().get(0));
+        float rating = place.getRating();
+        String attributions = (String) place.getAttributions();
+        if (attributions == null) {
+            attributions = "";
+        }
+        if (rating > 0) {
+            placeRatingBar.setVisibility(View.VISIBLE);
+            placeRating.setVisibility(View.VISIBLE);
+            placeRatingBar.setRating(rating);
+            placeRating.setText(rating + " ");
+        }
+        placeName.setText(name);
+        placeAddress.setText(address);
+        googleAttributions.setText(Html.fromHtml(attributions));
+        placeCategory.setText(category);
+        placePhone.setText(number);
+        placeUrl.setClickable(true);
+        placeUrl.setMovementMethod(LinkMovementMethod.getInstance());
+        String text = place.getWebsiteUri().toString();
+        placeUrl.setText(Html.fromHtml(text));
+
+
     }
 
     @Override
