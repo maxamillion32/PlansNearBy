@@ -9,6 +9,11 @@
     <string name="title_activity_events">EventsActivity</string>
     <string name="search_hint">Search here</string>
     <string name="facebook_app_id">545613042230072</string>
+    <string name="details_directions">Directions</string>
+    <string name="details_share">Share</string>
+    <string name="details_interested">Interested</string>
+    <string name="details_tickets">Tickets</string>
+    <string name="nearby_button">Find Around Me</string>
 
     <string-array name="filter_array">
         <item>Nearby</item>

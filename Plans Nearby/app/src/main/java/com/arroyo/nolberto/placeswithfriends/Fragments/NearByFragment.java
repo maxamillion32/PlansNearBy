@@ -1,4 +1,4 @@
-package com.arroyo.nolberto.placeswithfriends;
+package com.arroyo.nolberto.placeswithfriends.Fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.arroyo.nolberto.placeswithfriends.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -30,58 +32,31 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 /**
  * Created by nolbertoarroyo on 8/19/16.
  */
-public class NearByFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener{
+public class NearByFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
     private static final int PLACE_PICKER_REQUEST = 1;
-    private TextView placeName;
-    private TextView placeAddress;
-    private TextView googleAttributions;
-    private GoogleApiClient googleApiClient;
+    private Button pickerButton;
+    private TextView placeName, placeAddress, googleAttributions, placeRating, placeCategory, placePhone, placeUrl;
     private ImageView placeImage;
-    private TextView placeRating;
-    private TextView placeCategory;
+    private View root;
     private RatingBar placeRatingBar;
+    private GoogleApiClient googleApiClient;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        googleApiClient = new GoogleApiClient
-                .Builder(getContext())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(),this)
-                .build();
+        setGoogleApi();
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_nearby,container,false);
-        placeName = (TextView) root.findViewById(R.id.nearby_frag_name);
-        placeAddress = (TextView) root.findViewById(R.id.nearby_frag_address);
-        googleAttributions = (TextView) root.findViewById(R.id.nearby_frag_attributions);
-        Button pickerButton = (Button) root.findViewById(R.id.pickerButton);
-        placeCategory = (TextView) root.findViewById(R.id.nearby_frag_category);
-        placeRating = (TextView)root.findViewById(R.id.nearby_frag_rating);
-        placeRatingBar = (RatingBar) root.findViewById(R.id.ratingBar);
-
-        placeImage = (ImageView)root.findViewById(R.id.nearby_frag_image);
-        pickerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    PlacePicker.IntentBuilder intentBuilder =
-                            new PlacePicker.IntentBuilder();
-                    Intent intent = intentBuilder.build(getActivity());
-                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
-
-                } catch (GooglePlayServicesRepairableException
-                        | GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        root = inflater.inflate(R.layout.fragment_nearby, container, false);
+        setViews(root);
+        launchGooglePicker();
         return root;
     }
+
     @Override
     public void onActivityResult(int requestCode,
                                  int resultCode, Intent data) {
@@ -94,29 +69,41 @@ public class NearByFragment extends Fragment implements GoogleApiClient.OnConnec
             placePhotosAsync(placeId);
             final CharSequence name = place.getName();
             final CharSequence address = place.getAddress();
-            place.getPhoneNumber();
-            place.getPriceLevel();
-            place.getWebsiteUri();
-            String category = String.valueOf(place.getPlaceTypes());
+            final CharSequence number = place.getPhoneNumber();
+
+            String category = String.valueOf(place.getPlaceTypes().get(0));
             float rating = place.getRating();
             String attributions = (String) place.getAttributions();
             if (attributions == null) {
                 attributions = "";
             }
-            placeRatingBar.setRating(rating);
+            if (rating > 0) {
+                placeRatingBar.setVisibility(View.VISIBLE);
+                placeRating.setVisibility(View.VISIBLE);
+                placeRatingBar.setRating(rating);
+                placeRating.setText(rating + " ");
+            }
             placeName.setText(name);
             placeAddress.setText(address);
             googleAttributions.setText(Html.fromHtml(attributions));
             placeCategory.setText(category);
-            placeRating.setText(rating +" ");
+            placePhone.setText(number);
+            placeUrl.setClickable(true);
+            placeUrl.setMovementMethod(LinkMovementMethod.getInstance());
+            String text = place.getWebsiteUri().toString();
+            placeUrl.setText(Html.fromHtml(text));
+
 
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-    }@Override
+    }
+
+    @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
     private ResultCallback<PlacePhotoResult> mDisplayPhotoResultCallback
             = new ResultCallback<PlacePhotoResult>() {
         @Override
@@ -128,10 +115,7 @@ public class NearByFragment extends Fragment implements GoogleApiClient.OnConnec
         }
     };
 
-    /**
-     * Load a bitmap from the photos API asynchronously
-     * by using buffers and result callbacks.
-     */
+
     private void placePhotosAsync(String id) {
 
         Places.GeoDataApi.getPlacePhotos(googleApiClient, id)
@@ -151,18 +135,60 @@ public class NearByFragment extends Fragment implements GoogleApiClient.OnConnec
                                     .getScaledPhoto(googleApiClient, placeImage.getWidth(),
                                             placeImage.getHeight())
                                     .setResultCallback(mDisplayPhotoResultCallback);
-                        }else{
+                        } else {
                             placeImage.setImageResource(R.drawable.no_images);
                         }
                         photoMetadataBuffer.release();
                     }
                 });
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         googleApiClient.stopAutoManage(getActivity());
         googleApiClient.disconnect();
+    }
+
+    public void setViews(View root) {
+        this.root = root;
+        placeName = (TextView) root.findViewById(R.id.nearby_frag_name);
+        placeAddress = (TextView) root.findViewById(R.id.nearby_frag_address);
+        googleAttributions = (TextView) root.findViewById(R.id.nearby_frag_attributions);
+        pickerButton = (Button) root.findViewById(R.id.pickerButton);
+        placeCategory = (TextView) root.findViewById(R.id.nearby_frag_category);
+        placeRating = (TextView) root.findViewById(R.id.nearby_frag_rating);
+        placeRatingBar = (RatingBar) root.findViewById(R.id.ratingBar);
+        placeImage = (ImageView) root.findViewById(R.id.nearby_frag_image);
+        placePhone = (TextView) root.findViewById(R.id.nearby_frag_phone);
+        placeUrl = (TextView) root.findViewById(R.id.nearby_frag_url);
+    }
+
+    public void setGoogleApi() {
+        googleApiClient = new GoogleApiClient
+                .Builder(getContext())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(getActivity(), this)
+                .build();
+    }
+
+    public void launchGooglePicker() {
+        pickerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    PlacePicker.IntentBuilder intentBuilder =
+                            new PlacePicker.IntentBuilder();
+                    Intent intent = intentBuilder.build(getActivity());
+                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
+
+                } catch (GooglePlayServicesRepairableException
+                        | GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 }

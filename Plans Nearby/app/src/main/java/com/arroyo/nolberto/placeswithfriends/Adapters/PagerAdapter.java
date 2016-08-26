@@ -1,9 +1,12 @@
-package com.arroyo.nolberto.placeswithfriends;
+package com.arroyo.nolberto.placeswithfriends.Adapters;
 
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+
+import com.arroyo.nolberto.placeswithfriends.Fragments.EventsFragment;
+import com.arroyo.nolberto.placeswithfriends.Fragments.NearByFragment;
 
 /**
  * Created by nolbertoarroyo on 8/19/16.

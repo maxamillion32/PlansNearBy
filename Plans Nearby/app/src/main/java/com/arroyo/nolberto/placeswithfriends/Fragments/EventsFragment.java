@@ -1,4 +1,4 @@
-package com.arroyo.nolberto.placeswithfriends;
+package com.arroyo.nolberto.placeswithfriends.Fragments;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -17,16 +17,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import com.arroyo.nolberto.placeswithfriends.Adapters.CustomRecyclerViewEventsAdapter;
+import com.arroyo.nolberto.placeswithfriends.Interfaces.EventsServiceInterface;
+import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Models.Event;
 import com.arroyo.nolberto.placeswithfriends.Models.Events;
+import com.arroyo.nolberto.placeswithfriends.R;
 import com.google.android.gms.location.LocationListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
