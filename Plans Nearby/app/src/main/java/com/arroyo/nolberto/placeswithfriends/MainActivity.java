@@ -31,6 +31,13 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.Profile;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -41,6 +48,7 @@ import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener ,ItemClickInterface{
@@ -48,11 +56,15 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient googleApiClient;
     private PagerAdapter adapter;
     private ViewPager viewPager;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //initializing facebook sdk
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
+        setFacebook();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setPageView();
@@ -130,6 +142,16 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
+            //checking if someone is logged in to facebook, if so, loging out on click and setting new text
+            Profile profile = Profile.getCurrentProfile();
+            if (profile != null) {
+                LoginManager.getInstance().logOut();
+                item.setTitle(R.string.com_facebook_loginview_log_in_button_long);
+            } else {
+                LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+                item.setTitle(R.string.com_facebook_loginview_log_out_action);
+            }
+
 
         } else if (id == R.id.nav_share) {
 
@@ -193,7 +215,7 @@ public class MainActivity extends AppCompatActivity
             String query = intent.getStringExtra(SearchManager.QUERY);
             Toast.makeText(MainActivity.this, "Searching for " + query, Toast.LENGTH_SHORT).show();
             adapter.setQuery(query);
-            viewPager.setCurrentItem(1);
+            viewPager.setCurrentItem(0);
             Log.d("mainActivity query","result:"+query);
         }
 
@@ -201,6 +223,28 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onItemClicked(String selectedItem) {
+
+    }
+    //Method sets up facebook login call
+    public void setFacebook() {
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+
 
     }
 }

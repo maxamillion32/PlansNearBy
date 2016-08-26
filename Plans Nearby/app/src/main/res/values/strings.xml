@@ -8,6 +8,7 @@
     <string name="connection_failed">Connection Failed</string>
     <string name="title_activity_events">EventsActivity</string>
     <string name="search_hint">Search here</string>
+    <string name="facebook_app_id">545613042230072</string>
 
     <string-array name="filter_array">
         <item>Nearby</item>

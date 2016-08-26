@@ -23,51 +23,10 @@ import java.util.ArrayList;
  * Created by nolbertoarroyo on 8/20/16.
  */
 public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<CustomRecyclerViewEventsAdapter.ViewHolder> {
-    private ArrayList<Event> data;
-    Context context;
     private static ItemClickInterface onEventClickListener;
+    Context context;
     String price;
-
-    public  class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView itemImage;
-        public TextView itemTitle;
-        public TextView itemCategory;
-        public TextView distanceMiles;
-        public TextView itemPrice;
-        public TextView itemDate;
-        public CardView cardView;
-
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            itemImage = (ImageView) itemView.findViewById(R.id.list_item_image);
-            itemTitle = (TextView) itemView.findViewById(R.id.list_item_title);
-            itemCategory = (TextView) itemView.findViewById(R.id.list_item_category);
-            distanceMiles = (TextView) itemView.findViewById(R.id.list_item_distance);
-            itemPrice = (TextView)itemView.findViewById(R.id.list_item_price);
-            itemDate = (TextView) itemView.findViewById(R.id.list_item_date);
-            cardView = (CardView)itemView.findViewById(R.id.list_item_cardview);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String itemClicked = data.get(getLayoutPosition()).getId();
-                    Log.i("check",itemClicked);
-                            onEventClickListener.onItemClicked(itemClicked);
-                    Intent intent = new Intent(context,DetailsActivity.class);
-                    intent.putExtra("tag",itemClicked);
-                    context.startActivity(intent);
-                }
-            });
-
-        }
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
+    private ArrayList<Event> data;
 
     public CustomRecyclerViewEventsAdapter(ArrayList<Event> inComingData, ItemClickInterface eventClicked) {
         this.onEventClickListener = eventClicked;
@@ -78,6 +37,11 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
             // if there is no incoming data, make an empty list to avoid NullPointerExceptions
             this.data = new ArrayList<Event>();
         }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 
     @Override
@@ -110,13 +74,13 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
 
         if (dataItem.getLogo() != null) {
             Picasso.with(context).load(dataItem.getLogo().getUrl()).into(holder.itemImage);
-        }else{
+        } else {
             itemImage.setImageResource(R.drawable.no_images);
         }
 
         itemTitle.setText(dataItem.getName().getText());
 
-        itemDate.setText(dataItem.getStart().getUtc().substring(5,10));
+        itemDate.setText(dataItem.getStart().getLocal().substring(5, 10));
 
         if (dataItem.getVenue() != null) {
             distanceMiles.setText(dataItem.getVenue().getAddress().getLocalizedAreaDisplay());
@@ -126,21 +90,56 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
             itemCategory.setText(dataItem.getCategory().getNameLocalized());
         }
 //below code has a bug keep testing, crashes app when you scroll or search for free items
-
-        if (dataItem.getTicketClasses().get(0).getFree()) {
-            price = "Free";
-            itemPrice.setText(price);
-
-        }else{
+        if (dataItem.getTicketClasses().get(0).getCost() != null) {
             price = dataItem.getTicketClasses().get(0).getCost().getDisplay();
             itemPrice.setText(price);
-        }
 
-    }
+            } else if (dataItem.getTicketClasses().get(0).getFree()) {
+            price = "Free";
+            itemPrice.setText(price);
+            }
+
+        }
 
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public ImageView itemImage;
+        public TextView itemTitle;
+        public TextView itemCategory;
+        public TextView distanceMiles;
+        public TextView itemPrice;
+        public TextView itemDate;
+        public CardView cardView;
+
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            itemImage = (ImageView) itemView.findViewById(R.id.list_item_image);
+            itemTitle = (TextView) itemView.findViewById(R.id.list_item_title);
+            itemCategory = (TextView) itemView.findViewById(R.id.list_item_category);
+            distanceMiles = (TextView) itemView.findViewById(R.id.list_item_distance);
+            itemPrice = (TextView) itemView.findViewById(R.id.list_item_price);
+            itemDate = (TextView) itemView.findViewById(R.id.list_item_date);
+            cardView = (CardView) itemView.findViewById(R.id.list_item_cardview);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String itemClicked = data.get(getLayoutPosition()).getId();
+                    Log.i("check", itemClicked);
+                    onEventClickListener.onItemClicked(itemClicked);
+                    Intent intent = new Intent(context, DetailsActivity.class);
+                    intent.putExtra("tag", itemClicked);
+                    context.startActivity(intent);
+                }
+            });
+
+        }
     }
 
 }

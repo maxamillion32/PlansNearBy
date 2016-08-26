@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.provider.CalendarContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,9 @@ import android.widget.Toast;
 
 import com.arroyo.nolberto.placeswithfriends.Models.Event;
 import com.arroyo.nolberto.placeswithfriends.Models.Events;
+import com.facebook.CallbackManager;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -37,6 +41,8 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
     private EventsServiceInterface eventsServiceInterface;
     private static String baseURL = "https://www.eventbriteapi.com/";
     private Event event;
+    private CallbackManager callbackManager;
+    private ShareDialog shareDialog;
 
 
     @Override
@@ -56,7 +62,8 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addEventToCalendar();
+                //addEventToCalendar();
+                shareToFacebook();
                 Snackbar.make(view, "Add Event to calendar", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
@@ -144,5 +151,20 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
 
         startActivity(intent);
     }
-}
+    //method prepares shareDialog to share to facebook
+    public void shareToFacebook() {
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                    .setContentTitle(event.getName().getText())
+                    .setContentDescription(event.getDescription().getText())
+                    .setContentUrl(Uri.parse(event.getLogo().getUrl()))
+                    .build();
+
+            shareDialog.show(linkContent);
+        }
+
+
+    }}
 
