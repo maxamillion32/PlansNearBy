@@ -209,7 +209,7 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
 
             case R.id.activity_details_tickets_bttn:
                 // opens browser to buy tickets for event directly from eventbrite
-                Uri uri = Uri.parse(event.getUrl());
+                Uri uri = Uri.parse(event.getUrl()+"#tickets");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
                 break;
