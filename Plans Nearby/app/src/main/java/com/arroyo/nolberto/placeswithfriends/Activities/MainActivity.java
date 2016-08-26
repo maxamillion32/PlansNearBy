@@ -40,8 +40,6 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener ,ItemClickInterface {
-
-    private GoogleApiClient googleApiClient;
     private PagerAdapter adapter;
     private ViewPager viewPager;
     private CallbackManager callbackManager;
@@ -120,6 +118,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
+            //TODO:
 
         } else if (id == R.id.nav_slideshow) {
 

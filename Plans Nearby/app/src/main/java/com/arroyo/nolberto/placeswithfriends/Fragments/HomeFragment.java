@@ -120,7 +120,8 @@ public class HomeFragment extends Fragment implements GoogleApiClient.OnConnecti
                 }
                 likelyPlaces.release();
             }
-        });rvAdapter.notifyDataSetChanged();
+        });
+        rvAdapter.notifyDataSetChanged();
     }
 
     @Override

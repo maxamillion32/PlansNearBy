@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -53,6 +54,7 @@ public class EventsFragment extends Fragment implements LocationListener {
     private String lon;
     private String lat;
     private String city;
+    private SwipeRefreshLayout onSwipeRefresh;
 
 
     @Override
@@ -72,6 +74,7 @@ public class EventsFragment extends Fragment implements LocationListener {
         setRecyclerView(root);
         setLocationManager();
         getEventsList();
+        setOnSwipeRefresh();
         return root;
     }
 
@@ -94,6 +97,8 @@ public class EventsFragment extends Fragment implements LocationListener {
                     //Log.i("check list"," "+eventArrayList.size());
                     rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
                     recyclerView.setAdapter(rvAdapter);
+                    onSwipeRefresh.setRefreshing(false);
+
 
                 }
 
@@ -112,9 +117,11 @@ public class EventsFragment extends Fragment implements LocationListener {
 
     public void setRecyclerView(View v) {
         this.root = v;
+        onSwipeRefresh = (SwipeRefreshLayout)v.findViewById(R.id.swipeRefreshLayout);
         recyclerView = (RecyclerView) v.findViewById(R.id.events_frag_recycler_view);
         rvLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(rvLayoutManager);
+
     }
 
 
@@ -160,6 +167,17 @@ public class EventsFragment extends Fragment implements LocationListener {
         Log.d("fragment query", "result:" + resultQuery);
 
     }
+    public void setOnSwipeRefresh(){
+        onSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                resultQuery =null;
+                setLocationManager();
+                getEventsList();
+            }
+        });
+    }
+
 }
 
 

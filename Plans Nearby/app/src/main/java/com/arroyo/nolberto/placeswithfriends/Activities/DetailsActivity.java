@@ -92,51 +92,50 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
     public void getEventFromId() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(baseURL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
 
-            eventsServiceInterface.getEventById(eventId).enqueue(new Callback<Event>() {
-
-                @Override
-                public void onResponse(Call<Event> call, Response<Event> response) {
-                    //getting article from api and inserting to database favorites table
-                    event = response.body();
-
-                    eventTitle.setText(event.getName().getText());
-                    eventDescription.setText(Html.fromHtml(event.getDescription().getHtml()));
-                    eventDescription.setMovementMethod(LinkMovementMethod.getInstance());
-
-                    if (event.getVenue() != null) {
-                        eventAddress.setText(event.getVenue().getAddress().getLocalizedAddressDisplay());
-                    }
-
-                    if (event.getCategory() != null) {
-                        eventCategory.setText(event.getCategory().getNameLocalized());
-                    }
-
-                    if (event.getLogo() != null) {
-                        Picasso.with(DetailsActivity.this).load(event.getLogo().getUrl()).into(eventImage);
-                    } else {
-                        eventImage.setImageResource(R.drawable.no_images);
-                    }
-
-                }
-
-
-                @Override
-                public void onFailure(Call<Event> call, Throwable t) {
-                    Toast.makeText(DetailsActivity.this, "Event API call failed", Toast.LENGTH_SHORT).show();
-                    Log.i("Failed", "fail");
-                }
-            });
-            // the connection is available
-        } else {
-            // the connection is not available
+        if (networkInfo == null || !networkInfo.isConnected()){
+            return;
         }
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseURL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
+
+        eventsServiceInterface.getEventById(eventId).enqueue(new Callback<Event>() {
+
+            @Override
+            public void onResponse(Call<Event> call, Response<Event> response) {
+                //getting article from api and inserting to database favorites table
+                event = response.body();
+
+                eventTitle.setText(event.getName().getText());
+                eventDescription.setText(Html.fromHtml(event.getDescription().getHtml()));
+                eventDescription.setMovementMethod(LinkMovementMethod.getInstance());
+
+                if (event.getVenue() != null) {
+                    eventAddress.setText(event.getVenue().getAddress().getLocalizedAddressDisplay());
+                }
+
+                if (event.getCategory() != null) {
+                    eventCategory.setText(event.getCategory().getNameLocalized());
+                }
+
+                if (event.getLogo() != null) {
+                    Picasso.with(DetailsActivity.this).load(event.getLogo().getUrl()).into(eventImage);
+                } else {
+                    eventImage.setImageResource(R.drawable.no_images);
+                }
+
+            }
+
+
+            @Override
+            public void onFailure(Call<Event> call, Throwable t) {
+                Toast.makeText(DetailsActivity.this, "Event API call failed", Toast.LENGTH_SHORT).show();
+                Log.i("Failed", "fail");
+            }
+        });
     }
 
     // this method
