@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
@@ -23,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.arroyo.nolberto.placeswithfriends.Fragments.EnterCityDialogFragment;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Adapters.PagerAdapter;
 import com.arroyo.nolberto.placeswithfriends.R;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity
     private ViewPager viewPager;
     private CallbackManager callbackManager;
     private Toolbar toolbar;
+    private EnterCityDialogFragment cityDialogFragment;
+    private String city;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +58,13 @@ public class MainActivity extends AppCompatActivity
         setFacebook();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setDrawer();
         setPageView();
         handleIntent(getIntent());
+        final android.app.FragmentManager fragmentManager = getFragmentManager();
+         cityDialogFragment= new EnterCityDialogFragment();
+
+
 
 
 
@@ -135,7 +144,8 @@ public class MainActivity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_share) {
-
+            //testing dialogfrag
+            cityDialogFragment.show(getSupportFragmentManager(),"city fragment");
         } else if (id == R.id.nav_send) {
 
         }
@@ -237,5 +247,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+    public void onUserSelectValue(String selectedValue) {
+        // TODO add your implementation.
+        Log.i("selectedValue", selectedValue);
+        this.city = selectedValue;
+
     }
 }
