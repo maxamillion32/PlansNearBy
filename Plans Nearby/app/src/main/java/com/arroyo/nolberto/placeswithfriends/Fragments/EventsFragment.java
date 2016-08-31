@@ -55,6 +55,8 @@ public class EventsFragment extends Fragment implements LocationListener {
     private String lat;
     private String city;
     private SwipeRefreshLayout onSwipeRefresh;
+    ConnectivityManager connMgr;
+    NetworkInfo networkInfo;
 
 
     @Override
@@ -67,11 +69,19 @@ public class EventsFragment extends Fragment implements LocationListener {
         }
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_events, container, false);
         setRecyclerView(root);
+        connMgr= (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkInfo = connMgr.getActiveNetworkInfo();
         setLocationManager();
         getEventsList();
         setOnSwipeRefresh();
@@ -79,39 +89,74 @@ public class EventsFragment extends Fragment implements LocationListener {
     }
 
     public void getEventsList() {
-        ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(baseURL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
 
-            eventsServiceInterface.getEventsResults(resultQuery, lat, lon).enqueue(new Callback<Events>() {
-                @Override
-                public void onResponse(Call<Events> call, Response<Events> response) {
-                    //getting article from api and inserting to database favorites table
+        if (city == null) {
+            if (networkInfo != null && networkInfo.isConnected()) {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(baseURL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
 
-                    eventArrayList = (ArrayList<Event>) response.body().getEvents();
-                    //Log.i("check list"," "+eventArrayList.size());
-                    rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
-                    recyclerView.setAdapter(rvAdapter);
-                    onSwipeRefresh.setRefreshing(false);
+                eventsServiceInterface.getEventsResults(resultQuery, lat, lon).enqueue(new Callback<Events>() {
+                    @Override
+                    public void onResponse(Call<Events> call, Response<Events> response) {
+                        //getting article from api and inserting to database favorites table
+
+                        eventArrayList = (ArrayList<Event>) response.body().getEvents();
+                        //Log.i("check list"," "+eventArrayList.size());
+                        rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
+                        recyclerView.setAdapter(rvAdapter);
+                        onSwipeRefresh.setRefreshing(false);
 
 
-                }
+                    }
 
-                @Override
-                public void onFailure(Call<Events> call, Throwable t) {
-                    Toast.makeText(getActivity(), "Article API call failed", Toast.LENGTH_SHORT).show();
-                    Log.i("Failed", "fail");
-                }
-            });
+                    @Override
+                    public void onFailure(Call<Events> call, Throwable t) {
+                        Toast.makeText(getActivity(), "Article API call failed", Toast.LENGTH_SHORT).show();
+                        Log.i("Failed", "fail");
+                    }
+                });
 
+            } else {
+                // the connection is not available
+//                Toast.makeText(getActivity(), "connection not available", Toast.LENGTH_SHORT).show();
+            }
         } else {
-            // the connection is not available
-            Toast.makeText(getActivity(), "connection not available", Toast.LENGTH_SHORT).show();
+            if (networkInfo != null && networkInfo.isConnected()) {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(baseURL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
+
+                eventsServiceInterface.getEventsResults(resultQuery,city).enqueue(new Callback<Events>() {
+                    @Override
+                    public void onResponse(Call<Events> call, Response<Events> response) {
+                        //getting article from api and inserting to database favorites table
+
+                        eventArrayList = (ArrayList<Event>) response.body().getEvents();
+                        //Log.i("check list"," "+eventArrayList.size());
+                        rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
+                        recyclerView.setAdapter(rvAdapter);
+                        onSwipeRefresh.setRefreshing(false);
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Events> call, Throwable t) {
+                        Toast.makeText(getActivity(), "Article API call failed", Toast.LENGTH_SHORT).show();
+                        Log.i("Failed", "fail");
+                    }
+                });
+
+            } else {
+                // the connection is not available
+                Toast.makeText(getActivity(), "connection not available", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
@@ -160,11 +205,13 @@ public class EventsFragment extends Fragment implements LocationListener {
     }
 
     public void setCity(String city) {
-        this.city = city;
+        //this.city = city;
     }
-    public void setResultQuery(String resultQuery) {
+    public void setResultQuery(String resultQuery, String city) {
         this.resultQuery = resultQuery;
-        Log.d("fragment query", "result:" + resultQuery);
+        this.city = city;
+        getEventsList();
+        Log.d("fragment query", "result:" + resultQuery + city);
 
     }
     public void setOnSwipeRefresh(){
@@ -177,6 +224,7 @@ public class EventsFragment extends Fragment implements LocationListener {
             }
         });
     }
+
 
 }
 

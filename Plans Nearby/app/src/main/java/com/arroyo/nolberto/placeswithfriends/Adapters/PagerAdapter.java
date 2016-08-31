@@ -14,6 +14,7 @@ import com.arroyo.nolberto.placeswithfriends.Fragments.NearByFragment;
 public class PagerAdapter extends FragmentStatePagerAdapter{
     int mNumOfTabs;
     String query;
+    String city;
     EventsFragment tab1;
 
 
@@ -28,8 +29,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
         switch (position) {
             case 0:
                 tab1 = new EventsFragment();
-                tab1.setResultQuery(query);
-                Log.d("pager query","result:"+query);
+                tab1.setResultQuery(query,city);
+                Log.d("pager query","result:"+query+ city);
                 return tab1;
             case 1:
                 //calling setResultQuery to pass query to fragment
@@ -49,8 +50,12 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
         return query;
     }
 
-    public void setQuery(String query) {
+    public void setQuery(String query, String city) {
         this.query = query;
+        this.city = city;
+        if (city != null) {
+            tab1.setResultQuery(query, city);
+        }
         Log.d("adapter query","result:"+query);
     }
 }

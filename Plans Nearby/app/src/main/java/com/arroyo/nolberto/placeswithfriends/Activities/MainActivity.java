@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -20,6 +21,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -48,6 +51,8 @@ public class MainActivity extends AppCompatActivity
     private Toolbar toolbar;
     private EnterCityDialogFragment cityDialogFragment;
     private String city;
+    private String query;
+    SharedPreferences shared;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +68,6 @@ public class MainActivity extends AppCompatActivity
         handleIntent(getIntent());
         final android.app.FragmentManager fragmentManager = getFragmentManager();
          cityDialogFragment= new EnterCityDialogFragment();
-
-
-
-
-
 
     }
 
@@ -96,11 +96,48 @@ public class MainActivity extends AppCompatActivity
         MenuItem item = menu.findItem(R.id.spinner);
         Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.filter_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner.setAdapter(adapter);
+        shared = getPreferences(MODE_PRIVATE);
+        String prefsString = shared.getString("city", city);
+        if(prefsString != null){
+            this.city= prefsString;
+        }
+        int prefsInt = shared.getInt("position", -1);
+        if(prefsInt != -1){
+            spinner.setSelection(prefsInt);
+        }
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+                editor.putInt("position", i);
+                editor.commit();
+                switch (i) {
+                    case 0:
+                        Toast.makeText(adapterView.getContext(), "Spinner item 1!", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        //testing dialogfrag
+                        if (city== null) {
+                            cityDialogFragment.show(getSupportFragmentManager(), "city fragment");
+                            Toast.makeText(adapterView.getContext(), "Spinner item 2!", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case 2:
+                        Toast.makeText(adapterView.getContext(), "Spinner item 3!", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         return true;
 
@@ -144,8 +181,7 @@ public class MainActivity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_share) {
-            //testing dialogfrag
-            cityDialogFragment.show(getSupportFragmentManager(),"city fragment");
+
         } else if (id == R.id.nav_send) {
 
         }
@@ -203,11 +239,11 @@ public class MainActivity extends AppCompatActivity
     private void handleIntent(Intent intent) {
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
+            query = intent.getStringExtra(SearchManager.QUERY);
             Toast.makeText(MainActivity.this, "Searching for " + query, Toast.LENGTH_SHORT).show();
-            adapter.setQuery(query);
+            adapter.setQuery(query, city);
             viewPager.setCurrentItem(0);
-            Log.d("mainActivity query","result:"+query);
+            Log.d("mainActivity query","result:"+query +city);
         }
 
     }
@@ -252,6 +288,11 @@ public class MainActivity extends AppCompatActivity
         // TODO add your implementation.
         Log.i("selectedValue", selectedValue);
         this.city = selectedValue;
+        handleIntent(getIntent());
+        SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+        editor.putString(city, selectedValue);
+        editor.apply();
+        adapter.setQuery(query, city);
 
     }
 }
