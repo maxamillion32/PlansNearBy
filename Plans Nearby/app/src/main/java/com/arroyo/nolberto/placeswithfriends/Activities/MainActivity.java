@@ -196,6 +196,7 @@ public class MainActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("EVENTS"));
         tabLayout.addTab(tabLayout.newTab().setText("NEAR ME"));
+        tabLayout.addTab(tabLayout.newTab().setText("TEST"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager = (ViewPager) findViewById(R.id.pager);

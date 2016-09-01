@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.arroyo.nolberto.placeswithfriends.Fragments.EventsFragment;
+import com.arroyo.nolberto.placeswithfriends.Fragments.ForYouEventsFragment;
 import com.arroyo.nolberto.placeswithfriends.Fragments.NearByFragment;
 
 /**
@@ -16,6 +17,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
     String query;
     String city;
     EventsFragment tab1;
+    int category;
+    ForYouEventsFragment tab3;
 
 
     public PagerAdapter(FragmentManager fm, int NumOfTabs) {
@@ -36,6 +39,12 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
                 //calling setResultQuery to pass query to fragment
                 NearByFragment tab2 = new NearByFragment();
                 return tab2;
+            case 2:
+                this.category = 103;
+                tab3 = new ForYouEventsFragment();
+                tab3.setCategoryQuery(query,city,category);
+                tab3.getEventsCategoryList();
+                return tab3;
             default:
                 return null;
         }
@@ -55,6 +64,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
         this.city = city;
         if (city != null) {
             tab1.setResultQuery(query, city);
+            tab3.setCategoryQuery(query, city, category);
         }
         Log.d("adapter query","result:"+query);
     }
