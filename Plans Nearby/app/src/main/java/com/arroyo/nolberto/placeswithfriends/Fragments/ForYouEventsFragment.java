@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -27,7 +28,6 @@ import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Models.Event;
 import com.arroyo.nolberto.placeswithfriends.Models.Events;
 import com.arroyo.nolberto.placeswithfriends.R;
-import com.google.android.gms.location.LocationListener;
 
 import java.util.ArrayList;
 
@@ -38,9 +38,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by nolbertoarroyo on 8/19/16.
+ * Created by nolbertoarroyo on 9/1/16.
  */
-public class EventsFragment extends Fragment implements LocationListener {
+public class ForYouEventsFragment extends Fragment implements LocationListener {
+
+
     private static String baseURL = "https://www.eventbriteapi.com/v3/";
     private ArrayList<Event> eventArrayList;
     private String resultQuery;
@@ -58,6 +60,7 @@ public class EventsFragment extends Fragment implements LocationListener {
     private SwipeRefreshLayout onSwipeRefresh;
     ConnectivityManager connMgr;
     NetworkInfo networkInfo;
+    int category;
 
 
     @Override
@@ -70,27 +73,21 @@ public class EventsFragment extends Fragment implements LocationListener {
         }
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.fragment_events, container, false);
+        root = inflater.inflate(R.layout.fragment_for_you_events, container, false);
         setRecyclerView(root);
         connMgr= (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         networkInfo = connMgr.getActiveNetworkInfo();
-        ViewPager vp=(ViewPager) getActivity().findViewById(R.id.pager);
         setLocationManager();
-        getEventsList();
+        getEventsCategoryList();
         setOnSwipeRefresh();
         return root;
     }
 
-    public void getEventsList() {
+
+    public void getEventsCategoryList() {
 
 
         if (city == null) {
@@ -101,7 +98,7 @@ public class EventsFragment extends Fragment implements LocationListener {
                         .build();
                 eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
 
-                eventsServiceInterface.getEventsResults(resultQuery, lat, lon).enqueue(new Callback<Events>() {
+                eventsServiceInterface.getEventsResults(resultQuery, lat, lon, category).enqueue(new Callback<Events>() {
                     @Override
                     public void onResponse(Call<Events> call, Response<Events> response) {
                         //getting article from api and inserting to database favorites table
@@ -134,16 +131,14 @@ public class EventsFragment extends Fragment implements LocationListener {
                         .build();
                 eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
 
-                eventsServiceInterface.getEventsResults(resultQuery,city).enqueue(new Callback<Events>() {
+                eventsServiceInterface.getEventsResults(resultQuery,city,category).enqueue(new Callback<Events>() {
                     @Override
                     public void onResponse(Call<Events> call, Response<Events> response) {
                         //getting event from api
 
                         eventArrayList = (ArrayList<Event>) response.body().getEvents();
-                        //Log.i("check list"," "+eventArrayList.size());
                         rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
                         recyclerView.setAdapter(rvAdapter);
-                        onSwipeRefresh.setRefreshing(false);
 
 
                     }
@@ -157,7 +152,7 @@ public class EventsFragment extends Fragment implements LocationListener {
 
             } else {
                 // the connection is not available
-                Toast.makeText(getActivity(), "connection not available", Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(getActivity(), "connection not available", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -171,6 +166,8 @@ public class EventsFragment extends Fragment implements LocationListener {
         recyclerView.setLayoutManager(rvLayoutManager);
 
     }
+
+
 
 
     @Override
@@ -210,26 +207,38 @@ public class EventsFragment extends Fragment implements LocationListener {
     public void setCity(String city) {
         //this.city = city;
     }
-    public void setResultQuery(String resultQuery, String city) {
-        this.resultQuery = resultQuery;
-        this.city = city;
-        getEventsList();
-        Log.d("fragment query", "result:" + resultQuery + city);
 
-    }
     public void setOnSwipeRefresh(){
         onSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 resultQuery =null;
                 setLocationManager();
-                getEventsList();
+                getEventsCategoryList();
             }
         });
     }
+    public void setCategoryQuery(String resultQuery, String city, int category) {
+        this.resultQuery = resultQuery;
+        this.city = city;
+        this.category = category;
+        getEventsCategoryList();
+        Log.d("fragment query", "result:" + resultQuery + city +category);
 
+    } @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
 
 
 }
-
-
