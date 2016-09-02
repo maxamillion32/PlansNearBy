@@ -43,7 +43,6 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
                 this.category = 103;
                 tab3 = new ForYouEventsFragment();
                 tab3.setCategoryQuery(query,city,category);
-                tab3.getEventsCategoryList();
                 return tab3;
             default:
                 return null;
@@ -62,7 +61,12 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
     public void setQuery(String query, String city) {
         this.query = query;
         this.city = city;
-        if (city != null) {
+        //code below needed when locaiton icon is pressed
+        //without this code the icon doesn't work
+        if (city == null && query == null) {
+            tab1.setResultQuery(query, city);
+            tab3.setCategoryQuery(query, city, category);
+        }else if (city!= null){
             tab1.setResultQuery(query, city);
             tab3.setCategoryQuery(query, city, category);
         }
