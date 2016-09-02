@@ -17,10 +17,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.arroyo.nolberto.placeswithfriends.Activities.MainActivity;
 import com.arroyo.nolberto.placeswithfriends.Adapters.CustomRecyclerViewEventsAdapter;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.EventsServiceInterface;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
@@ -73,8 +77,10 @@ public class EventsFragment extends Fragment implements LocationListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
     }
+
 
     @Nullable
     @Override
@@ -157,7 +163,7 @@ public class EventsFragment extends Fragment implements LocationListener {
 
             } else {
                 // the connection is not available
-                Toast.makeText(getActivity(), "connection not available", Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(getActivity(), "connection not available", Toast.LENGTH_SHORT).show();
             }
 
         }

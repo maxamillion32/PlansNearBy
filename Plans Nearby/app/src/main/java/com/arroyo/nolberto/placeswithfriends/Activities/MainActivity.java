@@ -28,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.arroyo.nolberto.placeswithfriends.Fragments.EnterCityDialogFragment;
+import com.arroyo.nolberto.placeswithfriends.Fragments.ForYouEventsFragment;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Adapters.PagerAdapter;
 import com.arroyo.nolberto.placeswithfriends.R;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     private String city;
     private String query;
     SharedPreferences shared;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +68,7 @@ public class MainActivity extends AppCompatActivity
         setDrawer();
         setPageView();
         handleIntent(getIntent());
-        final android.app.FragmentManager fragmentManager = getFragmentManager();
-         cityDialogFragment= new EnterCityDialogFragment();
+        cityDialogFragment= new EnterCityDialogFragment();
 
     }
 
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity
         searchView.setSearchableInfo(searchableInfo);
 
         MenuItem item = menu.findItem(R.id.spinner);
-        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+        spinner = (Spinner) MenuItemCompat.getActionView(item);
 
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.filter_array, android.R.layout.simple_spinner_item);
@@ -148,11 +149,24 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.action_settings:
 
-        //noinspection SimplifiableIfStatement
+                return true;
 
-        return super.onOptionsItemSelected(item);
+            case R.id.location:
+                spinner.setSelection(0);
+                this.city = null;
+                adapter.setQuery(query,city);
+
+                return true;
+
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -196,7 +210,7 @@ public class MainActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("EVENTS"));
         tabLayout.addTab(tabLayout.newTab().setText("NEAR ME"));
-        tabLayout.addTab(tabLayout.newTab().setText("TEST"));
+        tabLayout.addTab(tabLayout.newTab().setText("FOR ME"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -204,7 +218,7 @@ public class MainActivity extends AppCompatActivity
                 (getSupportFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -289,10 +303,7 @@ public class MainActivity extends AppCompatActivity
         // TODO add your implementation.
         Log.i("selectedValue", selectedValue);
         this.city = selectedValue;
-        handleIntent(getIntent());
-        SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-        editor.putString(city, selectedValue);
-        editor.apply();
+        this.query=null;
         adapter.setQuery(query, city);
 
     }
