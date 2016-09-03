@@ -39,8 +39,10 @@ import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity
         //initializing facebook sdk
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
+        loginFirebase();
         setFacebook();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -264,5 +267,13 @@ public class MainActivity extends AppCompatActivity
         this.query=null;
         adapter.setQuery(query, city);
 
+    }
+    public void loginFirebase(){
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        startActivityForResult(AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setProviders(
+                        AuthUI.FACEBOOK_PROVIDER)
+                .build(),1);
     }
 }
