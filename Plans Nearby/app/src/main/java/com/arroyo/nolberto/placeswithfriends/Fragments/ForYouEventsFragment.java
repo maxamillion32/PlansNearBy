@@ -1,5 +1,6 @@
 package com.arroyo.nolberto.placeswithfriends.Fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -102,7 +103,6 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
                     @Override
                     public void onResponse(Call<Events> call, Response<Events> response) {
                         //getting article from api and inserting to database favorites table
-
                         eventArrayList = (ArrayList<Event>) response.body().getEvents();
                         //Log.i("check list"," "+eventArrayList.size());
                         rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
@@ -114,14 +114,14 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
 
                     @Override
                     public void onFailure(Call<Events> call, Throwable t) {
-                        Toast.makeText(getActivity(), "Article API call failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.api_fail_toast, Toast.LENGTH_SHORT).show();
                         Log.i("Failed", "fail");
                     }
                 });
 
             } else {
                 // the connection is not available
-//                Toast.makeText(getActivity(), "connection not available", Toast.LENGTH_SHORT).show();
+     //            Toast.makeText(getActivity(),R.string.connection_unavailable, Toast.LENGTH_SHORT).show();
             }
         } else {
             if (networkInfo != null && networkInfo.isConnected()) {
@@ -130,29 +130,35 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
+                final ProgressDialog loading = new
+                        ProgressDialog(getContext());
+                loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                loading.show();
 
                 eventsServiceInterface.getEventsResults(resultQuery,city,category).enqueue(new Callback<Events>() {
                     @Override
                     public void onResponse(Call<Events> call, Response<Events> response) {
                         //getting event from api
-
+                        loading.dismiss();
+                        onSwipeRefresh.setRefreshing(false);
                         eventArrayList = (ArrayList<Event>) response.body().getEvents();
                         rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
                         recyclerView.setAdapter(rvAdapter);
+
 
 
                     }
 
                     @Override
                     public void onFailure(Call<Events> call, Throwable t) {
-                        Toast.makeText(getActivity(), "Article API call failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getParent(), R.string.api_fail_toast, Toast.LENGTH_SHORT).show();
                         Log.i("Failed", "fail");
                     }
                 });
 
             } else {
                 // the connection is not available
-                //  Toast.makeText(getActivity(), "connection not available", Toast.LENGTH_SHORT).show();
+            //      Toast.makeText(getActivity().getParent(), R.string.connection_unavailable, Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -191,7 +197,6 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            Toast.makeText(getActivity(), "has location", Toast.LENGTH_SHORT).show();
         }
         Location location = locationManager.getLastKnownLocation(provider);
 
@@ -199,13 +204,9 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
         if (location != null) {
             onLocationChanged(location);
         } else {
-            Toast.makeText(getActivity(), "Location not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.location_unavailable, Toast.LENGTH_SHORT).show();
         }
 
-    }
-
-    public void setCity(String city) {
-        //this.city = city;
     }
 
     public void setOnSwipeRefresh(){

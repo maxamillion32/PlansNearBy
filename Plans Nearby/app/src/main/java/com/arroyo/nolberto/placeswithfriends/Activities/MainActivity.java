@@ -53,8 +53,7 @@ public class MainActivity extends AppCompatActivity
     private EnterCityDialogFragment cityDialogFragment;
     private String city;
     private String query;
-    SharedPreferences shared;
-    Spinner spinner;
+    Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +82,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        this.menu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         // set searchManager and searchableInfo
@@ -93,52 +93,6 @@ public class MainActivity extends AppCompatActivity
         // link searchable info with the SearchView
         SearchView searchView =(SearchView)menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchableInfo);
-
-        MenuItem item = menu.findItem(R.id.spinner);
-        spinner = (Spinner) MenuItemCompat.getActionView(item);
-
-        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.filter_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinner.setAdapter(adapter);
-        shared = getPreferences(MODE_PRIVATE);
-        String prefsString = shared.getString("city", city);
-        if(prefsString != null){
-            this.city= prefsString;
-        }
-        int prefsInt = shared.getInt("position", -1);
-        if(prefsInt != -1){
-            spinner.setSelection(prefsInt);
-        }
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-                editor.putInt("position", i);
-                editor.commit();
-                switch (i) {
-                    case 0:
-                        Toast.makeText(adapterView.getContext(), "Spinner item 1!", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 1:
-                        //testing dialogfrag
-                        if (city== null) {
-                            cityDialogFragment.show(getSupportFragmentManager(), "city fragment");
-                            Toast.makeText(adapterView.getContext(), "Spinner item 2!", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case 2:
-                        Toast.makeText(adapterView.getContext(), "Spinner item 3!", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
         return true;
 
@@ -155,10 +109,13 @@ public class MainActivity extends AppCompatActivity
                 return true;
 
             case R.id.location:
-                spinner.setSelection(0);
-                this.city = null;
-                adapter.setQuery(query,city);
-
+                if (city== null) {
+                    cityDialogFragment.show(getSupportFragmentManager(), "city fragment");
+                }else {
+                    menu.findItem(R.id.location).setIcon(R.drawable.ic_my_location_white_24dp);
+                    this.city = null;
+                    adapter.setQuery(query, city);
+                }
                 return true;
 
 
@@ -208,9 +165,9 @@ public class MainActivity extends AppCompatActivity
 
     public void setPageView() {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("EVENTS"));
-        tabLayout.addTab(tabLayout.newTab().setText("NEAR ME"));
-        tabLayout.addTab(tabLayout.newTab().setText("FOR ME"));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_one));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_events_name));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_near_me_name));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -241,7 +198,7 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Toast.makeText(MainActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, R.string.connection_unavailable, Toast.LENGTH_SHORT).show();
 
     }
     @Override
@@ -255,9 +212,9 @@ public class MainActivity extends AppCompatActivity
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
-            Toast.makeText(MainActivity.this, "Searching for " + query, Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getString(R.string.search_text) + query, Toast.LENGTH_SHORT).show();
             adapter.setQuery(query, city);
-            viewPager.setCurrentItem(0);
+            viewPager.setCurrentItem(1);
             Log.d("mainActivity query","result:"+query +city);
         }
 
@@ -302,6 +259,7 @@ public class MainActivity extends AppCompatActivity
     public void onUserSelectValue(String selectedValue) {
         // TODO add your implementation.
         Log.i("selectedValue", selectedValue);
+        menu.findItem(R.id.location).setIcon(R.drawable.ic_location_city_white_24dp);
         this.city = selectedValue;
         this.query=null;
         adapter.setQuery(query, city);
