@@ -48,6 +48,7 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener ,ItemClickInterface {
+    private static final int FB_SIGN_IN= 1;
     private PagerAdapter adapter;
     private ViewPager viewPager;
     private CallbackManager callbackManager;
@@ -143,14 +144,21 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-            //checking if someone is logged in to facebook, if so, loging out on click and setting new text
+            //checking if someone is logged in to facebook, if so, logging out on click and setting new text
             Profile profile = Profile.getCurrentProfile();
             if (profile != null) {
                 LoginManager.getInstance().logOut();
+                AuthUI.getInstance().signOut(this);
                 item.setTitle(R.string.com_facebook_loginview_log_in_button_long);
             } else {
                 LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
                 item.setTitle(R.string.com_facebook_loginview_log_out_action);
+                startActivityForResult(AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setProviders(
+                                AuthUI.FACEBOOK_PROVIDER)
+                        .build(),1);
+
             }
 
 
@@ -270,10 +278,29 @@ public class MainActivity extends AppCompatActivity
     }
     public void loginFirebase(){
         FirebaseAuth auth = FirebaseAuth.getInstance();
+       if (auth.getCurrentUser()!= null) {
+       Toast.makeText(MainActivity.this,auth.getCurrentUser().getDisplayName()+ "signed on",Toast.LENGTH_SHORT).show();
+       }else {
         startActivityForResult(AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setProviders(
-                        AuthUI.FACEBOOK_PROVIDER)
-                .build(),1);
+                   .createSignInIntentBuilder()
+                   .setProviders(
+                           AuthUI.FACEBOOK_PROVIDER)
+                   .build(),1);
+           LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+       }
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FB_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // user is signed in!
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+            } else {
+                // user is not signed in. Maybe just wait for the user to press
+                // "sign in" again, or show a message
+                Toast.makeText(MainActivity.this, "sign in ", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
