@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "119762574175-0cst2a7sm2dbk1t7fnpumm1mmv1ifc8p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arroyo.nolberto.placeswithfriends",
+            "certificate_hash": "032DE90180D992A0336346D2C6C7F18B7028862C"
+          }
+        },
+        {
           "client_id": "119762574175-80lt3vh0oggic5kleg26npuap862hdue.apps.googleusercontent.com",
           "client_type": 3
         }

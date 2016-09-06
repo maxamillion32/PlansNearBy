@@ -1,6 +1,8 @@
 package com.arroyo.nolberto.placeswithfriends.Fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -10,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -61,6 +64,7 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
     ConnectivityManager connMgr;
     NetworkInfo networkInfo;
     int category;
+    String[] categories;
 
 
     @Override
@@ -78,7 +82,7 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_for_you_events, container, false);
         setRecyclerView(root);
-        connMgr= (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         networkInfo = connMgr.getActiveNetworkInfo();
         setLocationManager();
         getEventsCategoryList();
@@ -91,6 +95,8 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
 
 
         if (city == null) {
+
+
             if (networkInfo != null && networkInfo.isConnected()) {
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(baseURL)
@@ -98,11 +104,10 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
                         .build();
                 eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
 
-                eventsServiceInterface.getEventsResults(resultQuery, lat, lon, category).enqueue(new Callback<Events>() {
+                eventsServiceInterface.getEventsCatResults(resultQuery, lat, lon, toDelimitedString(loadArray("interests", getActivity()))).enqueue(new Callback<Events>() {
                     @Override
                     public void onResponse(Call<Events> call, Response<Events> response) {
                         //getting article from api and inserting to database favorites table
-
                         eventArrayList = (ArrayList<Event>) response.body().getEvents();
                         //Log.i("check list"," "+eventArrayList.size());
                         rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
@@ -114,14 +119,14 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
 
                     @Override
                     public void onFailure(Call<Events> call, Throwable t) {
-                        Toast.makeText(getActivity(), "Article API call failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.api_fail_toast, Toast.LENGTH_SHORT).show();
                         Log.i("Failed", "fail");
                     }
                 });
 
             } else {
                 // the connection is not available
-//                Toast.makeText(getActivity(), "connection not available", Toast.LENGTH_SHORT).show();
+                //            Toast.makeText(getActivity(),R.string.connection_unavailable, Toast.LENGTH_SHORT).show();
             }
         } else {
             if (networkInfo != null && networkInfo.isConnected()) {
@@ -130,29 +135,35 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
+                final ProgressDialog loading = new
+                        ProgressDialog(getContext());
+                loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                loading.show();
 
-                eventsServiceInterface.getEventsResults(resultQuery,city,category).enqueue(new Callback<Events>() {
+                eventsServiceInterface.getEventsCatResults(resultQuery, city, toDelimitedString(loadArray("interests", getActivity()))).enqueue(new Callback<Events>() {
                     @Override
                     public void onResponse(Call<Events> call, Response<Events> response) {
                         //getting event from api
+                        loading.dismiss();
 
                         eventArrayList = (ArrayList<Event>) response.body().getEvents();
                         rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
                         recyclerView.setAdapter(rvAdapter);
+                        onSwipeRefresh.setRefreshing(false);
 
 
                     }
 
                     @Override
                     public void onFailure(Call<Events> call, Throwable t) {
-                        Toast.makeText(getActivity(), "Article API call failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getParent(), R.string.api_fail_toast, Toast.LENGTH_SHORT).show();
                         Log.i("Failed", "fail");
                     }
                 });
 
             } else {
                 // the connection is not available
-                //  Toast.makeText(getActivity(), "connection not available", Toast.LENGTH_SHORT).show();
+                //      Toast.makeText(getActivity().getParent(), R.string.connection_unavailable, Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -160,14 +171,12 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
 
     public void setRecyclerView(View v) {
         this.root = v;
-        onSwipeRefresh = (SwipeRefreshLayout)v.findViewById(R.id.swipeRefreshLayout);
+        onSwipeRefresh = (SwipeRefreshLayout) v.findViewById(R.id.swipeRefreshLayout);
         recyclerView = (RecyclerView) v.findViewById(R.id.events_frag_recycler_view);
         rvLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(rvLayoutManager);
 
     }
-
-
 
 
     @Override
@@ -191,7 +200,6 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            Toast.makeText(getActivity(), "has location", Toast.LENGTH_SHORT).show();
         }
         Location location = locationManager.getLastKnownLocation(provider);
 
@@ -199,33 +207,31 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
         if (location != null) {
             onLocationChanged(location);
         } else {
-            Toast.makeText(getActivity(), "Location not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.location_unavailable, Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    public void setCity(String city) {
-        //this.city = city;
-    }
-
-    public void setOnSwipeRefresh(){
+    public void setOnSwipeRefresh() {
         onSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                resultQuery =null;
+                resultQuery = null;
                 setLocationManager();
                 getEventsCategoryList();
             }
         });
     }
-    public void setCategoryQuery(String resultQuery, String city, int category) {
+
+    public void setCategoryQuery(String resultQuery, String city) {
         this.resultQuery = resultQuery;
         this.city = city;
-        this.category = category;
         getEventsCategoryList();
-        Log.d("fragment query", "result:" + resultQuery + city +category);
+        Log.d("fragment query", "result:" + resultQuery + city + category);
 
-    } @Override
+    }
+
+    @Override
     public void onProviderEnabled(String s) {
 
     }
@@ -238,6 +244,26 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
 
+    }
+
+    public static String toDelimitedString(String[] array) {
+        String result = "";
+        if (array.length > 0) {
+            StringBuilder sb = new StringBuilder();
+            for (String s : array) {
+                sb.append(s).append(",");
+            }
+            result = sb.deleteCharAt(sb.length() - 1).toString();
+        }
+        return result;
+    }
+    public String[] loadArray(String arrayName, Context mContext) {
+        SharedPreferences prefs = mContext.getSharedPreferences("preferencename", 0);
+        int size = prefs.getInt(arrayName + "_size", 0);
+        String array[] = new String[size];
+        for(int i=0;i<size;i++)
+            array[i] = prefs.getString(arrayName + "_" + i, null);
+        return array;
     }
 
 

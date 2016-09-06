@@ -13,12 +13,11 @@ import com.arroyo.nolberto.placeswithfriends.Fragments.NearByFragment;
  * Created by nolbertoarroyo on 8/19/16.
  */
 public class PagerAdapter extends FragmentStatePagerAdapter{
-    int mNumOfTabs;
-    String query;
-    String city;
-    EventsFragment tab1;
-    int category;
-    ForYouEventsFragment tab3;
+    private int mNumOfTabs;
+    private String query;
+    private String city;
+    private ForYouEventsFragment tab1;
+    private EventsFragment tab2;
 
 
     public PagerAdapter(FragmentManager fm, int NumOfTabs) {
@@ -31,18 +30,17 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
 
         switch (position) {
             case 0:
-                tab1 = new EventsFragment();
-                tab1.setResultQuery(query,city);
-                Log.d("pager query","result:"+query+ city);
+                tab1 = new ForYouEventsFragment();
+                tab1.setCategoryQuery(query,city);
                 return tab1;
             case 1:
                 //calling setResultQuery to pass query to fragment
-                NearByFragment tab2 = new NearByFragment();
+                tab2 = new EventsFragment();
+                tab2.setResultQuery(query,city);
+                Log.d("pager query","result:"+query+ city);
                 return tab2;
             case 2:
-                this.category = 103;
-                tab3 = new ForYouEventsFragment();
-                tab3.setCategoryQuery(query,city,category);
+                NearByFragment tab3 = new NearByFragment();
                 return tab3;
             default:
                 return null;
@@ -64,11 +62,11 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
         //code below needed when locaiton icon is pressed
         //without this code the icon doesn't work
         if (city == null && query == null) {
-            tab1.setResultQuery(query, city);
-            tab3.setCategoryQuery(query, city, category);
+            tab2.setResultQuery(query, city);
+            tab1.setCategoryQuery(query, city);
         }else if (city!= null){
-            tab1.setResultQuery(query, city);
-            tab3.setCategoryQuery(query, city, category);
+            tab2.setResultQuery(query, city);
+            tab1.setCategoryQuery(query, city);
         }
         Log.d("adapter query","result:"+query);
     }

@@ -123,14 +123,14 @@ public class EventsFragment extends Fragment implements LocationListener {
 
                     @Override
                     public void onFailure(Call<Events> call, Throwable t) {
-                        Toast.makeText(getActivity(), "Article API call failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.api_fail_toast, Toast.LENGTH_SHORT).show();
                         Log.i("Failed", "fail");
                     }
                 });
 
             } else {
                 // the connection is not available
-//                Toast.makeText(getActivity(), "connection not available", Toast.LENGTH_SHORT).show();
+//                   Toast.makeText(getActivity(), R.string.connection_unavailable, Toast.LENGTH_SHORT).show();
             }
         } else {
             if (networkInfo != null && networkInfo.isConnected()) {
@@ -156,14 +156,14 @@ public class EventsFragment extends Fragment implements LocationListener {
 
                     @Override
                     public void onFailure(Call<Events> call, Throwable t) {
-                        Toast.makeText(getActivity(), "Article API call failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.api_fail_toast, Toast.LENGTH_SHORT).show();
                         Log.i("Failed", "fail");
                     }
                 });
 
             } else {
                 // the connection is not available
-            //    Toast.makeText(getActivity(), "connection not available", Toast.LENGTH_SHORT).show();
+           //    Toast.makeText(getContext(), R.string.connection_unavailable, Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -200,7 +200,6 @@ public class EventsFragment extends Fragment implements LocationListener {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            Toast.makeText(getActivity(), "has location", Toast.LENGTH_SHORT).show();
         }
         Location location = locationManager.getLastKnownLocation(provider);
 
@@ -208,7 +207,7 @@ public class EventsFragment extends Fragment implements LocationListener {
         if (location != null) {
             onLocationChanged(location);
         } else {
-            Toast.makeText(getActivity(), "Location not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.location_unavailable, Toast.LENGTH_SHORT).show();
         }
 
     }
