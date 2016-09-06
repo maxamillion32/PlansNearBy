@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.arroyo.nolberto.placeswithfriends.PickInterestsActivity">
+
+    <TextView
+        android:id="@+id/music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Music"
+        android:layout_margin="4dp"/>
+
+    <TextView
+        android:id="@+id/business_professional"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Business  Professional"
+        android:layout_alignTop="@+id/music"
+        android:layout_toLeftOf="@+id/seasonal_holiday"
+        android:layout_toStartOf="@+id/seasonal_holiday" />
+
+    <TextView
+        android:id="@+id/food_drink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Food and Drink"
+        android:layout_alignTop="@+id/business_professional"
+        android:layout_alignRight="@+id/travel_outdoor"
+        android:layout_alignEnd="@+id/travel_outdoor" />
+
+    <TextView
+        android:id="@+id/community_culture"
+        android:layout_below="@+id/music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Community &amp; Culture"
+        android:layout_margin="4dp"/>
+
+    <TextView
+        android:id="@+id/performing_visual_arts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Performing &amp; Visual Arts"
+        android:layout_alignTop="@+id/community_culture"
+        android:layout_alignRight="@+id/food_drink"
+        android:layout_alignEnd="@+id/food_drink" />
+
+    <TextView
+        android:id="@+id/film_media_entertainment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Film, Media &amp; Entertainment"
+        android:layout_marginTop="34dp"
+        android:layout_below="@+id/hobbies_special_interests"
+        android:layout_toRightOf="@+id/music"
+        android:layout_toEndOf="@+id/music" />
+
+    <TextView
+        android:id="@+id/other"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Other"
+        android:layout_above="@+id/seasonal_holiday"
+        android:layout_alignRight="@+id/hobbies_special_interests"
+        android:layout_alignEnd="@+id/hobbies_special_interests" />
+
+    <TextView
+        android:id="@+id/sports_fitness"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sports &amp; Fitness"
+        android:layout_marginTop="34dp"
+        android:layout_below="@+id/film_media_entertainment"
+        android:layout_alignRight="@+id/food_drink"
+        android:layout_alignEnd="@+id/food_drink" />
+
+    <TextView
+        android:id="@+id/health_wellness"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/performing_visual_arts"
+        android:text="Health &amp; Wellness"
+        android:layout_margin="4dp"/>
+
+    <TextView
+        android:id="@+id/science_tech"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/health_wellness"
+        android:text="Science &amp; Technology"
+        android:layout_below="@+id/performing_visual_arts"
+        android:layout_margin="4dp"/>
+
+    <TextView
+        android:id="@+id/travel_outdoor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Travel &amp; Outdoors"
+        android:layout_alignBottom="@+id/gov_politics"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/charity_causes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/travel_outdoor"
+        android:text="Charity"
+        android:layout_below="@+id/performing_visual_arts"
+        android:layout_margin="4dp"/>
+
+    <TextView
+        android:id="@+id/religion_spirituality"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/health_wellness"
+        android:text="Religion &amp; Spirituality"
+        android:layout_margin="4dp"/>
+
+    <TextView
+        android:id="@+id/family_education"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Family &amp; Education"
+        android:layout_below="@+id/auto_air_boat"
+        android:layout_alignLeft="@+id/science_tech"
+        android:layout_alignStart="@+id/science_tech" />
+
+    <TextView
+        android:id="@+id/seasonal_holiday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seasonal &amp; Holiday"
+        android:layout_alignBottom="@+id/hobbies_special_interests"
+        android:layout_alignLeft="@+id/auto_air_boat"
+        android:layout_alignStart="@+id/auto_air_boat" />
+
+    <TextView
+        android:id="@+id/gov_politics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/seasonal_holiday"
+        android:text="Government &amp; Politics"
+        android:layout_below="@id/health_wellness"
+        android:layout_margin="4dp"/>
+
+    <TextView
+        android:id="@+id/fashion_beauty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fashion &amp; Beauty"
+        android:layout_below="@+id/home_lifestyle"
+        android:layout_alignLeft="@+id/religion_spirituality"
+        android:layout_alignStart="@+id/religion_spirituality" />
+
+    <TextView
+        android:id="@+id/home_lifestyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/fashion_beauty"
+        android:text="Home &amp; Lifestyle"
+        android:layout_below="@+id/religion_spirituality"
+        android:layout_margin="4dp"/>
+
+    <TextView
+        android:id="@+id/auto_air_boat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Auto, Air, &amp; Boat"
+        android:layout_below="@+id/home_lifestyle"
+        android:layout_alignLeft="@+id/sports_fitness"
+        android:layout_alignStart="@+id/sports_fitness" />
+
+    <TextView
+        android:id="@+id/hobbies_special_interests"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hobbies &amp; Special Interests"
+        android:layout_marginTop="56dp"
+        android:layout_below="@+id/fashion_beauty"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <Button
+        android:id="@+id/finishButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/other"
+        android:layout_alignStart="@+id/other" />
+
+
+</RelativeLayout>

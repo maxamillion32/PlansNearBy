@@ -16,7 +16,6 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
     private int mNumOfTabs;
     private String query;
     private String city;
-    private int category;
     private ForYouEventsFragment tab1;
     private EventsFragment tab2;
 
@@ -31,9 +30,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
 
         switch (position) {
             case 0:
-                this.category = 103;
                 tab1 = new ForYouEventsFragment();
-                tab1.setCategoryQuery(query,city,category);
+                tab1.setCategoryQuery(query,city);
                 return tab1;
             case 1:
                 //calling setResultQuery to pass query to fragment
@@ -65,10 +63,10 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
         //without this code the icon doesn't work
         if (city == null && query == null) {
             tab2.setResultQuery(query, city);
-            tab1.setCategoryQuery(query, city, category);
+            tab1.setCategoryQuery(query, city);
         }else if (city!= null){
             tab2.setResultQuery(query, city);
-            tab1.setCategoryQuery(query, city, category);
+            tab1.setCategoryQuery(query, city);
         }
         Log.d("adapter query","result:"+query);
     }

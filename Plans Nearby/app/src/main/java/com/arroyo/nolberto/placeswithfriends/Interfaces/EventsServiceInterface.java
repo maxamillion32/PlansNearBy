@@ -35,11 +35,11 @@ public interface EventsServiceInterface {
 
     //get events by current location, sorted by date
     @GET("events/search/?expand=venue,category,ticket_classes,display_settings&sort_by=date&token=BCE2TXE45OB66VQPNBJ3")
-    Call<Events> getEventsResults(@Query("q") String query, @Query("location.latitude") String lat, @Query("location.longitude") String lon, @Query("categories") int category);
+    Call<Events> getEventsCatResults(@Query("q") String query, @Query("location.latitude") String lat, @Query("location.longitude") String lon, @Query("categories") String category);
 
 
     //get search results by city
     @GET("events/search/?expand=venue,category,ticket_classes&sort_by=date&token=BCE2TXE45OB66VQPNBJ3")
-    Call<Events> getEventsResults(@Query("q") String query,@Query("venue.city") String city, @Query("categories") int category);
+    Call<Events> getEventsCatResults(@Query("q") String query,@Query("venue.city") String city, @Query("categories") String category);
 
 }
