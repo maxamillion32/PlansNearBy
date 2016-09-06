@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import com.arroyo.nolberto.placeswithfriends.Fragments.EnterCityDialogFragment;
 import com.arroyo.nolberto.placeswithfriends.Fragments.ForYouEventsFragment;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Adapters.PagerAdapter;
+import com.arroyo.nolberto.placeswithfriends.PickInterestsActivity;
 import com.arroyo.nolberto.placeswithfriends.R;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -64,7 +66,6 @@ public class MainActivity extends AppCompatActivity
         //initializing facebook sdk
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
-        loginFirebase();
         setFacebook();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -137,7 +138,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            Intent intent = new Intent(MainActivity.this, PickInterestsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_gallery) {
             //TODO:
 
@@ -148,17 +150,10 @@ public class MainActivity extends AppCompatActivity
             Profile profile = Profile.getCurrentProfile();
             if (profile != null) {
                 LoginManager.getInstance().logOut();
-                AuthUI.getInstance().signOut(this);
                 item.setTitle(R.string.com_facebook_loginview_log_in_button_long);
             } else {
                 LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
                 item.setTitle(R.string.com_facebook_loginview_log_out_action);
-                startActivityForResult(AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setProviders(
-                                AuthUI.FACEBOOK_PROVIDER)
-                        .build(),1);
-
             }
 
 

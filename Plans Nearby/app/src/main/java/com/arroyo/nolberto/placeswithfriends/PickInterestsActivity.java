@@ -90,82 +90,101 @@ public class PickInterestsActivity extends AppCompatActivity implements View.OnC
             case R.id.music:
                 categoryId = "103";
                 userInterests.add(categoryId);
-                music.setBackgroundColor(getResources().getColor(R.color.green));
+                music.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 break;
             case R.id.business_professional:
                 categoryId = "101";
+                businessProfessional.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.food_drink:
                 categoryId = "110";
+                foodDrink.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.community_culture:
                 categoryId = "113";
+                communityCulture.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.performing_visual_arts:
                 categoryId = "105";
+                performingVisualArts.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.film_media_entertainment:
                 categoryId = "104";
+                filmMediaEntertainment.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.sports_fitness:
                 categoryId = "108";
+                sportsFitness.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.health_wellness:
                 categoryId = "107";
+                healthWellness.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.science_tech:
                 categoryId = "102";
+                scienceTech.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.travel_outdoor:
                 categoryId = "109";
+                travelOutdoor.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.charity_causes:
                 categoryId = "111";
+                charityCauses.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.religion_spirituality:
                 categoryId = "114";
+                religionSpirituality.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.family_education:
                 categoryId = "115";
+                familyEducation.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.seasonal_holiday:
                 categoryId = "116";
+                seasonalHoliday.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.gov_politics:
                 categoryId = "112";
+                govPolitics.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.fashion_beauty:
                 categoryId = "106";
+                fashionBeauty.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.home_lifestyle:
                 categoryId = "107";
+                homeLifestyle.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.auto_air_boat:
                 categoryId = "118";
+                autoAirBoat.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.hobbies_special_interests:
                 categoryId = "119";
+                hobbiesSpecialInterests.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.other:
                 categoryId = "199";
+                other.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 userInterests.add(categoryId);
                 break;
             case R.id.finishButton:
@@ -174,10 +193,6 @@ public class PickInterestsActivity extends AppCompatActivity implements View.OnC
                 Intent intent = new Intent(PickInterestsActivity.this, MainActivity.class);
                 startActivity(intent);
                 break;
-
-
-
-
 
         }
 
