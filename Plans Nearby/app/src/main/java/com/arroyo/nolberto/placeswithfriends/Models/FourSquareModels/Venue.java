@@ -58,7 +58,61 @@ public class Venue {
     @SerializedName("hours")
     @Expose
     private Hours hours;
+    @SerializedName("specials")
+    @Expose
+    private Specials specials;
+    @SerializedName("photos")
+    @Expose
+    private Photos venuePhotos;
+    @SerializedName("reasons")
+    @Expose
+    private Reasons reasons;
+    @SerializedName("tips")
+    @Expose
+    private Tip tips;
+    @SerializedName("bestPhoto")
+    @Expose
+    private BestPhoto bestPhoto;
 
+    public Specials getSpecials() {
+        return specials;
+    }
+
+    public void setSpecials(Specials specials) {
+        this.specials = specials;
+    }
+
+    public Photos getVenuePhotos() {
+        return venuePhotos;
+    }
+
+    public void setVenuePhotos(Photos venuePhotos) {
+        this.venuePhotos = venuePhotos;
+    }
+
+    public Reasons getReasons() {
+        return reasons;
+    }
+
+    public void setReasons(Reasons reasons) {
+        this.reasons = reasons;
+    }
+
+    public Tip getTips() {
+        return tips;
+    }
+
+    public void setTips(Tip tips) {
+        this.tips = tips;
+    }
+
+    public BestPhoto getBestPhoto() {
+        return bestPhoto;
+    }
+
+    public void setBestPhoto(BestPhoto bestPhoto) {
+        this.bestPhoto = bestPhoto;
+    }
 
     public String getUrl() {
         return url;

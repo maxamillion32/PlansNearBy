@@ -39,7 +39,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by nolbertoarroyo on 8/19/16.
  */
 public class FoodFragment extends Fragment implements LocationListener {
-    private static final int PERMISSION_REQUEST_CODE = 100;
     private static String baseURL = "https://api.foursquare.com/v2/";
     ArrayList<Item> places;
     private RecyclerView recyclerView;
@@ -94,7 +93,7 @@ public class FoodFragment extends Fragment implements LocationListener {
                         .build();
                 fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
 
-                fourSquareServiceInterface.getFoodNearby("40.7,-74").enqueue(new Callback<CallBackResult>() {
+                fourSquareServiceInterface.getFoodNearby(currentLocation).enqueue(new Callback<CallBackResult>() {
                     @Override
                     public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
                         //getting article from api and inserting to database favorites table

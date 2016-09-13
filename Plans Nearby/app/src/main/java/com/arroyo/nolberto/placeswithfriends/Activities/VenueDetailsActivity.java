@@ -59,7 +59,7 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
+        setContentView(R.layout.activity_venue_details);
         setViews();
         recieveVenueSelectedId();
         getVenueFromId();
@@ -78,13 +78,13 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
     }
 
     public void setViews() {
-        venueImage = (ImageView) findViewById(R.id.activity_details_image);
-        venueTitle = (TextView) findViewById(R.id.activity_details_title);
-        venueCategory = (TextView) findViewById(R.id.activity_details_category);
-        venueAddress = (TextView) findViewById(R.id.activity_details_address);
-        venueDescription = (TextView) findViewById(R.id.activity_details_description);
-        share = (ImageView) findViewById(R.id.activity_details_share_bttn);
-        directions = (ImageView) findViewById(R.id.activity_details_directions_bttn);
+        venueImage = (ImageView) findViewById(R.id.activity_details_venue_image);
+        venueTitle = (TextView) findViewById(R.id.activity_details_venue_title);
+        venueCategory = (TextView) findViewById(R.id.activity_details_venue_category);
+        venueAddress = (TextView) findViewById(R.id.activity_details_venue_address);
+        venueDescription = (TextView) findViewById(R.id.activity_details_venue_description);
+        share = (ImageView) findViewById(R.id.activity_details_venue_share_bttn);
+        directions = (ImageView) findViewById(R.id.activity_details_venue_directions_bttn);
     }
 
     public void getVenueFromId() {
@@ -117,9 +117,6 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
                 Picasso.with(getApplicationContext()).load(imageUrl).into(venueImage);
                 //venueDescription.setText(Html.fromHtml(venue.getDescription().getHtml()));
                 //venueDescription.setMovementMethod(LinkMovementMethod.getInstance());
-
-
-
             }
 
 
@@ -170,10 +167,6 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
                 String map = "http://maps.google.com/maps?daddr=" + venue.getLocation().getAddress();
                 Intent openMapsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map));
                 startActivity(openMapsIntent);
-
-                //Intent openMapsNavigationIntent = new Intent(android.content.Intent.ACTION_VIEW,
-                //      Uri.parse("google.navigation:q=" + event.getVenue().getAddress().getLocalizedAddressDisplay()));
-                //startActivity(intentMap);
 
                 break;
             case R.id.activity_details_interested_bttn:
