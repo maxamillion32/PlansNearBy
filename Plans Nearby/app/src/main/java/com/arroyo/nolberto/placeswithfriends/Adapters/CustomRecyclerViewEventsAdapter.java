@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.arroyo.nolberto.placeswithfriends.Activities.DetailsActivity;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
-import com.arroyo.nolberto.placeswithfriends.Models.Event;
+import com.arroyo.nolberto.placeswithfriends.Models.EventBriteModels.Event;
 import com.arroyo.nolberto.placeswithfriends.R;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -101,12 +101,11 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
             price = dataItem.getTicketClasses().get(0).getCost().getDisplay();
             itemPrice.setText(price);
 
-            } else if (dataItem.getTicketClasses().get(0).getFree()) {
+        } else if (dataItem.getTicketClasses().get(0).getFree()) {
             price = "Free";
             itemPrice.setText(price);
-            }
-
         }
+    }
 
     @Override
     public int getItemCount() {
@@ -148,6 +147,7 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
 
         }
     }
+
     public static Date fromISO8601UTC(String dateStr) {
         TimeZone tz = TimeZone.getTimeZone("UTC");
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");

@@ -4,12 +4,9 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -21,18 +18,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.arroyo.nolberto.placeswithfriends.Fragments.EnterCityDialogFragment;
-import com.arroyo.nolberto.placeswithfriends.Fragments.ForYouEventsFragment;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Adapters.PagerAdapter;
-import com.arroyo.nolberto.placeswithfriends.PickInterestsActivity;
 import com.arroyo.nolberto.placeswithfriends.R;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -51,6 +41,7 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener ,ItemClickInterface {
     private static final int FB_SIGN_IN= 1;
+    private static final String CITY_FRAGMENT = "city fragment";
     private PagerAdapter adapter;
     private ViewPager viewPager;
     private CallbackManager callbackManager;
@@ -115,7 +106,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.location:
                 if (city== null) {
-                    cityDialogFragment.show(getSupportFragmentManager(), "city fragment");
+                    cityDialogFragment.show(getSupportFragmentManager(), CITY_FRAGMENT);
                 }else {
                     menu.findItem(R.id.location).setIcon(R.drawable.ic_my_location_white_24dp);
                     this.city = null;
@@ -173,7 +164,8 @@ public class MainActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_one));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_events_name));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_near_me_name));
+        tabLayout.addTab(tabLayout.newTab().setText("FOOD"));
+        tabLayout.addTab(tabLayout.newTab().setText("DRINKS"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager = (ViewPager) findViewById(R.id.pager);

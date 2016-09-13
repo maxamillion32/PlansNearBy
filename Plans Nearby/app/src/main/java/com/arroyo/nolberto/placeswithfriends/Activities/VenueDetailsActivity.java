@@ -20,8 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arroyo.nolberto.placeswithfriends.Interfaces.EventsServiceInterface;
+import com.arroyo.nolberto.placeswithfriends.Interfaces.FourSquareServiceInterface;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Models.EventBriteModels.Event;
+import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.CallBackResult;
+import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.Venue;
 import com.arroyo.nolberto.placeswithfriends.R;
 import com.facebook.CallbackManager;
 import com.facebook.share.model.ShareLinkContent;
@@ -36,14 +39,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class DetailsActivity extends AppCompatActivity implements ItemClickInterface, View.OnClickListener {
-    private static String baseURL = "https://www.eventbriteapi.com/";
-    private ImageView eventImage,share, interested, directions;
-    private Button tickets;
-    private TextView eventTitle, eventAddress, eventCategory, eventDescription;
-    private Event event;
-    private String eventId;
-    private EventsServiceInterface eventsServiceInterface;
+
+public class VenueDetailsActivity extends AppCompatActivity implements ItemClickInterface, View.OnClickListener {
+    private static String baseURL = "https://api.foursquare.com/v2/";
+    private ImageView venueImage,share, directions;
+    private TextView venueTitle, venueAddress, venueCategory, venueDescription;
+    private Venue venue;
+    private String venueId;
+    private FourSquareServiceInterface serviceInterface;
     private CallbackManager callbackManager;
     private ShareDialog shareDialog;
 
@@ -58,38 +61,33 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         setViews();
-        recieveEventSelectedId();
-        getEventFromId();
+        recieveVenueSelectedId();
+        getVenueFromId();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addEventToCalendar();
                 Snackbar.make(view, "Add Event to calendar", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
             }
         });
-        tickets.setOnClickListener(this);
         share.setOnClickListener(this);
         directions.setOnClickListener(this);
-        interested.setOnClickListener(this);
     }
 
     public void setViews() {
-        eventImage = (ImageView) findViewById(R.id.activity_details_image);
-        eventTitle = (TextView) findViewById(R.id.activity_details_title);
-        eventCategory = (TextView) findViewById(R.id.activity_details_category);
-        eventAddress = (TextView) findViewById(R.id.activity_details_address);
-        eventDescription = (TextView) findViewById(R.id.activity_details_description);
+        venueImage = (ImageView) findViewById(R.id.activity_details_image);
+        venueTitle = (TextView) findViewById(R.id.activity_details_title);
+        venueCategory = (TextView) findViewById(R.id.activity_details_category);
+        venueAddress = (TextView) findViewById(R.id.activity_details_address);
+        venueDescription = (TextView) findViewById(R.id.activity_details_description);
         share = (ImageView) findViewById(R.id.activity_details_share_bttn);
-        tickets = (Button) findViewById(R.id.activity_details_tickets_bttn);
         directions = (ImageView) findViewById(R.id.activity_details_directions_bttn);
-        interested = (ImageView) findViewById(R.id.activity_details_interested_bttn);
     }
 
-    public void getEventFromId() {
+    public void getVenueFromId() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
@@ -100,70 +98,46 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
                 .baseUrl(baseURL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
+        serviceInterface = retrofit.create(FourSquareServiceInterface.class);
 
-        eventsServiceInterface.getEventById(eventId).enqueue(new Callback<Event>() {
+        serviceInterface.getVenueById(venueId).enqueue(new Callback<CallBackResult>() {
 
             @Override
-            public void onResponse(Call<Event> call, Response<Event> response) {
+            public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
                 //getting article from api and inserting to database favorites table
-                event = response.body();
+                venue = response.body().getResponse().getVenue();
+                Log.i("venue",venue.getId());
 
-                eventTitle.setText(event.getName().getText());
-                eventDescription.setText(Html.fromHtml(event.getDescription().getHtml()));
-                eventDescription.setMovementMethod(LinkMovementMethod.getInstance());
+                venueTitle.setText(venue.getName());
+                venueAddress.setText(venue.getLocation().getAddress());
+                String suffix =venue.getPhotos().getGroups().get(0).getItems().get(0).getSuffix();
+                String prefix = venue.getPhotos().getGroups().get(0).getItems().get(0).getPrefix();
 
-                if (event.getVenue() != null) {
-                    eventAddress.setText(event.getVenue().getAddress().getLocalizedAddressDisplay());
-                }
+                String imageUrl = prefix+"original"+suffix;
+                Picasso.with(getApplicationContext()).load(imageUrl).into(venueImage);
+                //venueDescription.setText(Html.fromHtml(venue.getDescription().getHtml()));
+                //venueDescription.setMovementMethod(LinkMovementMethod.getInstance());
 
-                if (event.getCategory() != null) {
-                    eventCategory.setText(event.getCategory().getNameLocalized());
-                }
 
-                if (event.getLogo() != null) {
-                    Picasso.with(DetailsActivity.this).load(event.getLogo().getUrl()).into(eventImage);
-                } else {
-                    eventImage.setImageResource(R.drawable.no_images);
-                }
 
             }
 
 
             @Override
-            public void onFailure(Call<Event> call, Throwable t) {
-                Toast.makeText(DetailsActivity.this, "Event API call failed", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<CallBackResult> call, Throwable t) {
+                Toast.makeText(VenueDetailsActivity.this, "failed", Toast.LENGTH_SHORT).show();
                 Log.i("Failed", "fail");
             }
         });
     }
 
     // this method
-    public void recieveEventSelectedId() {
+    public void recieveVenueSelectedId() {
         Intent intent = getIntent();
-        eventId = intent.getStringExtra("tag");
+        this.venueId = intent.getStringExtra("venueId");
+        Log.i("venueid",venueId+ " ");
     }
 
-    //adds current event to calender
-    public void addEventToCalendar() {
-        Intent intent = new Intent(Intent.ACTION_INSERT);
-        intent.setType("vnd.android.cursor.item/event");
-
-        Calendar cal = Calendar.getInstance();
-        long startTime = cal.getTimeInMillis();
-        long endTime = cal.getTimeInMillis() + 60 * 60 * 1000;
-
-        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
-        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
-        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
-
-        intent.putExtra(CalendarContract.Events.TITLE, event.getName().getText());
-        intent.putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription().getText());
-        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, event.getVenue().getAddress().getLocalizedAddressDisplay());
-        intent.putExtra(CalendarContract.Events.RRULE, "FREQ=YEARLY");
-
-        startActivity(intent);
-    }
 
     //method prepares shareDialog to share to facebook
     public void shareToFacebook() {
@@ -171,9 +145,9 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
         shareDialog = new ShareDialog(this);
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                    .setContentTitle(event.getName().getText())
-                    .setContentDescription(event.getDescription().getText())
-                    .setContentUrl(Uri.parse(event.getLogo().getUrl()))
+                    .setContentTitle(venue.getName())
+                    .setContentDescription(venue.getContact().getFormattedPhone())
+                    .setContentUrl(Uri.parse(venue.getUrl()))
                     .build();
 
             shareDialog.show(linkContent);
@@ -193,7 +167,7 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
 
             case R.id.activity_details_directions_bttn:
                 // opens maps in directions view
-                String map = "http://maps.google.com/maps?daddr=" + event.getVenue().getAddress().getLocalizedAddressDisplay();
+                String map = "http://maps.google.com/maps?daddr=" + venue.getLocation().getAddress();
                 Intent openMapsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map));
                 startActivity(openMapsIntent);
 
@@ -206,13 +180,8 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
 
                 break;
 
-            case R.id.activity_details_tickets_bttn:
-                // opens browser to buy tickets for event directly from eventbrite
-                Uri uri = Uri.parse(event.getUrl()+"#tickets");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-                break;
         }
     }
 }
+
 

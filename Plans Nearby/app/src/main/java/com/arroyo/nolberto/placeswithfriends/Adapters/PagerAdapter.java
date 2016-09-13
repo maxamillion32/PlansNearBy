@@ -5,8 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
+import com.arroyo.nolberto.placeswithfriends.Fragments.DrinksFragment;
 import com.arroyo.nolberto.placeswithfriends.Fragments.EventsFragment;
 import com.arroyo.nolberto.placeswithfriends.Fragments.ForYouEventsFragment;
+import com.arroyo.nolberto.placeswithfriends.Fragments.FoodFragment;
 import com.arroyo.nolberto.placeswithfriends.Fragments.NearByFragment;
 
 /**
@@ -18,6 +20,9 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
     private String city;
     private ForYouEventsFragment tab1;
     private EventsFragment tab2;
+    private FoodFragment tab3;
+    private DrinksFragment tab4;
+
 
 
     public PagerAdapter(FragmentManager fm, int NumOfTabs) {
@@ -40,8 +45,15 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
                 Log.d("pager query","result:"+query+ city);
                 return tab2;
             case 2:
-                NearByFragment tab3 = new NearByFragment();
+                tab3 = new FoodFragment();
+                tab3.setCity(city);
                 return tab3;
+
+            case 3:
+                tab4 = new DrinksFragment();
+                tab4.setCity(city);
+                return tab4;
+
             default:
                 return null;
         }
@@ -64,9 +76,13 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
         if (city == null && query == null) {
             tab2.setResultQuery(query, city);
             tab1.setCategoryQuery(query, city);
+            tab3.setCity(city);
+            tab4.setCity(city);
         }else if (city!= null){
             tab2.setResultQuery(query, city);
             tab1.setCategoryQuery(query, city);
+            tab3.setCity(city);
+            tab4.setCity(city);
         }
         Log.d("adapter query","result:"+query);
     }
