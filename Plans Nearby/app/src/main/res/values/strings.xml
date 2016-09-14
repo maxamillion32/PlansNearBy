@@ -19,4 +19,5 @@
     <string name="api_fail_toast">" Error finding events"</string>
     <string name="location_unavailable">Location not available</string>
     <string name="connection_unavailable">connection not available</string>
+    <string name="dialog_enter_city">ENTER CITY</string>
 </resources>

@@ -1,7 +1,7 @@
 package com.arroyo.nolberto.placeswithfriends.Interfaces;
 
-import com.arroyo.nolberto.placeswithfriends.Models.Event;
-import com.arroyo.nolberto.placeswithfriends.Models.Events;
+import com.arroyo.nolberto.placeswithfriends.Models.EventBriteModels.Event;
+import com.arroyo.nolberto.placeswithfriends.Models.EventBriteModels.Events;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

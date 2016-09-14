@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.arroyo.nolberto.placeswithfriends.Interfaces.EventsServiceInterface;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
-import com.arroyo.nolberto.placeswithfriends.Models.Event;
+import com.arroyo.nolberto.placeswithfriends.Models.EventBriteModels.Event;
 import com.arroyo.nolberto.placeswithfriends.R;
 import com.facebook.CallbackManager;
 import com.facebook.share.model.ShareLinkContent;

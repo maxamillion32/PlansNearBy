@@ -11,21 +11,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.arroyo.nolberto.placeswithfriends.Adapters.CustomRecyclerViewEventsAdapter;
-import com.arroyo.nolberto.placeswithfriends.Interfaces.EventsServiceInterface;
+import com.arroyo.nolberto.placeswithfriends.Adapters.CustomRecyclerViewAdapter;
+import com.arroyo.nolberto.placeswithfriends.Interfaces.FourSquareServiceInterface;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
-import com.arroyo.nolberto.placeswithfriends.Models.EventBriteModels.Event;
-import com.arroyo.nolberto.placeswithfriends.Models.EventBriteModels.Events;
+import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.CallBackResult;
+import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.Item;
 import com.arroyo.nolberto.placeswithfriends.R;
 import com.google.android.gms.location.LocationListener;
 
@@ -37,27 +34,24 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
 /**
  * Created by nolbertoarroyo on 8/19/16.
  */
-public class EventsFragment extends Fragment implements LocationListener {
-    private static String baseURL = "https://www.eventbriteapi.com/v3/";
-    private ArrayList<Event> eventArrayList;
-    private String resultQuery;
+public class FoodFragment extends Fragment implements LocationListener {
+    private static String baseURL = "https://api.foursquare.com/v2/";
+    ArrayList<Item> places;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter rvAdapter;
     private RecyclerView.LayoutManager rvLayoutManager;
-    private ItemClickInterface onItemClickedListener;
-    private EventsServiceInterface eventsServiceInterface;
-    private View root;
     private LocationManager locationManager;
     private String provider;
-    private String lon;
-    private String lat;
+    private String currentLocation;
     private String city;
-    private SwipeRefreshLayout onSwipeRefresh;
     ConnectivityManager connMgr;
     NetworkInfo networkInfo;
+    FourSquareServiceInterface fourSquareServiceInterface;
+    ItemClickInterface onItemClickedListener;
 
 
     @Override
@@ -70,62 +64,54 @@ public class EventsFragment extends Fragment implements LocationListener {
         }
     }
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-
     }
-
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.fragment_events, container, false);
-        setRecyclerView(root);
-        connMgr= (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        View root = inflater.inflate(com.arroyo.nolberto.placeswithfriends.R.layout.fragment_food, container, false);
+        recyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
+        rvLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(rvLayoutManager);
+        connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         networkInfo = connMgr.getActiveNetworkInfo();
         setLocationManager();
-        getEventsList();
-        setOnSwipeRefresh();
+        getVenuesList();
         return root;
     }
 
-    public void getEventsList() {
-
-
+    public void getVenuesList() {
         if (city == null) {
             if (networkInfo != null && networkInfo.isConnected()) {
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(baseURL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
-                eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
+                fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
 
-                eventsServiceInterface.getEventsResults(resultQuery, lat, lon).enqueue(new Callback<Events>() {
+                fourSquareServiceInterface.getFoodNearby(currentLocation).enqueue(new Callback<CallBackResult>() {
                     @Override
-                    public void onResponse(Call<Events> call, Response<Events> response) {
+                    public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
                         //getting article from api and inserting to database favorites table
 
-                        eventArrayList = (ArrayList<Event>) response.body().getEvents();
-                        //Log.i("check list"," "+eventArrayList.size());
-                        rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
+                        places = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
+                        rvAdapter = new CustomRecyclerViewAdapter(places, (ItemClickInterface) getActivity());
                         recyclerView.setAdapter(rvAdapter);
-                        onSwipeRefresh.setRefreshing(false);
 
 
                     }
 
                     @Override
-                    public void onFailure(Call<Events> call, Throwable t) {
-                        Toast.makeText(getActivity(), R.string.api_fail_toast, Toast.LENGTH_SHORT).show();
-                        Log.i("Failed", "fail");
-                    }
-                });
+                    public void onFailure(Call<CallBackResult> call, Throwable t) {
 
-            } else {
-                // the connection is not available
-//                   Toast.makeText(getActivity(), R.string.connection_unavailable, Toast.LENGTH_SHORT).show();
+                    }
+
+
+                });
             }
         } else {
             if (networkInfo != null && networkInfo.isConnected()) {
@@ -133,52 +119,30 @@ public class EventsFragment extends Fragment implements LocationListener {
                         .baseUrl(baseURL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
-                eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
+                fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
 
-                eventsServiceInterface.getEventsResults(resultQuery,city).enqueue(new Callback<Events>() {
+                fourSquareServiceInterface.getFoodVenues(city).enqueue(new Callback<CallBackResult>() {
                     @Override
-                    public void onResponse(Call<Events> call, Response<Events> response) {
-                        //getting event from api
+                    public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
+                        //getting article from api and inserting to database favorites table
 
-                        eventArrayList = (ArrayList<Event>) response.body().getEvents();
-                        //Log.i("check list"," "+eventArrayList.size());
-                        rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
+                        places = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
+                        rvAdapter = new CustomRecyclerViewAdapter(places, (ItemClickInterface) getActivity());
                         recyclerView.setAdapter(rvAdapter);
-                        onSwipeRefresh.setRefreshing(false);
 
 
                     }
 
                     @Override
-                    public void onFailure(Call<Events> call, Throwable t) {
-                        Toast.makeText(getActivity(), R.string.api_fail_toast, Toast.LENGTH_SHORT).show();
-                        Log.i("Failed", "fail");
-                    }
-                });
+                    public void onFailure(Call<CallBackResult> call, Throwable t) {
 
-            } else {
-                // the connection is not available
-           //    Toast.makeText(getContext(), R.string.connection_unavailable, Toast.LENGTH_SHORT).show();
+                    }
+
+
+                });
             }
 
         }
-    }
-
-    public void setRecyclerView(View v) {
-        this.root = v;
-        onSwipeRefresh = (SwipeRefreshLayout)v.findViewById(R.id.swipeRefreshLayout);
-        recyclerView = (RecyclerView) v.findViewById(R.id.events_frag_recycler_view);
-        rvLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(rvLayoutManager);
-
-    }
-
-
-    @Override
-    public void onLocationChanged(Location location) {
-        lat = String.valueOf((location.getLatitude()));
-        lon = String.valueOf((location.getLongitude()));
-
     }
 
     public void setLocationManager() {
@@ -207,29 +171,15 @@ public class EventsFragment extends Fragment implements LocationListener {
 
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        this.currentLocation = location.getLatitude() + "," + location.getLongitude();
+
+    }
+
     public void setCity(String city) {
-        //this.city = city;
-    }
-    public void setResultQuery(String resultQuery, String city) {
-        this.resultQuery = resultQuery;
         this.city = city;
-        getEventsList();
-        Log.d("fragment query", "result:" + resultQuery + city);
-
+        getVenuesList();
     }
-    public void setOnSwipeRefresh(){
-        onSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                resultQuery =null;
-                setLocationManager();
-                getEventsList();
-            }
-        });
-    }
-
-
-
 }
-
 
