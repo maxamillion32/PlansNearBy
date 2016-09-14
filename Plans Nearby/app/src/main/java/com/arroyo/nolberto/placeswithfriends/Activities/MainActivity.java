@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity
                 if (city== null) {
                     cityDialogFragment.show(getSupportFragmentManager(), CITY_FRAGMENT);
                 }else {
-                    menu.findItem(R.id.location).setIcon(R.drawable.ic_my_location_white_24dp);
+                    menu.findItem(R.id.location).setIcon(R.drawable.ic_near_me_white_24dp);
                     this.city = null;
                     adapter.setQuery(query, city);
                 }
@@ -128,15 +128,13 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_interests) {
             Intent intent = new Intent(MainActivity.this, PickInterestsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
             //TODO:
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        }  else if (id == R.id.nav_facebook_login) {
             //checking if someone is logged in to facebook, if so, logging out on click and setting new text
             Profile profile = Profile.getCurrentProfile();
             if (profile != null) {
@@ -148,9 +146,7 @@ public class MainActivity extends AppCompatActivity
             }
 
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_about) {
 
         }
 

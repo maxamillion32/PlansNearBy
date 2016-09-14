@@ -7,6 +7,9 @@ package com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Tip {
 
     @SerializedName("id")
@@ -21,7 +24,17 @@ public class Tip {
     @SerializedName("type")
     @Expose
     private String type;
+
+    public List<Group_> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group_> groups) {
+        this.groups = groups;
+    }
+
     @SerializedName("canonicalUrl")
+
     @Expose
     private String canonicalUrl;
     @SerializedName("logView")
@@ -39,6 +52,10 @@ public class Tip {
     @SerializedName("user")
     @Expose
     private User user;
+    @SerializedName("groups")
+    @Expose
+    private List<Group_> groups = new ArrayList<Group_>();
+
 
     /**
      * @return The id

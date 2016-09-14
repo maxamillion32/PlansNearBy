@@ -14,8 +14,10 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ import com.arroyo.nolberto.placeswithfriends.Interfaces.FourSquareServiceInterfa
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Models.EventBriteModels.Event;
 import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.CallBackResult;
+import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.Item__;
 import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.Venue;
 import com.arroyo.nolberto.placeswithfriends.R;
 import com.facebook.CallbackManager;
@@ -31,6 +34,7 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import retrofit2.Call;
@@ -43,12 +47,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class VenueDetailsActivity extends AppCompatActivity implements ItemClickInterface, View.OnClickListener {
     private static String baseURL = "https://api.foursquare.com/v2/";
     private ImageView venueImage,share, directions;
-    private TextView venueTitle, venueAddress, venueCategory, venueDescription;
+    private TextView venueTitle, venueAddress, venueCategory, venueDescription,tipsReviews;
     private Venue venue;
     private String venueId;
     private FourSquareServiceInterface serviceInterface;
     private CallbackManager callbackManager;
     private ShareDialog shareDialog;
+    private ArrayList<String> tipsItems;
+    private ListView listView;
+    private ArrayAdapter<String> adapter;
 
 
     @Override
@@ -63,16 +70,6 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
         setViews();
         recieveVenueSelectedId();
         getVenueFromId();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Add Event to calendar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
-            }
-        });
         share.setOnClickListener(this);
         directions.setOnClickListener(this);
     }
@@ -85,6 +82,7 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
         venueDescription = (TextView) findViewById(R.id.activity_details_venue_description);
         share = (ImageView) findViewById(R.id.activity_details_venue_share_bttn);
         directions = (ImageView) findViewById(R.id.activity_details_venue_directions_bttn);
+        tipsReviews = (TextView) findViewById(R.id.activity_venue_details_tips);
     }
 
     public void getVenueFromId() {
@@ -110,13 +108,22 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
 
                 venueTitle.setText(venue.getName());
                 venueAddress.setText(venue.getLocation().getAddress());
+                venueCategory.setText(venue.getCategories().get(0).getName());
+                tipsReviews.setText("Tips and Reviews");
                 String suffix =venue.getPhotos().getGroups().get(0).getItems().get(0).getSuffix();
                 String prefix = venue.getPhotos().getGroups().get(0).getItems().get(0).getPrefix();
 
                 String imageUrl = prefix+"original"+suffix;
                 Picasso.with(getApplicationContext()).load(imageUrl).into(venueImage);
-                //venueDescription.setText(Html.fromHtml(venue.getDescription().getHtml()));
-                //venueDescription.setMovementMethod(LinkMovementMethod.getInstance());
+                listView = (ListView)findViewById(R.id.tips_list_view);
+                tipsItems= new ArrayList<String>();
+                for (int i=0; i<venue.getTips().getGroups().get(0).getItems().size();i++){
+                    tipsItems.add(venue.getTips().getGroups().get(0).getItems().get(i).getText());
+                }
+                Log.i("arraylist"," "+tipsItems.size());
+                adapter = new ArrayAdapter<String>(VenueDetailsActivity.this,android.R.layout.simple_list_item_1,android.R.id.text1,tipsItems);
+                listView.setAdapter(adapter);
+
             }
 
 
@@ -157,19 +164,19 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
     public void onClick(View view) {
         switch (view.getId()) {
 
-            case R.id.activity_details_share_bttn:
+            case R.id.activity_details_venue_share_bttn:
                 //shares current event to facebook, have option to choose friends
                 shareToFacebook();
                 break;
 
-            case R.id.activity_details_directions_bttn:
+            case R.id.activity_details_venue_directions_bttn:
                 // opens maps in directions view
                 String map = "http://maps.google.com/maps?daddr=" + venue.getLocation().getAddress();
                 Intent openMapsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map));
                 startActivity(openMapsIntent);
 
                 break;
-            case R.id.activity_details_interested_bttn:
+            case R.id.activity_details_venue_interested_bttn:
 
                 break;
 

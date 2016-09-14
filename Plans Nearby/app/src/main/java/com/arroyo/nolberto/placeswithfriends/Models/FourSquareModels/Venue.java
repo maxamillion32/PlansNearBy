@@ -13,6 +13,7 @@ public class Venue {
     @SerializedName("id")
     @Expose
     private String id;
+    private String discription;
     @SerializedName("name")
     @Expose
     private String name;
@@ -61,9 +62,6 @@ public class Venue {
     @SerializedName("specials")
     @Expose
     private Specials specials;
-    @SerializedName("photos")
-    @Expose
-    private Photos venuePhotos;
     @SerializedName("reasons")
     @Expose
     private Reasons reasons;
@@ -73,6 +71,20 @@ public class Venue {
     @SerializedName("bestPhoto")
     @Expose
     private BestPhoto bestPhoto;
+    @SerializedName("photos")
+    @Expose
+
+    private Photos photos;
+    @SerializedName("venuePage")
+    @Expose
+    private VenueCategory venuePage;
+    @SerializedName("hereNow")
+    @Expose
+    private HereNow hereNow;
+    @SerializedName("featuredPhotos")
+    @Expose
+    private FeaturedPhotos featuredPhotos;
+
 
     public Specials getSpecials() {
         return specials;
@@ -82,13 +94,6 @@ public class Venue {
         this.specials = specials;
     }
 
-    public Photos getVenuePhotos() {
-        return venuePhotos;
-    }
-
-    public void setVenuePhotos(Photos venuePhotos) {
-        this.venuePhotos = venuePhotos;
-    }
 
     public Reasons getReasons() {
         return reasons;
@@ -153,21 +158,6 @@ public class Venue {
     public void setFeaturedPhotos(FeaturedPhotos featuredPhotos) {
         this.featuredPhotos = featuredPhotos;
     }
-
-    @SerializedName("photos")
-    @Expose
-
-    private Photos photos;
-    @SerializedName("venuePage")
-    @Expose
-    private VenueCategory venuePage;
-    @SerializedName("hereNow")
-    @Expose
-    private HereNow hereNow;
-    @SerializedName("featuredPhotos")
-    @Expose
-    private FeaturedPhotos featuredPhotos;
-
     /**
      *
      * @return
@@ -438,6 +428,12 @@ public class Venue {
         this.hereNow = hereNow;
     }
 
+    public String getDiscription() {
+        return discription;
+    }
 
+    public void setDiscription(String discription) {
+        this.discription = discription;
+    }
 }
 
