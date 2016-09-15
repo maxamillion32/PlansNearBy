@@ -103,9 +103,12 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
         TextView distanceMiles = holder.distanceMiles;
         TextView itemRating = holder.itemRating;
         TextView itemMessage = holder.itemMessage;
-        itemRating.setText(dataItem.getVenue().getRating().toString());
-        Integer venueCost =dataItem.getVenue().getPrice().getTier();
-        if (venueCost!=null){
+        if (dataItem.getVenue().getRating() !=null){
+
+            itemRating.setText(dataItem.getVenue().getRating().toString());
+        }
+        if (dataItem.getVenue().getPrice()!= null){
+            Integer venueCost = dataItem.getVenue().getPrice().getTier();
             if (venueCost==1){
 
                 itemMessage.setText("$");
