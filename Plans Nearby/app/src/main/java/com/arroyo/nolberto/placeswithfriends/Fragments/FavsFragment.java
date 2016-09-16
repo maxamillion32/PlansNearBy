@@ -3,6 +3,7 @@ package com.arroyo.nolberto.placeswithfriends.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -31,7 +32,6 @@ public class FavsFragment extends DialogFragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.favs_dialog,container,false);
-        getDialog().setTitle("Saved Places");
         venuesListView= (ListView)root.findViewById(R.id.favs_dialog_lv);
         final Cursor favsCursor = dbHelper.getInstance(getContext()).getFavoritesList();
         final CursorAdapter cursorAdapter = new CursorAdapter(getActivity(),favsCursor,0) {
@@ -47,13 +47,14 @@ public class FavsFragment extends DialogFragment{
                 TextView venueTitle = (TextView)view.findViewById(R.id.favs_list_item_title);
                 TextView venueCategory = (TextView)view.findViewById(R.id.favs_list_item_category);
                 TextView venueCity = (TextView)view.findViewById(R.id.favs_list_item_city);
-                TextView venueCost = (TextView)view.findViewById(R.id.favs_list_item_cost);
                 TextView venueRating = (TextView)view.findViewById(R.id.favs_list_item_rating);
 
                 venueTitle.setText(cursor.getString(cursor.getColumnIndex(DataBaseHelper.DataEntryFavorites.COL_TITLE)));
                 venueCategory.setText(cursor.getString(cursor.getColumnIndex(DataBaseHelper.DataEntryFavorites.COL_CATEGORY)));
                 venueCity.setText(cursor.getString(cursor.getColumnIndex(DataBaseHelper.DataEntryFavorites.COL_CITY)));
                 venueRating.setText(cursor.getString(cursor.getColumnIndex(DataBaseHelper.DataEntryFavorites.COL_RATING)));
+                String ratingColor = "#"+cursor.getString(cursor.getColumnIndex(DataBaseHelper.DataEntryFavorites.COL_RATING_COLOR));
+                venueRating.setBackgroundColor(Color.parseColor(ratingColor));
             }
         };
 

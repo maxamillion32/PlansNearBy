@@ -7,9 +7,9 @@
             android:icon="@android:drawable/btn_star_big_off"
             android:title="My Interests" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_saved_places"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="My Events" />
+            android:title="My Saved Places" />
         <item
             android:id="@+id/nav_facebook_login"
             android:icon="@drawable/com_facebook_button_icon_white"

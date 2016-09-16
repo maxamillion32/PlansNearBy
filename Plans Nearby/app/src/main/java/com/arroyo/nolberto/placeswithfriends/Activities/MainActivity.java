@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_interests) {
             Intent intent = new Intent(MainActivity.this, PickInterestsActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_saved_places) {
             if (DataBaseHelper.FAVORITES_COLUMNS.length >=1) {
                 savedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL,R.style.CustomDialog);
                 savedDialogFragment.show(getSupportFragmentManager(), SAVED_VENUES_FRAGMENT);

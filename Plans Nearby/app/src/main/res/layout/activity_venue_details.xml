@@ -5,10 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Activities.DetailsActivity">
 
 
@@ -17,115 +13,120 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:elevation="4dp"
-        android:padding="4dp"
         android:scaleType="fitXY" />
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/activity_details_venue_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="2dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/activity_details_venue_category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="2dp"
-        android:layout_below="@+id/activity_details_venue_title"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:id="@+id/activity_details_venue_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_details_venue_category"
-        android:padding="2dp"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:id="@+id/activity_details_venue_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_details_venue_address"
-        android:padding="2dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/green" />
-
-    <ImageView
-        android:id="@+id/activity_details_venue_url"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="14dp"
-        android:layout_marginRight="16dp"
-        android:src="@android:drawable/ic_menu_more"
-        android:scaleY="2"
-        android:scaleX="2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/activity_details_venue_more_info"
-        android:text="More Info"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/activity_details_venue_url"
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-</RelativeLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:paddingTop="8dp"
-        android:paddingRight="8dp"
-        android:paddingLeft="8dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp">
 
-        <ImageView
-            android:id="@+id/activity_details_venue_interested_bttn"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/activity_details_venue_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/activity_details_venue_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/activity_details_venue_title"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/activity_details_venue_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/activity_details_venue_category"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/activity_details_venue_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/activity_details_venue_address"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/green" />
+
+            <ImageView
+                android:id="@+id/activity_details_venue_url"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="14dp"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:src="@android:drawable/ic_menu_more" />
+
+            <TextView
+                android:id="@+id/activity_details_venue_more_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/activity_details_venue_url"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="4dp"
+                android:text="More Info" />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp">
+
+            <ImageView
+                android:id="@+id/activity_details_venue_interested_bttn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:src="@drawable/ic_bookmark_black_48dp"
+                android:text="@string/details_interested" />
+
+            <ImageView
+                android:id="@+id/activity_details_venue_share_bttn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:src="@drawable/ic_share_black_48dp"
+                android:text="@string/details_share" />
+
+            <ImageView
+                android:id="@+id/activity_details_venue_directions_bttn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:elevation="4dp"
+                android:src="@drawable/ic_directions_black_48dp"
+                android:text="@string/details_directions" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/activity_venue_details_tips"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:src="@drawable/ic_bookmark_black_48dp"
-            android:text="@string/details_interested" />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <ImageView
-            android:id="@+id/activity_details_venue_share_bttn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:src="@drawable/ic_share_black_48dp"
-            android:text="@string/details_share" />
-
-        <ImageView
-            android:id="@+id/activity_details_venue_directions_bttn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:elevation="4dp"
-            android:src="@drawable/ic_directions_black_48dp"
-            android:text="@string/details_directions" />
-
+        <ListView
+            android:id="@+id/tips_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/activity_venue_details_tips"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <ListView
-        android:id="@+id/tips_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-
 </LinearLayout>
 

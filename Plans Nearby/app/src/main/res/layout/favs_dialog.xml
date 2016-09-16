@@ -5,10 +5,21 @@
 
 
 
+
+    <TextView
+        android:text="Saved Places"
+        android:layout_marginBottom="8dp"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <ListView
         android:id="@+id/favs_dialog_lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"/>
+        android:padding="8dp"
+        android:divider="@color/gray"
+        android:dividerHeight="1dp"/>
 
 </LinearLayout>

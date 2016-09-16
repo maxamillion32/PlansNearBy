@@ -2,6 +2,9 @@ package com.arroyo.nolberto.placeswithfriends.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.arroyo.nolberto.placeswithfriends.Activities.DetailsActivity;
+import com.arroyo.nolberto.placeswithfriends.Activities.MainActivity;
 import com.arroyo.nolberto.placeswithfriends.Activities.VenueDetailsActivity;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Models.EventBriteModels.Event;
@@ -27,37 +31,36 @@ import java.util.ArrayList;
 /**
  * Created by nolbertoarroyo on 8/19/16.
  */
-public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecyclerViewAdapter.ViewHolder>{
+public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecyclerViewAdapter.ViewHolder> {
     private ArrayList<Item> data;
     private static ItemClickInterface onVenueClickListener;
     Context context;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-    public ImageView itemImage;
-    public TextView itemTitle,itemCategory,distanceMiles, itemRating,itemMessage;
+        public ImageView itemImage;
+        public TextView itemTitle, itemCategory, distanceMiles, itemRating, itemMessage;
 
-    public ViewHolder(View itemView) {
-        super(itemView);
-        itemImage = (ImageView) itemView.findViewById(R.id.list_item_image);
-        itemTitle = (TextView) itemView.findViewById(R.id.list_item_title);
-        itemCategory = (TextView) itemView.findViewById(R.id.list_item_category);
-        distanceMiles = (TextView) itemView.findViewById(R.id.list_item_distance);
-        itemRating = (TextView) itemView.findViewById(R.id.list_item_price);
-        itemMessage = (TextView)itemView.findViewById(R.id.list_item_date);
+        public ViewHolder(View itemView) {
+            super(itemView);
+            itemImage = (ImageView) itemView.findViewById(R.id.list_item_image);
+            itemTitle = (TextView) itemView.findViewById(R.id.list_item_title);
+            itemCategory = (TextView) itemView.findViewById(R.id.list_item_category);
+            distanceMiles = (TextView) itemView.findViewById(R.id.list_item_distance);
+            itemRating = (TextView) itemView.findViewById(R.id.list_item_price);
+            itemMessage = (TextView) itemView.findViewById(R.id.list_item_date);
 
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String itemClicked = data.get(getLayoutPosition()).getVenue().getId();
-                Log.i("check", itemClicked);
-                onVenueClickListener.onItemClicked(itemClicked);
-                Intent intent = new Intent(context, VenueDetailsActivity.class);
-                intent.putExtra("venueId", itemClicked);
-                context.startActivity(intent);
-            }
-        });
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String itemClicked = data.get(getLayoutPosition()).getVenue().getId();
+                    onVenueClickListener.onItemClicked(itemClicked);
+                    Intent intent = new Intent(context, VenueDetailsActivity.class);
+                    intent.putExtra("venueId", itemClicked);
+                    context.startActivity(intent);
+                }
+            });
 
-    }
+        }
     }
 
 
@@ -66,7 +69,7 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
         return super.toString();
     }
 
-    public CustomRecyclerViewAdapter(ArrayList<Item> inComingData,ItemClickInterface itemClicked) {
+    public CustomRecyclerViewAdapter(ArrayList<Item> inComingData, ItemClickInterface itemClicked) {
         this.onVenueClickListener = itemClicked;
         if (inComingData != null) {
             // if there is incoming data, use it
@@ -103,28 +106,35 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
         TextView distanceMiles = holder.distanceMiles;
         TextView itemRating = holder.itemRating;
         TextView itemMessage = holder.itemMessage;
-        if (dataItem.getVenue().getRating() !=null){
+        if (dataItem.getVenue().getRating() != null) {
 
             itemRating.setText(dataItem.getVenue().getRating().toString());
+            itemRating.setTextColor(Color.WHITE);
+            itemRating.setTypeface(itemRating.getTypeface(),Typeface.BOLD);
+            String ratingColor = "#"+dataItem.getVenue().getRatingColor();
+            itemRating.setBackgroundColor(Color.parseColor(ratingColor));
         }
-        if (dataItem.getVenue().getPrice()!= null){
+        if (dataItem.getVenue().getPrice() != null) {
             Integer venueCost = dataItem.getVenue().getPrice().getTier();
-            if (venueCost==1){
+            if (venueCost == 1) {
 
                 itemMessage.setText("$");
-            }else if (venueCost==2){
+            } else if (venueCost == 2) {
                 itemMessage.setText("$$");
-            }else if (venueCost == 3){
+            } else if (venueCost == 3) {
                 itemMessage.setText("$$$");
+            } else if (venueCost == 4) {
+                itemMessage.setText("$$$$");
             }
         }
+
         itemTitle.setText(dataItem.getVenue().getName());
         itemCategory.setText((CharSequence) dataItem.getVenue().getCategories().get(0).getName());
         distanceMiles.setText(dataItem.getVenue().getLocation().getCity());
-        String suffix =dataItem.getVenue().getFeaturedPhotos().getItems().get(0).getSuffix();
+        String suffix = dataItem.getVenue().getFeaturedPhotos().getItems().get(0).getSuffix();
         String prefix = dataItem.getVenue().getFeaturedPhotos().getItems().get(0).getPrefix();
 
-        String url = prefix+"original"+suffix;
+        String url = prefix + "original" + suffix;
         Picasso.with(context).load(url).into(holder.itemImage);
     }
 

@@ -54,6 +54,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             public static final String COL_CATEGORY = "CATEGORY";
             public static final String COL_CITY = "CITY";
             public static final String COL_RATING = "RATING";
+            public static final String COL_RATING_COLOR ="RATING_COLOR";
 
         }
         //Create Favorites table
@@ -64,13 +65,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 DataEntryFavorites.COL_CATEGORY + " TEXT," +
                 DataEntryFavorites.COL_CITY + " TEXT," +
                 DataEntryFavorites.COL_RATING + " TEXT," +
+                DataEntryFavorites.COL_RATING_COLOR + " TEXT," +
                 DataEntryFavorites.COL_ITEM_ID + " TEXT)";
 
         private static final String SQL_DELETE_ENTRIES_FAVORITES = "DROP TABLE IF EXISTS " +
                 DataEntryFavorites.TABLE_NAME;
 
         //creating favorites columns
-        public static final String[] FAVORITES_COLUMNS = {DataEntryFavorites._ID,DataEntryFavorites.COL_ITEM_ID,DataEntryFavorites.COL_TITLE, DataEntryFavorites.COL_CITY,DataEntryFavorites.COL_RATING,DataEntryFavorites.COL_CATEGORY};
+        public static final String[] FAVORITES_COLUMNS = {DataEntryFavorites._ID,DataEntryFavorites.COL_ITEM_ID,DataEntryFavorites.COL_TITLE, DataEntryFavorites.COL_CITY,DataEntryFavorites.COL_RATING,DataEntryFavorites.COL_CATEGORY,DataEntryFavorites.COL_RATING_COLOR};
 
         // method for inserting Articles properties into favorites table
         public void insertRowFavorities(Venue item){
@@ -82,6 +84,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put(DataEntryFavorites.COL_RATING, item.getRating().toString());
             values.put(DataEntryFavorites.COL_CITY, item.getLocation().getCity());
             values.put(DataEntryFavorites.COL_CATEGORY, item.getCategories().get(0).getName());
+            values.put(DataEntryFavorites.COL_RATING_COLOR, item.getRatingColor());
             database.insertOrThrow(DataEntryFavorites.TABLE_NAME,null,values);
         }
 
