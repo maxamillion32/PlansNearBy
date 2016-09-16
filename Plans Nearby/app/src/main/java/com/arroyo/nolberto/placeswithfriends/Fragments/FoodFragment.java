@@ -40,7 +40,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class FoodFragment extends Fragment implements LocationListener {
     private static String baseURL = "https://api.foursquare.com/v2/";
-    ArrayList<Item> places;
+    private ArrayList<Item> places;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter rvAdapter;
     private RecyclerView.LayoutManager rvLayoutManager;
@@ -48,10 +48,10 @@ public class FoodFragment extends Fragment implements LocationListener {
     private String provider;
     private String currentLocation;
     private String city;
-    ConnectivityManager connMgr;
-    NetworkInfo networkInfo;
-    FourSquareServiceInterface fourSquareServiceInterface;
-    ItemClickInterface onItemClickedListener;
+    private ConnectivityManager connMgr;
+    private NetworkInfo networkInfo;
+    private FourSquareServiceInterface fourSquareServiceInterface;
+    private ItemClickInterface onItemClickedListener;
 
 
     @Override

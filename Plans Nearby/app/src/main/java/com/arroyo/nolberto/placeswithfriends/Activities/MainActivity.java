@@ -43,19 +43,19 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener ,ItemClickInterface {
+    public static final String SAVED_VENUES_FRAGMENT = "saved venues fragment";
     private static final int FB_SIGN_IN= 1;
     private static final String CITY_FRAGMENT = "city fragment";
-    public static final String SAVED_VENUES_FRAGMENT = "saved venues fragment";
 
     private PagerAdapter adapter;
     private ViewPager viewPager;
     private CallbackManager callbackManager;
-    private Toolbar toolbar;
     private EnterCityDialogFragment cityDialogFragment;
-    FavsFragment savedDialogFragment;
+    private FavsFragment savedDialogFragment;
+    private Toolbar toolbar;
+    private Menu menu;
     private String city;
     private String query;
-    Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +64,7 @@ public class MainActivity extends AppCompatActivity
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         setFacebook();
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setToolbar();
         setDrawer();
         setPageView();
         handleIntent(getIntent());
@@ -88,15 +87,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         this.menu = menu;
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu and set search widget
         getMenuInflater().inflate(R.menu.main, menu);
-        // set searchManager and searchableInfo
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchableInfo searchableInfo = searchManager.getSearchableInfo(getComponentName());
-
-        // link searchable info with the SearchView
-        SearchView searchView =(SearchView)menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(searchableInfo);
+        setSearchWidget();
 
         return true;
 
@@ -297,5 +290,18 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(MainActivity.this, "sign in ", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    public void setToolbar(){
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
+    public void setSearchWidget(){
+        // set searchManager and searchableInfo
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchableInfo searchableInfo = searchManager.getSearchableInfo(getComponentName());
+
+        // link searchable info with the SearchView
+        SearchView searchView =(SearchView)menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchableInfo);
     }
 }
