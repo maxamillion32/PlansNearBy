@@ -17,6 +17,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildTypes.each {
+        it.buildConfigField 'String', 'FOURSQUARE_CLIENT_ID', FoursquareClientId
+        it.buildConfigField 'String', 'FOURSQUARE_CLIENT_SECRET', FoursquareClientSecret
+        it.buildConfigField 'String', 'EVENTBRITE_TOKEN', EventbriteToken
+        it.buildConfigField 'String', 'GOOGLE_API_KEY', GoogleApiKey
+        it.buildConfigField 'String', 'FACEBOOK_APP_ID', FacebookAppId
+
+    }
 }
 repositories {
     mavenCentral()
