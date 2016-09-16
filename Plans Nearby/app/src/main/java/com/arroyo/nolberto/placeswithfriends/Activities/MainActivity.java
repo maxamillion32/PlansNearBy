@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -20,7 +21,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.arroyo.nolberto.placeswithfriends.DataBaseHelper;
 import com.arroyo.nolberto.placeswithfriends.Fragments.EnterCityDialogFragment;
+import com.arroyo.nolberto.placeswithfriends.Fragments.FavsFragment;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Adapters.PagerAdapter;
 import com.arroyo.nolberto.placeswithfriends.R;
@@ -42,11 +45,14 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener ,ItemClickInterface {
     private static final int FB_SIGN_IN= 1;
     private static final String CITY_FRAGMENT = "city fragment";
+    public static final String SAVED_VENUES_FRAGMENT = "saved venues fragment";
+
     private PagerAdapter adapter;
     private ViewPager viewPager;
     private CallbackManager callbackManager;
     private Toolbar toolbar;
     private EnterCityDialogFragment cityDialogFragment;
+    FavsFragment savedDialogFragment;
     private String city;
     private String query;
     Menu menu;
@@ -64,6 +70,8 @@ public class MainActivity extends AppCompatActivity
         setPageView();
         handleIntent(getIntent());
         cityDialogFragment= new EnterCityDialogFragment();
+        savedDialogFragment = new FavsFragment();
+
 
     }
 
@@ -131,9 +139,13 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_interests) {
             Intent intent = new Intent(MainActivity.this, PickInterestsActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_gallery) {
-            //TODO:
-
+        } else if (id == R.id.nav_saved_places) {
+            if (DataBaseHelper.FAVORITES_COLUMNS.length >=1) {
+                savedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL,R.style.CustomDialog);
+                savedDialogFragment.show(getSupportFragmentManager(), SAVED_VENUES_FRAGMENT);
+            }else{
+             Toast.makeText(this,"You dont have any Favorites Yet", Toast.LENGTH_SHORT).show();
+            }
         }  else if (id == R.id.nav_facebook_login) {
             //checking if someone is logged in to facebook, if so, logging out on click and setting new text
             Profile profile = Profile.getCurrentProfile();

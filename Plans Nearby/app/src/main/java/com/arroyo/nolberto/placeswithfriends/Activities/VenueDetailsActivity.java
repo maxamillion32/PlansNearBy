@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arroyo.nolberto.placeswithfriends.DataBaseHelper;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.EventsServiceInterface;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.FourSquareServiceInterface;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
@@ -46,7 +48,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class VenueDetailsActivity extends AppCompatActivity implements ItemClickInterface, View.OnClickListener {
     private static String baseURL = "https://api.foursquare.com/v2/";
-    private ImageView venueImage,share, directions;
+    private ImageView venueImage,share, directions,saveVenue,venueUrl;
     private TextView venueTitle, venueAddress, venueCategory, venueDescription,tipsReviews;
     private Venue venue;
     private String venueId;
@@ -56,6 +58,7 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
     private ArrayList<String> tipsItems;
     private ListView listView;
     private ArrayAdapter<String> adapter;
+    private DataBaseHelper helper;
 
 
     @Override
@@ -72,6 +75,9 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
         getVenueFromId();
         share.setOnClickListener(this);
         directions.setOnClickListener(this);
+        saveVenue.setOnClickListener(this);
+        venueUrl.setOnClickListener(this);
+
     }
 
     public void setViews() {
@@ -83,6 +89,8 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
         share = (ImageView) findViewById(R.id.activity_details_venue_share_bttn);
         directions = (ImageView) findViewById(R.id.activity_details_venue_directions_bttn);
         tipsReviews = (TextView) findViewById(R.id.activity_venue_details_tips);
+        saveVenue = (ImageView)findViewById(R.id.activity_details_venue_interested_bttn);
+        venueUrl = (ImageView)findViewById(R.id.activity_details_venue_url);
     }
 
     public void getVenueFromId() {
@@ -104,15 +112,15 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
             public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
                 //getting article from api and inserting to database favorites table
                 venue = response.body().getResponse().getVenue();
-                Log.i("venue",venue.getId());
-
                 venueTitle.setText(venue.getName());
                 venueAddress.setText(venue.getLocation().getAddress());
                 venueCategory.setText(venue.getCategories().get(0).getName());
                 tipsReviews.setText("Tips and Reviews");
+                if (venue.getHours()!=null){
+                    venueDescription.setText(venue.getHours().getStatus());
+                }
                 String suffix =venue.getPhotos().getGroups().get(0).getItems().get(0).getSuffix();
                 String prefix = venue.getPhotos().getGroups().get(0).getItems().get(0).getPrefix();
-
                 String imageUrl = prefix+"original"+suffix;
                 Picasso.with(getApplicationContext()).load(imageUrl).into(venueImage);
                 listView = (ListView)findViewById(R.id.tips_list_view);
@@ -120,8 +128,8 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
                 for (int i=0; i<venue.getTips().getGroups().get(0).getItems().size();i++){
                     tipsItems.add(venue.getTips().getGroups().get(0).getItems().get(i).getText());
                 }
-                Log.i("arraylist"," "+tipsItems.size());
                 adapter = new ArrayAdapter<String>(VenueDetailsActivity.this,android.R.layout.simple_list_item_1,android.R.id.text1,tipsItems);
+                listView.setDividerHeight(12);
                 listView.setAdapter(adapter);
 
             }
@@ -130,7 +138,6 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
             @Override
             public void onFailure(Call<CallBackResult> call, Throwable t) {
                 Toast.makeText(VenueDetailsActivity.this, "failed", Toast.LENGTH_SHORT).show();
-                Log.i("Failed", "fail");
             }
         });
     }
@@ -166,7 +173,7 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
 
             case R.id.activity_details_venue_share_bttn:
                 //shares current event to facebook, have option to choose friends
-                shareToFacebook();
+                  shareToFacebook();
                 break;
 
             case R.id.activity_details_venue_directions_bttn:
@@ -177,6 +184,25 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
 
                 break;
             case R.id.activity_details_venue_interested_bttn:
+
+                helper= DataBaseHelper.getInstance(VenueDetailsActivity.this);
+                if (helper.exists(venueId)) {
+                    helper.deleteFavoritesItem(venueId);
+                    Toast.makeText(VenueDetailsActivity.this, "Venue removed from favorites", Toast.LENGTH_SHORT).show();
+                } else {
+                    helper = DataBaseHelper.getInstance(VenueDetailsActivity.this);
+                    helper.insertRowFavorities(venue);
+                    Log.i("name"," " + venue.getName());
+                    Toast.makeText(VenueDetailsActivity.this, "Venue added to favorites", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+            case R.id.activity_details_venue_url:
+
+                Uri uri = Uri.parse(venue.getTips().getGroups().get(0).getItems().get(0).getCanonicalUrl());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+
 
                 break;
 

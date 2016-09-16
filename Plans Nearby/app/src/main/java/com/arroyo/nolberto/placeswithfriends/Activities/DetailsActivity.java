@@ -38,7 +38,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DetailsActivity extends AppCompatActivity implements ItemClickInterface, View.OnClickListener {
     private static String baseURL = "https://www.eventbriteapi.com/";
-    private ImageView eventImage,share, interested, directions;
+    private ImageView eventImage,share, directions;
     private Button tickets;
     private TextView eventTitle, eventAddress, eventCategory, eventDescription;
     private Event event;
@@ -74,7 +74,6 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
         tickets.setOnClickListener(this);
         share.setOnClickListener(this);
         directions.setOnClickListener(this);
-        interested.setOnClickListener(this);
     }
 
     public void setViews() {
@@ -86,7 +85,6 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
         share = (ImageView) findViewById(R.id.activity_details_share_bttn);
         tickets = (Button) findViewById(R.id.activity_details_tickets_bttn);
         directions = (ImageView) findViewById(R.id.activity_details_directions_bttn);
-        interested = (ImageView) findViewById(R.id.activity_details_interested_bttn);
     }
 
     public void getEventFromId() {
@@ -200,9 +198,6 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
                 //Intent openMapsNavigationIntent = new Intent(android.content.Intent.ACTION_VIEW,
                 //      Uri.parse("google.navigation:q=" + event.getVenue().getAddress().getLocalizedAddressDisplay()));
                 //startActivity(intentMap);
-
-                break;
-            case R.id.activity_details_interested_bttn:
 
                 break;
 
