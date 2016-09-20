@@ -1,7 +1,9 @@
 package com.arroyo.nolberto.placeswithfriends.Adapters;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,6 +35,7 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
     private static ItemClickInterface onEventClickListener;
     Context context;
     String price;
+    String aRevisedDate;
     private ArrayList<Event> data;
 
     public CustomRecyclerViewEventsAdapter(ArrayList<Event> inComingData, ItemClickInterface eventClicked) {
@@ -66,6 +69,7 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
         return viewHolder;
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Event dataItem = data.get(position);
@@ -87,7 +91,25 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
 
         itemTitle.setText(dataItem.getName().getText());
 
-        itemDate.setText(dataItem.getStart().getLocal().substring(5, 10));
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            Date dateObj = sdf.parse(dataItem.getStart().getLocal());
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));   // This line converts the given date into UTC time zone
+
+            aRevisedDate = new SimpleDateFormat("EEE, MMM d"+ "\n"+" hh:mm a").format(dateObj);
+
+            if (aRevisedDate.charAt(13)!='0'&& aRevisedDate.charAt(12)<=10 || aRevisedDate.charAt(12)!='0'&& aRevisedDate.charAt(11)<=9){
+                aRevisedDate = new SimpleDateFormat("EEE, MMM d"+ "\n"+" hh:mm a").format(dateObj);
+
+            }else{
+                aRevisedDate = new SimpleDateFormat("EEE, MMM d"+ "\n"+" h:mm a").format(dateObj);
+            }
+            itemDate.setTextSize(14);
+            itemDate.setText(aRevisedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
         if (dataItem.getVenue() != null) {
             distanceMiles.setText(dataItem.getVenue().getAddress().getLocalizedAreaDisplay());
