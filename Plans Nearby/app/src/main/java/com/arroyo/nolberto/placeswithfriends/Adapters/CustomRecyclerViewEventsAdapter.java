@@ -1,7 +1,9 @@
 package com.arroyo.nolberto.placeswithfriends.Adapters;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,8 +33,9 @@ import java.util.TimeZone;
  */
 public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<CustomRecyclerViewEventsAdapter.ViewHolder> {
     private static ItemClickInterface onEventClickListener;
-    Context context;
-    String price;
+    private Context context;
+    private String price;
+    private String formattedEventDate;
     private ArrayList<Event> data;
 
     public CustomRecyclerViewEventsAdapter(ArrayList<Event> inComingData, ItemClickInterface eventClicked) {
@@ -66,6 +69,7 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
         return viewHolder;
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Event dataItem = data.get(position);
@@ -87,7 +91,8 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
 
         itemTitle.setText(dataItem.getName().getText());
 
-        itemDate.setText(dataItem.getStart().getLocal().substring(5, 10));
+       setEventDate(dataItem,itemDate);
+
 
         if (dataItem.getVenue() != null) {
             distanceMiles.setText(dataItem.getVenue().getAddress().getLocalizedAreaDisplay());
@@ -97,12 +102,12 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
             itemCategory.setText(dataItem.getCategory().getNameLocalized());
         }
 //below code has a bug keep testing, crashes app when you scroll or search for free items
-        if (dataItem.getTicketClasses().get(0).getCost() != null) {
+        if (!dataItem.getTicketClasses().isEmpty() && dataItem.getTicketClasses().get(0).getCost() != null) {
             price = dataItem.getTicketClasses().get(0).getCost().getDisplay();
             itemPrice.setText(price);
 
-        } else if (dataItem.getTicketClasses().get(0).getFree()) {
-            price = "Free";
+        } else if (!dataItem.getTicketClasses().isEmpty() && dataItem.getTicketClasses().get(0).getFree()) {
+            price = context.getString(R.string.event_price_free);
             itemPrice.setText(price);
         }
     }
@@ -147,19 +152,26 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
 
         }
     }
+    public void setEventDate(Event dataItem, TextView itemDate){
 
-    public static Date fromISO8601UTC(String dateStr) {
-        TimeZone tz = TimeZone.getTimeZone("UTC");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-        df.setTimeZone(tz);
-
+        final SimpleDateFormat eventDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         try {
-            return df.parse(dateStr);
+            Date eventDate = eventDateFormat.parse(dataItem.getStart().getLocal());
+            eventDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));   // This line converts the given date into UTC time zone
+
+            formattedEventDate = new SimpleDateFormat("EEE, MMM d"+ "\n"+" hh:mm a").format(eventDate);
+
+            if (formattedEventDate.charAt(13)!='0'&& formattedEventDate.charAt(12)<=10 || formattedEventDate.charAt(12)!='0'&& formattedEventDate.charAt(11)<=9){
+                formattedEventDate = new SimpleDateFormat("EEE, MMM d"+ "\n"+" hh:mm a").format(eventDate);
+
+            }else{
+                formattedEventDate = new SimpleDateFormat("EEE, MMM d"+ "\n"+" h:mm a").format(eventDate);
+            }
+            itemDate.setTextSize(14);
+            itemDate.setText(formattedEventDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        return null;
     }
 
 }

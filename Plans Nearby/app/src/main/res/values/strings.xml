@@ -20,4 +20,9 @@
     <string name="location_unavailable">Location not available</string>
     <string name="connection_unavailable">connection not available</string>
     <string name="dialog_enter_city">ENTER CITY</string>
+    <string name="event_when">"When: "</string>
+    <string name="event_api_failed">Event API call failed</string>
+    <string name="event_address_text">"Address: "</string>
+    <string name="add_event_calendar">Add Event to calendar</string>
+    <string name="event_price_free">Free</string>
 </resources>
