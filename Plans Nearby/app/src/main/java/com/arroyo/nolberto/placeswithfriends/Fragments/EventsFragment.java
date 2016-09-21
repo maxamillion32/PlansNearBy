@@ -101,6 +101,7 @@ public class EventsFragment extends Fragment implements LocationListener {
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
+                onSwipeRefresh.setRefreshing(true);
 
                 eventsServiceInterface.getEventsResults(resultQuery, lat, lon).enqueue(new Callback<Events>() {
                     @Override
@@ -134,6 +135,7 @@ public class EventsFragment extends Fragment implements LocationListener {
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
+                onSwipeRefresh.setRefreshing(true);
 
                 eventsServiceInterface.getEventsResults(resultQuery,city).enqueue(new Callback<Events>() {
                     @Override

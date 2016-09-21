@@ -12,9 +12,9 @@
     <string name="details_interested">Interested</string>
     <string name="details_tickets">Tickets</string>
     <string name="nearby_button">Find Around Me</string>
-    <string name="tab_one">FOR ME</string>
-    <string name="tab_events_name">EVENTS</string>
-    <string name="tab_near_me_name">NEAR ME</string>
+    <string name="tab_one_title">FOR ME</string>
+    <string name="tab_events_title">EVENTS</string>
+    <string name="tab_near_me_title">NEAR ME</string>
     <string name="search_text">"Searching for "</string>
     <string name="api_fail_toast">" Error finding events"</string>
     <string name="location_unavailable">Location not available</string>
@@ -25,4 +25,6 @@
     <string name="event_address_text">"Address: "</string>
     <string name="add_event_calendar">Add Event to calendar</string>
     <string name="event_price_free">Free</string>
+    <string name="tab_food_title">FOOD</string>
+    <string name="tab_drinks_title">DRINKS</string>
 </resources>

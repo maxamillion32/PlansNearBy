@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecyclerViewAdapter.ViewHolder> {
     private ArrayList<Item> data;
     private static ItemClickInterface onVenueClickListener;
-    Context context;
+    private Context context;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView itemImage;

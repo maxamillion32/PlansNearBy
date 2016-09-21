@@ -159,13 +159,13 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
             Date eventDate = eventDateFormat.parse(dataItem.getStart().getLocal());
             eventDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));   // This line converts the given date into UTC time zone
 
-            formattedEventDate = new SimpleDateFormat("EEE, MMM d"+ "\n"+" hh:mm a").format(eventDate);
+            formattedEventDate = new SimpleDateFormat("EEE, MMM d, hh:mm a").format(eventDate);
 
             if (formattedEventDate.charAt(13)!='0'&& formattedEventDate.charAt(12)<=10 || formattedEventDate.charAt(12)!='0'&& formattedEventDate.charAt(11)<=9){
-                formattedEventDate = new SimpleDateFormat("EEE, MMM d"+ "\n"+" hh:mm a").format(eventDate);
+                formattedEventDate = new SimpleDateFormat("EEE, MMM d, hh:mm a").format(eventDate);
 
             }else{
-                formattedEventDate = new SimpleDateFormat("EEE, MMM d"+ "\n"+" h:mm a").format(eventDate);
+                formattedEventDate = new SimpleDateFormat("EEE, MMM d, h:mm a").format(eventDate);
             }
             itemDate.setTextSize(14);
             itemDate.setText(formattedEventDate);
