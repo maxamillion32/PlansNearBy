@@ -76,7 +76,7 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
         ImageView itemImage = holder.itemImage;
         TextView itemTitle = holder.itemTitle;
         TextView itemCategory = holder.itemCategory;
-        TextView distanceMiles = holder.distanceMiles;
+        TextView itemAddress = holder.itemAddress;
         TextView itemPrice = holder.itemPrice;
         TextView itemDate = holder.itemDate;
 
@@ -95,7 +95,7 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
 
 
         if (dataItem.getVenue() != null) {
-            distanceMiles.setText(dataItem.getVenue().getAddress().getLocalizedAreaDisplay());
+            itemAddress.setText(dataItem.getVenue().getAddress().getLocalizedAreaDisplay());
         }
 
         if (dataItem.getCategory() != null) {
@@ -119,11 +119,7 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView itemImage;
-        public TextView itemTitle;
-        public TextView itemCategory;
-        public TextView distanceMiles;
-        public TextView itemPrice;
-        public TextView itemDate;
+        public TextView itemTitle,itemCategory,itemAddress,itemPrice,itemDate;
         public CardView cardView;
 
 
@@ -133,7 +129,7 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
             itemImage = (ImageView) itemView.findViewById(R.id.list_item_image);
             itemTitle = (TextView) itemView.findViewById(R.id.list_item_title);
             itemCategory = (TextView) itemView.findViewById(R.id.list_item_category);
-            distanceMiles = (TextView) itemView.findViewById(R.id.list_item_distance);
+            itemAddress = (TextView) itemView.findViewById(R.id.list_item_distance);
             itemPrice = (TextView) itemView.findViewById(R.id.list_item_price);
             itemDate = (TextView) itemView.findViewById(R.id.list_item_date);
             cardView = (CardView) itemView.findViewById(R.id.list_item_cardview);
@@ -167,7 +163,7 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
             }else{
                 formattedEventDate = new SimpleDateFormat("EEE, MMM d, h:mm a").format(eventDate);
             }
-            itemDate.setTextSize(14);
+            //itemDate.setTextSize(14);
             itemDate.setText(formattedEventDate);
         } catch (ParseException e) {
             e.printStackTrace();

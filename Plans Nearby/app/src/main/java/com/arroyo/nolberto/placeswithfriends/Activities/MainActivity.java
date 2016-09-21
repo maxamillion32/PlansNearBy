@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity
         //initializing facebook sdk
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        adapter= (PagerAdapter) viewPager.getAdapter();
         setFacebook();
         setToolbar();
         setDrawer();
