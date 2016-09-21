@@ -51,6 +51,8 @@ public class DrinksFragment extends Fragment implements LocationListener {
     NetworkInfo networkInfo;
     FourSquareServiceInterface fourSquareServiceInterface;
     ItemClickInterface onItemClickedListener;
+    private String section;
+
 
 
     @Override
@@ -79,7 +81,11 @@ public class DrinksFragment extends Fragment implements LocationListener {
         connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         networkInfo = connMgr.getActiveNetworkInfo();
         setLocationManager();
-        getVenuesList();
+        if (section!=null){
+            getListBySection();
+        }else {
+            getVenuesList();
+        }
         return root;
     }
 
@@ -143,6 +149,66 @@ public class DrinksFragment extends Fragment implements LocationListener {
 
         }
     }
+    public void getListBySection() {
+        if (city == null) {
+            if (networkInfo != null && networkInfo.isConnected()) {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(baseURL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
+
+                fourSquareServiceInterface.getCategoryNearby(currentLocation,section).enqueue(new Callback<CallBackResult>() {
+                    @Override
+                    public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
+                        //getting article from api and inserting to database favorites table
+
+                        venues = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
+                        rvAdapter = new CustomRecyclerViewAdapter(venues, (ItemClickInterface) getActivity());
+                        recyclerView.setAdapter(rvAdapter);
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<CallBackResult> call, Throwable t) {
+
+                    }
+
+
+                });
+            }
+        } else {
+            if (networkInfo != null && networkInfo.isConnected()) {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(baseURL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
+
+                fourSquareServiceInterface.getCategoryByCity(city,section).enqueue(new Callback<CallBackResult>() {
+                    @Override
+                    public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
+                        //getting article from api and inserting to database favorites table
+
+                        venues = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
+                        rvAdapter = new CustomRecyclerViewAdapter(venues, (ItemClickInterface) getActivity());
+                        recyclerView.setAdapter(rvAdapter);
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<CallBackResult> call, Throwable t) {
+
+                    }
+
+
+                });
+            }
+
+        }
+    }
 
     public void setLocationManager() {
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -179,6 +245,10 @@ public class DrinksFragment extends Fragment implements LocationListener {
     public void setCity(String city) {
         this.city = city;
         getVenuesList();
+    }
+    public void setValues(String city, String section){
+        this.city = city;
+        this.section = section;
     }
 }
 

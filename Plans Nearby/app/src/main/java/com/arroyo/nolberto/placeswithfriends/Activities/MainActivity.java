@@ -153,7 +153,14 @@ public class MainActivity extends AppCompatActivity
                     item.setTitle(R.string.com_facebook_loginview_log_out_action);
                 }
                 break;
+            case R.id.nav_top_picks:
+                sendCategoryValues("topPicks");
+                break;
+            case R.id.nav_sights:
+                sendCategoryValues("sights");
+                break;
             case R.id.nav_about:
+                sendCategoryValues("this_weekend");
                 break;
 
 
@@ -306,5 +313,11 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+    }
+    public void sendCategoryValues(String category){
+        Intent intent = new Intent(this, SortingActivity.class);
+        intent.putExtra("city", city);
+        intent.putExtra("category",category);
+        startActivity(intent);
     }
 }

@@ -58,6 +58,7 @@ public class EventsFragment extends Fragment implements LocationListener {
     private SwipeRefreshLayout onSwipeRefresh;
     ConnectivityManager connMgr;
     NetworkInfo networkInfo;
+    String weekendOnly;
 
 
     @Override
@@ -86,7 +87,11 @@ public class EventsFragment extends Fragment implements LocationListener {
         connMgr= (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         networkInfo = connMgr.getActiveNetworkInfo();
         setLocationManager();
-        getEventsList();
+        if (weekendOnly!=null){
+            getWeekendList();
+        }else {
+            getEventsList();
+        }
         setOnSwipeRefresh();
         return root;
     }
@@ -166,6 +171,81 @@ public class EventsFragment extends Fragment implements LocationListener {
         }
     }
 
+    public void getWeekendList() {
+
+
+        if (city == null) {
+            if (networkInfo != null && networkInfo.isConnected()) {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(baseURL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
+                onSwipeRefresh.setRefreshing(true);
+
+                eventsServiceInterface.getWeekendResultsNear(weekendOnly, lat, lon).enqueue(new Callback<Events>() {
+                    @Override
+                    public void onResponse(Call<Events> call, Response<Events> response) {
+                        //getting article from api and inserting to database favorites table
+
+                        eventArrayList = (ArrayList<Event>) response.body().getEvents();
+                        //Log.i("check list"," "+eventArrayList.size());
+                        rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
+                        recyclerView.setAdapter(rvAdapter);
+                        onSwipeRefresh.setRefreshing(false);
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Events> call, Throwable t) {
+                        Toast.makeText(getActivity(), R.string.api_fail_toast, Toast.LENGTH_SHORT).show();
+                        Log.i("Failed", "fail");
+                    }
+                });
+
+            } else {
+                // the connection is not available
+//                   Toast.makeText(getActivity(), R.string.connection_unavailable, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            if (networkInfo != null && networkInfo.isConnected()) {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(baseURL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
+                onSwipeRefresh.setRefreshing(true);
+
+                eventsServiceInterface.getWeekendResultsCity(weekendOnly,city).enqueue(new Callback<Events>() {
+                    @Override
+                    public void onResponse(Call<Events> call, Response<Events> response) {
+                        //getting event from api
+
+                        eventArrayList = (ArrayList<Event>) response.body().getEvents();
+                        //Log.i("check list"," "+eventArrayList.size());
+                        rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
+                        recyclerView.setAdapter(rvAdapter);
+                        onSwipeRefresh.setRefreshing(false);
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Events> call, Throwable t) {
+                        Toast.makeText(getActivity(), R.string.api_fail_toast, Toast.LENGTH_SHORT).show();
+                        Log.i("Failed", "fail");
+                    }
+                });
+
+            } else {
+                // the connection is not available
+                //    Toast.makeText(getContext(), R.string.connection_unavailable, Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
     public void setRecyclerView(View v) {
         this.root = v;
         onSwipeRefresh = (SwipeRefreshLayout)v.findViewById(R.id.swipeRefreshLayout);
@@ -209,8 +289,9 @@ public class EventsFragment extends Fragment implements LocationListener {
 
     }
 
-    public void setCity(String city) {
-        //this.city = city;
+    public void setValues(String city,String weekend) {
+        this.city = city;
+        this.weekendOnly=weekend;
     }
     public void setResultQuery(String resultQuery, String city) {
         this.resultQuery = resultQuery;
@@ -229,6 +310,7 @@ public class EventsFragment extends Fragment implements LocationListener {
             }
         });
     }
+
 
 
 

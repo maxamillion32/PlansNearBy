@@ -104,11 +104,13 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
         itemTitle.setText(dataItem.getVenue().getName());
         itemCategory.setText((CharSequence) dataItem.getVenue().getCategories().get(0).getName());
         itemCity.setText(dataItem.getVenue().getLocation().getCity());
+        if (dataItem.getVenue().getFeaturedPhotos()!=null){
         String suffix = dataItem.getVenue().getFeaturedPhotos().getItems().get(0).getSuffix();
         String prefix = dataItem.getVenue().getFeaturedPhotos().getItems().get(0).getPrefix();
 
         String url = prefix + "original" + suffix;
         Picasso.with(context).load(url).into(holder.itemImage);
+    }
     }
 
     @Override
