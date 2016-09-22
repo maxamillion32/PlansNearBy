@@ -153,14 +153,16 @@ public class MainActivity extends AppCompatActivity
                     item.setTitle(R.string.com_facebook_loginview_log_out_action);
                 }
                 break;
-            case R.id.nav_top_picks:
-                sendCategoryValues("topPicks");
+            case R.id.nav_trending:
+                sendCategoryValues("trending");
                 break;
-            case R.id.nav_sights:
-                sendCategoryValues("sights");
+            case R.id.nav_coffee:
+                sendCategoryValues("coffee");
                 break;
-            case R.id.nav_about:
+            case R.id.nav_weekend:
                 sendCategoryValues("this_weekend");
+            break;
+            case R.id.nav_about:
                 break;
 
 
@@ -286,6 +288,9 @@ public class MainActivity extends AppCompatActivity
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_events_title));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_food_title));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_drinks_title));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_top_picks_title));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_sights_title));
+
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -293,7 +298,7 @@ public class MainActivity extends AppCompatActivity
                 (getSupportFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(5);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

@@ -37,7 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by nolbertoarroyo on 9/12/16.
  */
-public class DrinksFragment extends Fragment implements LocationListener {
+public class VenuesFragment extends Fragment implements LocationListener {
     private static String baseURL = "https://api.foursquare.com/v2/";
     ArrayList<Item> venues;
     private RecyclerView recyclerView;
@@ -74,20 +74,18 @@ public class DrinksFragment extends Fragment implements LocationListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_drinks, container, false);
+        View root = inflater.inflate(R.layout.fragment_venues, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
         rvLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(rvLayoutManager);
         connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         networkInfo = connMgr.getActiveNetworkInfo();
         setLocationManager();
-        if (section!=null){
-            getListBySection();
-        }else {
             getVenuesList();
-        }
+
         return root;
     }
+
 
     public void getVenuesList() {
         if (city == null) {
@@ -98,7 +96,7 @@ public class DrinksFragment extends Fragment implements LocationListener {
                         .build();
                 fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
 
-                fourSquareServiceInterface.getDrinksNearby(currentLocation).enqueue(new Callback<CallBackResult>() {
+                fourSquareServiceInterface.getVenuesNearby(currentLocation,section).enqueue(new Callback<CallBackResult>() {
                     @Override
                     public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
                         //getting article from api and inserting to database favorites table
@@ -126,67 +124,7 @@ public class DrinksFragment extends Fragment implements LocationListener {
                         .build();
                 fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
 
-                fourSquareServiceInterface.getDrinksVenues(city).enqueue(new Callback<CallBackResult>() {
-                    @Override
-                    public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
-                        //getting article from api and inserting to database favorites table
-
-                        venues = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
-                        rvAdapter = new CustomRecyclerViewAdapter(venues, (ItemClickInterface) getActivity());
-                        recyclerView.setAdapter(rvAdapter);
-
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<CallBackResult> call, Throwable t) {
-
-                    }
-
-
-                });
-            }
-
-        }
-    }
-    public void getListBySection() {
-        if (city == null) {
-            if (networkInfo != null && networkInfo.isConnected()) {
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(baseURL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-                fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
-
-                fourSquareServiceInterface.getCategoryNearby(currentLocation,section).enqueue(new Callback<CallBackResult>() {
-                    @Override
-                    public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
-                        //getting article from api and inserting to database favorites table
-
-                        venues = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
-                        rvAdapter = new CustomRecyclerViewAdapter(venues, (ItemClickInterface) getActivity());
-                        recyclerView.setAdapter(rvAdapter);
-
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<CallBackResult> call, Throwable t) {
-
-                    }
-
-
-                });
-            }
-        } else {
-            if (networkInfo != null && networkInfo.isConnected()) {
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(baseURL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-                fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
-
-                fourSquareServiceInterface.getCategoryByCity(city,section).enqueue(new Callback<CallBackResult>() {
+                fourSquareServiceInterface.getVenuesByCity(city,section).enqueue(new Callback<CallBackResult>() {
                     @Override
                     public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
                         //getting article from api and inserting to database favorites table
@@ -242,9 +180,12 @@ public class DrinksFragment extends Fragment implements LocationListener {
 
     }
 
-    public void setCity(String city) {
+    public void setCity(String city,String category) {
         this.city = city;
-        getVenuesList();
+        this.section= category;
+        if (section!=null){
+            getVenuesList();
+        }
     }
     public void setValues(String city, String section){
         this.city = city;

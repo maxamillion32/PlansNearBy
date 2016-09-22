@@ -27,4 +27,13 @@
     <string name="event_price_free">Free</string>
     <string name="tab_food_title">FOOD</string>
     <string name="tab_drinks_title">DRINKS</string>
+    <string name="tab_top_picks_title">TOP PICKS</string>
+    <string name="tab_sights_title">SIGHTS</string>
+    <string name="nav_title_about">About</string>
+    <string name="nav_events_this_weekend_title">Events This Weekend</string>
+    <string name="nav_coffee_title">Coffee</string>
+    <string name="nav_trending_title">Trending</string>
+    <string name="nav_login_with_facebook_title">Login With Facebook</string>
+    <string name="nav_my_saved_places_title">My Saved Places</string>
+    <string name="nav_my_interests_title">My Interests</string>
 </resources>

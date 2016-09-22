@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.arroyo.nolberto.placeswithfriends.Fragments.DrinksFragment;
+import com.arroyo.nolberto.placeswithfriends.Fragments.VenuesFragment;
 import com.arroyo.nolberto.placeswithfriends.Fragments.EventsFragment;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.R;
@@ -16,7 +16,7 @@ import com.arroyo.nolberto.placeswithfriends.R;
 public class SortingActivity extends AppCompatActivity implements ItemClickInterface{
     private String city;
     private String section;
-    DrinksFragment venuesFragment;
+    VenuesFragment venuesFragment;
     EventsFragment weekendEvents;
     FragmentTransaction transaction;
 
@@ -37,8 +37,8 @@ public class SortingActivity extends AppCompatActivity implements ItemClickInter
     }
     public void startCategoryFragment(){
 
-        if (section.equalsIgnoreCase("topPicks")|| section.equalsIgnoreCase("sights")) {
-            venuesFragment = new DrinksFragment();
+        if (section.equalsIgnoreCase("trending")|| section.equalsIgnoreCase("coffee")) {
+            venuesFragment = new VenuesFragment();
             venuesFragment.setValues(city, section);
             launchFragment(venuesFragment);
         }else{

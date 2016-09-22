@@ -62,7 +62,7 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
     ConnectivityManager connMgr;
     NetworkInfo networkInfo;
     int category;
-    String[] categories;
+    String categories;
 
 
     @Override

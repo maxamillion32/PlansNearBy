@@ -5,11 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
-import com.arroyo.nolberto.placeswithfriends.Fragments.DrinksFragment;
+import com.arroyo.nolberto.placeswithfriends.Fragments.VenuesFragment;
 import com.arroyo.nolberto.placeswithfriends.Fragments.EventsFragment;
 import com.arroyo.nolberto.placeswithfriends.Fragments.ForYouEventsFragment;
-import com.arroyo.nolberto.placeswithfriends.Fragments.FoodFragment;
-import com.arroyo.nolberto.placeswithfriends.Fragments.NearByFragment;
 
 /**
  * Created by nolbertoarroyo on 8/19/16.
@@ -20,8 +18,11 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
     private String city;
     private ForYouEventsFragment tab1;
     private EventsFragment tab2;
-    private FoodFragment tab3;
-    private DrinksFragment tab4;
+    private VenuesFragment tab3;
+    private VenuesFragment tab4;
+    private VenuesFragment tab5;
+    private VenuesFragment tab6;
+    private String category;
 
 
 
@@ -45,14 +46,27 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
                 Log.d("pager query","result:"+query+ city);
                 return tab2;
             case 2:
-                tab3 = new FoodFragment();
-                tab3.setCity(city);
+                tab3 = new VenuesFragment();
+                category = "food";
+                tab3.setCity(city,category);
                 return tab3;
 
             case 3:
-                tab4 = new DrinksFragment();
-                tab4.setCity(city);
+                tab4 = new VenuesFragment();
+                tab4.setCity(city,"drinks");
                 return tab4;
+            case 4:
+                tab5 = new VenuesFragment();
+                category = "topPicks";
+                tab5.setCity(city,category);
+                Log.d("drinks","result:"+city);
+                return tab5;
+            case 5:
+                tab6 = new VenuesFragment();
+                category = "sights";
+                tab6.setCity(city,category);
+                Log.d("drinks","result:"+city);
+                return tab6;
 
             default:
                 return null;
@@ -71,19 +85,24 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
     public void setQuery(String query, String city) {
         this.query = query;
         this.city = city;
+
         //code below needed when locaiton icon is pressed
         //without this code the icon doesn't work
         if (city == null && query == null) {
             tab2.setResultQuery(query, city);
             tab1.setCategoryQuery(query, city);
-            tab3.setCity(city);
-            tab4.setCity(city);
+            tab3.setCity(city,"food");
+            tab4.setCity(city,"drinks");
+            tab5.setCity(city,"topPicks");
+            tab6.setCity(city,"sights");
         }else if (city!= null){
             tab2.setResultQuery(query, city);
-            tab1.setCategoryQuery(query, city);
-            tab3.setCity(city);
-            tab4.setCity(city);
+        tab1.setCategoryQuery(query, city);
+        tab3.setCity(city,"food");
+        tab4.setCity(city,"drinks");
+        tab5.setCity(city,"topPicks");
+        tab6.setCity(city,"sights");
         }
-        Log.d("adapter query","result:"+query);
+        Log.d("adapter query","result:"+city);
     }
 }
