@@ -12,7 +12,7 @@
     app:cardUseCompatPadding="true"
     card_view:cardCornerRadius="8dp"
     card_view:cardElevation="4dp"
-    card_view:contentPadding="16dp">
+    card_view:contentPadding="8dp">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -63,7 +63,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/list_item_image"
             android:paddingTop="8dp"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/list_item_price"

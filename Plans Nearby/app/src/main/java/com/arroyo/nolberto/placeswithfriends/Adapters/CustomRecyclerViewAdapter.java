@@ -34,35 +34,7 @@ import java.util.ArrayList;
 public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecyclerViewAdapter.ViewHolder> {
     private ArrayList<Item> data;
     private static ItemClickInterface onVenueClickListener;
-    Context context;
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView itemImage;
-        public TextView itemTitle, itemCategory, distanceMiles, itemRating, itemMessage;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            itemImage = (ImageView) itemView.findViewById(R.id.list_item_image);
-            itemTitle = (TextView) itemView.findViewById(R.id.list_item_title);
-            itemCategory = (TextView) itemView.findViewById(R.id.list_item_category);
-            distanceMiles = (TextView) itemView.findViewById(R.id.list_item_distance);
-            itemRating = (TextView) itemView.findViewById(R.id.list_item_price);
-            itemMessage = (TextView) itemView.findViewById(R.id.list_item_date);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String itemClicked = data.get(getLayoutPosition()).getVenue().getId();
-                    onVenueClickListener.onItemClicked(itemClicked);
-                    Intent intent = new Intent(context, VenueDetailsActivity.class);
-                    intent.putExtra("venueId", itemClicked);
-                    context.startActivity(intent);
-                }
-            });
-
-        }
-    }
-
+    private Context context;
 
     @Override
     public String toString() {
@@ -103,9 +75,9 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
         ImageView itemImage = holder.itemImage;
         TextView itemTitle = holder.itemTitle;
         TextView itemCategory = holder.itemCategory;
-        TextView distanceMiles = holder.distanceMiles;
+        TextView itemCity = holder.itemCity;
         TextView itemRating = holder.itemRating;
-        TextView itemMessage = holder.itemMessage;
+        TextView itemPriceTier = holder.itemPriceTier;
         if (dataItem.getVenue().getRating() != null) {
 
             itemRating.setText(dataItem.getVenue().getRating().toString());
@@ -115,31 +87,61 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
             itemRating.setBackgroundColor(Color.parseColor(ratingColor));
         }
         if (dataItem.getVenue().getPrice() != null) {
+            //itemPriceTier.setTextSize(14);
             Integer venueCost = dataItem.getVenue().getPrice().getTier();
             if (venueCost == 1) {
 
-                itemMessage.setText("$");
+                itemPriceTier.setText("$");
             } else if (venueCost == 2) {
-                itemMessage.setText("$$");
+                itemPriceTier.setText("$$");
             } else if (venueCost == 3) {
-                itemMessage.setText("$$$");
+                itemPriceTier.setText("$$$");
             } else if (venueCost == 4) {
-                itemMessage.setText("$$$$");
+                itemPriceTier.setText("$$$$");
             }
         }
 
         itemTitle.setText(dataItem.getVenue().getName());
         itemCategory.setText((CharSequence) dataItem.getVenue().getCategories().get(0).getName());
-        distanceMiles.setText(dataItem.getVenue().getLocation().getCity());
+        itemCity.setText(dataItem.getVenue().getLocation().getCity());
+        if (dataItem.getVenue().getFeaturedPhotos()!=null){
         String suffix = dataItem.getVenue().getFeaturedPhotos().getItems().get(0).getSuffix();
         String prefix = dataItem.getVenue().getFeaturedPhotos().getItems().get(0).getPrefix();
 
         String url = prefix + "original" + suffix;
         Picasso.with(context).load(url).into(holder.itemImage);
     }
+    }
 
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public ImageView itemImage;
+        public TextView itemTitle, itemCategory, itemCity, itemRating, itemPriceTier;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            itemImage = (ImageView) itemView.findViewById(R.id.list_item_image);
+            itemTitle = (TextView) itemView.findViewById(R.id.list_item_title);
+            itemCategory = (TextView) itemView.findViewById(R.id.list_item_category);
+            itemCity = (TextView) itemView.findViewById(R.id.list_item_distance);
+            itemRating = (TextView) itemView.findViewById(R.id.list_item_price);
+            itemPriceTier = (TextView) itemView.findViewById(R.id.list_item_date);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String itemClicked = data.get(getLayoutPosition()).getVenue().getId();
+                    onVenueClickListener.onItemClicked(itemClicked);
+                    Intent intent = new Intent(context, VenueDetailsActivity.class);
+                    intent.putExtra("venueId", itemClicked);
+                    context.startActivity(intent);
+                }
+            });
+
+        }
     }
 }

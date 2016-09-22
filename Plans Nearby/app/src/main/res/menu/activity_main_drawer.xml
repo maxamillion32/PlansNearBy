@@ -5,15 +5,27 @@
         <item
             android:id="@+id/nav_interests"
             android:icon="@android:drawable/btn_star_big_off"
-            android:title="My Interests" />
+            android:title="@string/nav_my_interests_title" />
         <item
             android:id="@+id/nav_saved_places"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="My Saved Places" />
+            android:title="@string/nav_my_saved_places_title" />
         <item
             android:id="@+id/nav_facebook_login"
             android:icon="@drawable/com_facebook_button_icon_white"
-            android:title="Login With Facebook" />
+            android:title="@string/nav_login_with_facebook_title" />
+        <item
+            android:id="@+id/nav_trending"
+            android:icon="@android:drawable/ic_menu_info_details"
+            android:title="@string/nav_trending_title" />
+        <item
+            android:id="@+id/nav_coffee"
+            android:icon="@android:drawable/ic_menu_info_details"
+            android:title="@string/nav_coffee_title" />
+        <item
+            android:id="@+id/nav_weekend"
+            android:icon="@android:drawable/ic_menu_info_details"
+            android:title="@string/nav_events_this_weekend_title" />
     </group>
 
     <item android:title="About">
@@ -21,7 +33,7 @@
             <item
                 android:id="@+id/nav_about"
                 android:icon="@android:drawable/ic_menu_info_details"
-                android:title="About" />
+                android:title="@string/nav_title_about" />
         </menu>
     </item>
 

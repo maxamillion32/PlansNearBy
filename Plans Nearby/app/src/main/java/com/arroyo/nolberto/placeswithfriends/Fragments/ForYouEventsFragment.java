@@ -62,7 +62,7 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
     ConnectivityManager connMgr;
     NetworkInfo networkInfo;
     int category;
-    String[] categories;
+    String categories;
 
 
     @Override
@@ -101,10 +101,14 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
+                onSwipeRefresh.setRefreshing(true);
+
 
                 eventsServiceInterface.getEventsCatResults(resultQuery, lat, lon, toDelimitedString(loadArray("interests", getActivity()))).enqueue(new Callback<Events>() {
                     @Override
                     public void onResponse(Call<Events> call, Response<Events> response) {
+
+
                         //getting article from api and inserting to database favorites table
                         eventArrayList = (ArrayList<Event>) response.body().getEvents();
                         //Log.i("check list"," "+eventArrayList.size());
@@ -133,17 +137,12 @@ public class ForYouEventsFragment extends Fragment implements LocationListener {
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
-                final ProgressDialog loading = new
-                        ProgressDialog(getContext());
-                loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                loading.show();
+                onSwipeRefresh.setRefreshing(true);
 
                 eventsServiceInterface.getEventsCatResults(resultQuery, city, toDelimitedString(loadArray("interests", getActivity()))).enqueue(new Callback<Events>() {
                     @Override
                     public void onResponse(Call<Events> call, Response<Events> response) {
                         //getting event from api
-                        loading.dismiss();
-
                         eventArrayList = (ArrayList<Event>) response.body().getEvents();
                         rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
                         recyclerView.setAdapter(rvAdapter);

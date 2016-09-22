@@ -128,73 +128,51 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        switch (id){
+            case R.id.nav_interests:
+                Intent intent = new Intent(MainActivity.this, PickInterestsActivity.class);
+                startActivity(intent);
 
-        if (id == R.id.nav_interests) {
-            Intent intent = new Intent(MainActivity.this, PickInterestsActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_saved_places) {
-            if (DataBaseHelper.FAVORITES_COLUMNS.length >=1) {
-                savedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL,R.style.CustomDialog);
-                savedDialogFragment.show(getSupportFragmentManager(), SAVED_VENUES_FRAGMENT);
-            }else{
-             Toast.makeText(this,"You dont have any Favorites Yet", Toast.LENGTH_SHORT).show();
-            }
-        }  else if (id == R.id.nav_facebook_login) {
-            //checking if someone is logged in to facebook, if so, logging out on click and setting new text
-            Profile profile = Profile.getCurrentProfile();
-            if (profile != null) {
-                LoginManager.getInstance().logOut();
-                item.setTitle(R.string.com_facebook_loginview_log_in_button_long);
-            } else {
-                LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
-                item.setTitle(R.string.com_facebook_loginview_log_out_action);
-            }
+                break;
+            case R.id.nav_saved_places:
+                if (DataBaseHelper.FAVORITES_COLUMNS.length >=1) {
+                    savedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL,R.style.CustomDialog);
+                    savedDialogFragment.show(getSupportFragmentManager(), SAVED_VENUES_FRAGMENT);
+                }else{
+                    Toast.makeText(this,"You dont have any Favorites Yet", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.nav_facebook_login:
+                //checking if someone is logged in to facebook, if so, logging out on click and setting new text
+                Profile profile = Profile.getCurrentProfile();
+                if (profile != null) {
+                    LoginManager.getInstance().logOut();
+                    item.setTitle(R.string.com_facebook_loginview_log_in_button_long);
+                } else {
+                    LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+                    item.setTitle(R.string.com_facebook_loginview_log_out_action);
+                }
+                break;
+            case R.id.nav_trending:
+                sendCategoryValues("trending");
+                break;
+            case R.id.nav_coffee:
+                sendCategoryValues("coffee");
+                break;
+            case R.id.nav_weekend:
+                sendCategoryValues("this_weekend");
+            break;
+            case R.id.nav_about:
+                break;
 
 
-        } else if (id == R.id.nav_about) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+    } DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
 
-    public void setPageView() {
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_one));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_events_name));
-        tabLayout.addTab(tabLayout.newTab().setText("FOOD"));
-        tabLayout.addTab(tabLayout.newTab().setText("DRINKS"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        adapter = new PagerAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount());
-
-        viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(3);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-    }
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Toast.makeText(MainActivity.this, R.string.connection_unavailable, Toast.LENGTH_SHORT).show();
@@ -303,5 +281,48 @@ public class MainActivity extends AppCompatActivity
         // link searchable info with the SearchView
         SearchView searchView =(SearchView)menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchableInfo);
+    }
+    public void setPageView() {
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_one_title));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_events_title));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_food_title));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_drinks_title));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_top_picks_title));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_sights_title));
+
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        adapter = new PagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+
+        viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(5);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+    }
+    public void sendCategoryValues(String category){
+        Intent intent = new Intent(this, SortingActivity.class);
+        intent.putExtra("city", city);
+        intent.putExtra("category",category);
+        startActivity(intent);
     }
 }

@@ -34,13 +34,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-
 /**
- * Created by nolbertoarroyo on 8/19/16.
+ * Created by nolbertoarroyo on 9/12/16.
  */
-public class FoodFragment extends Fragment implements LocationListener {
+public class VenuesFragment extends Fragment implements LocationListener {
     private static String baseURL = "https://api.foursquare.com/v2/";
-    private ArrayList<Item> places;
+    ArrayList<Item> venues;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter rvAdapter;
     private RecyclerView.LayoutManager rvLayoutManager;
@@ -48,10 +47,12 @@ public class FoodFragment extends Fragment implements LocationListener {
     private String provider;
     private String currentLocation;
     private String city;
-    private ConnectivityManager connMgr;
-    private NetworkInfo networkInfo;
-    private FourSquareServiceInterface fourSquareServiceInterface;
-    private ItemClickInterface onItemClickedListener;
+    ConnectivityManager connMgr;
+    NetworkInfo networkInfo;
+    FourSquareServiceInterface fourSquareServiceInterface;
+    ItemClickInterface onItemClickedListener;
+    private String section;
+
 
 
     @Override
@@ -73,16 +74,18 @@ public class FoodFragment extends Fragment implements LocationListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(com.arroyo.nolberto.placeswithfriends.R.layout.fragment_food, container, false);
+        View root = inflater.inflate(R.layout.fragment_venues, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
         rvLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(rvLayoutManager);
         connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         networkInfo = connMgr.getActiveNetworkInfo();
         setLocationManager();
-        getVenuesList();
+            getVenuesList();
+
         return root;
     }
+
 
     public void getVenuesList() {
         if (city == null) {
@@ -93,13 +96,13 @@ public class FoodFragment extends Fragment implements LocationListener {
                         .build();
                 fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
 
-                fourSquareServiceInterface.getFoodNearby(currentLocation).enqueue(new Callback<CallBackResult>() {
+                fourSquareServiceInterface.getVenuesNearby(currentLocation,section).enqueue(new Callback<CallBackResult>() {
                     @Override
                     public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
                         //getting article from api and inserting to database favorites table
 
-                        places = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
-                        rvAdapter = new CustomRecyclerViewAdapter(places, (ItemClickInterface) getActivity());
+                        venues = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
+                        rvAdapter = new CustomRecyclerViewAdapter(venues, (ItemClickInterface) getActivity());
                         recyclerView.setAdapter(rvAdapter);
 
 
@@ -121,13 +124,13 @@ public class FoodFragment extends Fragment implements LocationListener {
                         .build();
                 fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
 
-                fourSquareServiceInterface.getFoodVenues(city).enqueue(new Callback<CallBackResult>() {
+                fourSquareServiceInterface.getVenuesByCity(city,section).enqueue(new Callback<CallBackResult>() {
                     @Override
                     public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
                         //getting article from api and inserting to database favorites table
 
-                        places = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
-                        rvAdapter = new CustomRecyclerViewAdapter(places, (ItemClickInterface) getActivity());
+                        venues = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
+                        rvAdapter = new CustomRecyclerViewAdapter(venues, (ItemClickInterface) getActivity());
                         recyclerView.setAdapter(rvAdapter);
 
 
@@ -177,9 +180,16 @@ public class FoodFragment extends Fragment implements LocationListener {
 
     }
 
-    public void setCity(String city) {
+    public void setCity(String city,String category) {
         this.city = city;
-        getVenuesList();
+        this.section= category;
+        if (section!=null){
+            getVenuesList();
+        }
+    }
+    public void setValues(String city, String section){
+        this.city = city;
+        this.section = section;
     }
 }
 
