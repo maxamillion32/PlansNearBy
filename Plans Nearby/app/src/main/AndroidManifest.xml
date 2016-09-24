@@ -48,7 +48,7 @@
             android:value="AIzaSyDPidBCQ6IC8dTrtWn1PJwm_2Y-_9GtddE" />
 
         <activity
-            android:name=".Activities.DetailsActivity"
+            android:name=".Activities.EventDetailsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.PickInterestsActivity"

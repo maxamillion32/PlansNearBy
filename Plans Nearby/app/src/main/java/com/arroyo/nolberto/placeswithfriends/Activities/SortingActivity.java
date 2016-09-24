@@ -6,38 +6,42 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.arroyo.nolberto.placeswithfriends.Fragments.VenuesFragment;
+import com.arroyo.nolberto.placeswithfriends.Constants;
 import com.arroyo.nolberto.placeswithfriends.Fragments.EventsFragment;
+import com.arroyo.nolberto.placeswithfriends.Fragments.VenuesFragment;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.R;
 
+/**
+ * activity receives nav drawer selections, and host fragments selected in nav drawer
+ * trending, coffee, and about fragments
+ */
 public class SortingActivity extends AppCompatActivity implements ItemClickInterface{
-    private String city;
-    private String section;
-    VenuesFragment venuesFragment;
-    EventsFragment weekendEvents;
-    FragmentTransaction transaction;
+    private VenuesFragment venuesFragment;
+    private EventsFragment weekendEvents;
+    private FragmentTransaction transaction;
+    private String city,section;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sorting);
-        recieveEventSelectedId();
+        receiveCategoryFromMain();
         startCategoryFragment();
 
     }
-    public void recieveEventSelectedId() {
+    //gets category and city from MainActivity intent
+    public void receiveCategoryFromMain() {
         Intent intent = getIntent();
-        this.city = intent.getStringExtra("city");
-        this.section = intent.getStringExtra("category");
-        Log.i("check"," "+section);
+        this.city = intent.getStringExtra(Constants.MAIN_DRAWER_CITY_KEY);
+        this.section = intent.getStringExtra(Constants.MAIN_DRAWER_CATEGORY_KEY);
 
     }
+    //checking which fragment to start using the category received from MainActivity
     public void startCategoryFragment(){
 
-        if (section.equalsIgnoreCase("trending")|| section.equalsIgnoreCase("coffee")) {
+        if (section.equalsIgnoreCase(Constants.MAIN_CATEGORY_TRENDING)|| section.equalsIgnoreCase(Constants.MAIN_CATEGORY_COFFEE)) {
             venuesFragment = new VenuesFragment();
             venuesFragment.setValues(city, section);
             launchFragment(venuesFragment);
@@ -49,6 +53,7 @@ public class SortingActivity extends AppCompatActivity implements ItemClickInter
         }
 
     }
+
     public void launchFragment (Fragment fragment){
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -58,11 +63,7 @@ public class SortingActivity extends AppCompatActivity implements ItemClickInter
 
     }
 
-    @Override
-    public void onItemClicked(String selectedItem) {
-
-    }
-
+    //fragments detached
     @Override
     protected void onPause() {
         super.onPause();
@@ -70,5 +71,10 @@ public class SortingActivity extends AppCompatActivity implements ItemClickInter
         transaction.detach(weekendEvents);
         this.city=null;
         this.section=null;
+    }
+
+    @Override
+    public void onItemClicked(String selectedItem) {
+
     }
 }

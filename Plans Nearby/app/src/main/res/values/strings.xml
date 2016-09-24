@@ -36,4 +36,17 @@
     <string name="nav_login_with_facebook_title">Login With Facebook</string>
     <string name="nav_my_saved_places_title">My Saved Places</string>
     <string name="nav_my_interests_title">My Interests</string>
+    <string name="failed_venue_callback_toast">Problem fetching venues</string>
+    <string name="venues_no_results_toast">Sorry, there are no venues available</string>
+    <string name="main_no_saved_venues_toast">You don\'t have any Favorites Yet</string>
+    <string name="location_permission_rationale_toast">Location required to show you the best events and places</string>
+    <string name="permission_granted_toast">Permission granted</string>
+    <string name="permission_denied_tost">Oops you just denied the permission</string>
+    <string name="details_calendar_permission_toast">You need to grant calendar permission to add event</string>
+    <string name="venues_details_tips">Tips and Reviews</string>
+    <string name="venue_details_failed_api_toast">failed to retrieve event details</string>
+    <string name="venue_details_removed_venue_toast">Venue removed from favorites</string>
+    <string name="venue_details_added_venue_favs">Venue added to favorites</string>
+    <string name="city_dialog_submit_text">submit</string>
+    <string name="city_dialog_cancel_text">CANCEL</string>
 </resources>

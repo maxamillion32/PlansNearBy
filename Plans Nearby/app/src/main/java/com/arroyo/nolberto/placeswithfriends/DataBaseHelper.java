@@ -11,6 +11,7 @@ import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.Venue;
 
 /**
  * Created by nolbertoarroyo on 9/14/16.
+ * database helper for user saved venues
  */
 public class DataBaseHelper extends SQLiteOpenHelper {
     

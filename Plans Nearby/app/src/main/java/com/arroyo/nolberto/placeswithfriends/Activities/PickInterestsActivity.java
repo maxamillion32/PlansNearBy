@@ -9,12 +9,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.arroyo.nolberto.placeswithfriends.Constants;
 import com.arroyo.nolberto.placeswithfriends.R;
 
 import java.util.ArrayList;
 
+/**
+ * this activity allows user to select event interests and save selections into ArrayList as selected
+ * once all selections are made it converts list to array and save in shared prefs
+ * activity goes to Main after user completes selections
+ */
 public class PickInterestsActivity extends AppCompatActivity implements View.OnClickListener {
-    ArrayList<String> userInterests;
+    private ArrayList<String> userInterests;
     private TextView music, businessProfessional, foodDrink, communityCulture, performingVisualArts, filmMediaEntertainment, other, sportsFitness,
             healthWellness, scienceTech, travelOutdoor, charityCauses, religionSpirituality,
             familyEducation, seasonalHoliday, govPolitics, fashionBeauty, autoAirBoat, homeLifestyle, hobbiesSpecialInterests;
@@ -25,32 +31,9 @@ public class PickInterestsActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_interests);
         setViews();
+        setTextViewListeners();
         userInterests = new ArrayList<>();
-        music.setOnClickListener(this);
-        businessProfessional.setOnClickListener(this);
-        foodDrink.setOnClickListener(this);
-        communityCulture.setOnClickListener(this);
-        performingVisualArts.setOnClickListener(this);
-        filmMediaEntertainment.setOnClickListener(this);
-        other.setOnClickListener(this);
-        sportsFitness.setOnClickListener(this);
-        healthWellness.setOnClickListener(this);
-        scienceTech.setOnClickListener(this);
-        travelOutdoor.setOnClickListener(this);
-        charityCauses.setOnClickListener(this);
-        religionSpirituality.setOnClickListener(this);
-        familyEducation.setOnClickListener(this);
-        seasonalHoliday.setOnClickListener(this);
-        govPolitics.setOnClickListener(this);
-        fashionBeauty.setOnClickListener(this);
-        autoAirBoat.setOnClickListener(this);
-        homeLifestyle.setOnClickListener(this);
-        hobbiesSpecialInterests.setOnClickListener(this);
-
-        String[] interests = userInterests.toArray(new String[userInterests.size()]);
-        saveArray(interests, "interests", this);
-
-        finish.setOnClickListener(this);
+        convertArraylistToArray();
 
 
     }
@@ -81,6 +64,8 @@ public class PickInterestsActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    //click listener, switch statement for selecting categories, when clicked value of category is added to
+    //userInterests ArrayList, TextView background color changed to blue showing selection
     @Override
     public void onClick(View view) {
         String categoryId;
@@ -187,7 +172,7 @@ public class PickInterestsActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.finishButton:
                 String[] interests = userInterests.toArray(new String[userInterests.size()]);
-                saveArray(interests, "interests", this);
+                saveArray(interests, Constants.PREFS_INTEREST_ARRAY, this);
                 Intent intent = new Intent(PickInterestsActivity.this, MainActivity.class);
                 startActivity(intent);
                 break;
@@ -196,13 +181,53 @@ public class PickInterestsActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    /**
+     * saveArray() saves array of categories selected by user into shared prefs
+     *
+     * @param array
+     * @param arrayName
+     * @param mContext
+     * @return
+     */
     public boolean saveArray(String[] array, String arrayName, Context mContext) {
-        SharedPreferences prefs = mContext.getSharedPreferences("preferencename", 0);
+        SharedPreferences prefs = mContext.getSharedPreferences(Constants.SHAREPREFS, 0);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(arrayName + "_size", array.length);
         for (int i = 0; i < array.length; i++)
             editor.putString(arrayName + "_" + i, array[i]);
         return editor.commit();
+    }
+
+
+    //setting textViewListeners and button listeners for selecting categories in flowLayout
+    public void setTextViewListeners() {
+        music.setOnClickListener(this);
+        businessProfessional.setOnClickListener(this);
+        foodDrink.setOnClickListener(this);
+        communityCulture.setOnClickListener(this);
+        performingVisualArts.setOnClickListener(this);
+        filmMediaEntertainment.setOnClickListener(this);
+        other.setOnClickListener(this);
+        sportsFitness.setOnClickListener(this);
+        healthWellness.setOnClickListener(this);
+        scienceTech.setOnClickListener(this);
+        travelOutdoor.setOnClickListener(this);
+        charityCauses.setOnClickListener(this);
+        religionSpirituality.setOnClickListener(this);
+        familyEducation.setOnClickListener(this);
+        seasonalHoliday.setOnClickListener(this);
+        govPolitics.setOnClickListener(this);
+        fashionBeauty.setOnClickListener(this);
+        autoAirBoat.setOnClickListener(this);
+        homeLifestyle.setOnClickListener(this);
+        hobbiesSpecialInterests.setOnClickListener(this);
+        finish.setOnClickListener(this);
+    }
+
+    //converting arraylist to Array and saving array to shareprefs
+    public void convertArraylistToArray(){
+        String[] interests = userInterests.toArray(new String[userInterests.size()]);
+        saveArray(interests, Constants.PREFS_INTEREST_ARRAY, this);
     }
 
 }

@@ -1,12 +1,21 @@
 package com.arroyo.nolberto.placeswithfriends.Activities;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
@@ -21,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.arroyo.nolberto.placeswithfriends.Constants;
 import com.arroyo.nolberto.placeswithfriends.DataBaseHelper;
 import com.arroyo.nolberto.placeswithfriends.Fragments.EnterCityDialogFragment;
 import com.arroyo.nolberto.placeswithfriends.Fragments.FavsFragment;
@@ -41,21 +51,27 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener ,ItemClickInterface {
-    public static final String SAVED_VENUES_FRAGMENT = "saved venues fragment";
-    private static final int FB_SIGN_IN= 1;
-    private static final String CITY_FRAGMENT = "city fragment";
+/**
+ * Activity starts application, gets values from location manager,
+ * cityDialogFragment and user selection in nav drawer and sends
+ * values to viewpager adapter
+ */
 
-    private PagerAdapter adapter;
-    private ViewPager viewPager;
-    private CallbackManager callbackManager;
-    private EnterCityDialogFragment cityDialogFragment;
-    private FavsFragment savedDialogFragment;
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener, ItemClickInterface, LocationListener {
+    private static final int FB_SIGN_IN = 1;
+    public static Activity activity;
     private Toolbar toolbar;
     private Menu menu;
-    private String city;
-    private String query;
+    private MenuItem item;
+    private PagerAdapter adapter;
+    private ViewPager viewPager;
+    private EnterCityDialogFragment cityDialogFragment;
+    private FavsFragment savedDialogFragment;
+    private LocationManager locationManager;
+    private CallbackManager callbackManager;
+    private Location location;
+    private String city, query, provider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,26 +79,19 @@ public class MainActivity extends AppCompatActivity
         //initializing facebook sdk
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
+        activity = this;
+        setLocationManager();
         setFacebook();
         setToolbar();
         setDrawer();
         setPageView();
         handleIntent(getIntent());
-        cityDialogFragment= new EnterCityDialogFragment();
+        cityDialogFragment = new EnterCityDialogFragment();
         savedDialogFragment = new FavsFragment();
 
 
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
@@ -97,110 +106,32 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-            case R.id.action_settings:
-
-                return true;
 
             case R.id.location:
-                if (city== null) {
-                    cityDialogFragment.show(getSupportFragmentManager(), CITY_FRAGMENT);
-                }else {
-                    menu.findItem(R.id.location).setIcon(R.drawable.ic_near_me_white_24dp);
-                    this.city = null;
-                    adapter.setQuery(query, city);
-                }
+                cityOrNearDialog();
                 return true;
 
 
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        switch (id){
-            case R.id.nav_interests:
-                Intent intent = new Intent(MainActivity.this, PickInterestsActivity.class);
-                startActivity(intent);
 
-                break;
-            case R.id.nav_saved_places:
-                if (DataBaseHelper.FAVORITES_COLUMNS.length >=1) {
-                    savedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL,R.style.CustomDialog);
-                    savedDialogFragment.show(getSupportFragmentManager(), SAVED_VENUES_FRAGMENT);
-                }else{
-                    Toast.makeText(this,"You dont have any Favorites Yet", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.nav_facebook_login:
-                //checking if someone is logged in to facebook, if so, logging out on click and setting new text
-                Profile profile = Profile.getCurrentProfile();
-                if (profile != null) {
-                    LoginManager.getInstance().logOut();
-                    item.setTitle(R.string.com_facebook_loginview_log_in_button_long);
-                } else {
-                    LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
-                    item.setTitle(R.string.com_facebook_loginview_log_out_action);
-                }
-                break;
-            case R.id.nav_trending:
-                sendCategoryValues("trending");
-                break;
-            case R.id.nav_coffee:
-                sendCategoryValues("coffee");
-                break;
-            case R.id.nav_weekend:
-                sendCategoryValues("this_weekend");
-            break;
-            case R.id.nav_about:
-                break;
+     //checking if someone is logged in to facebook, if so, logging out on click and setting new text
 
-
-    } DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Toast.makeText(MainActivity.this, R.string.connection_unavailable, Toast.LENGTH_SHORT).show();
-
-    }
-    @Override
-    protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
-    }
-
-    //running handleIntent which calls checks if there was a search, displays toast with search query
-    //calling setQuery(), to send query to viewpager, tab is switched to search fragment tab when a search is made
-    private void handleIntent(Intent intent) {
-
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            query = intent.getStringExtra(SearchManager.QUERY);
-            Toast.makeText(MainActivity.this, getString(R.string.search_text) + query, Toast.LENGTH_SHORT).show();
-            adapter.setQuery(query, city);
-            viewPager.setCurrentItem(1);
-            Log.d("mainActivity query","result:"+query +city);
+    public void facebookLoginLogout() {
+        Profile profile = Profile.getCurrentProfile();
+        if (profile != null) {
+            LoginManager.getInstance().logOut();
+            item.setTitle(R.string.com_facebook_loginview_log_in_button_long);
+        } else {
+            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+            item.setTitle(R.string.com_facebook_loginview_log_out_action);
         }
-
     }
 
-    @Override
-    public void onItemClicked(String selectedItem) {
-
-    }
     //Method sets up facebook login call
     public void setFacebook() {
         callbackManager = CallbackManager.Factory.create();
@@ -223,7 +154,51 @@ public class MainActivity extends AppCompatActivity
 
 
     }
-    public void setDrawer(){
+
+    public void setToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
+
+    public void setSearchWidget() {
+        // set searchManager and searchableInfo
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchableInfo searchableInfo = searchManager.getSearchableInfo(getComponentName());
+
+        // link searchable info with the SearchView
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchableInfo);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    //running handleIntent which calls checks if there was a search, displays toast with search query
+    //calling setQuery(), to send query to viewpager, tab is switched to search fragment tab when a search is made
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            query = intent.getStringExtra(SearchManager.QUERY);
+            Toast.makeText(MainActivity.this, getString(R.string.search_text) + query, Toast.LENGTH_SHORT).show();
+            adapter.setQuery(query, city);
+            viewPager.setCurrentItem(1);
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public void setDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -233,55 +208,47 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-    public void onUserSelectValue(String selectedValue) {
-        // TODO add your implementation.
-        Log.i("selectedValue", selectedValue);
-        menu.findItem(R.id.location).setIcon(R.drawable.ic_location_city_white_24dp);
-        this.city = selectedValue;
-        this.query=null;
-        adapter.setQuery(query, city);
 
-    }
-    public void loginFirebase(){
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-       if (auth.getCurrentUser()!= null) {
-       Toast.makeText(MainActivity.this,auth.getCurrentUser().getDisplayName()+ "signed on",Toast.LENGTH_SHORT).show();
-       }else {
-        startActivityForResult(AuthUI.getInstance()
-                   .createSignInIntentBuilder()
-                   .setProviders(
-                           AuthUI.FACEBOOK_PROVIDER)
-                   .build(),1);
-           LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
-       }
-    }
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == FB_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                // user is signed in!
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
-            } else {
-                // user is not signed in. Maybe just wait for the user to press
-                // "sign in" again, or show a message
-                Toast.makeText(MainActivity.this, "sign in ", Toast.LENGTH_SHORT).show();
-            }
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        //sends selection values to be passed to SortingActivity
+        //to start fragments
+        this.item = item;
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.nav_interests:
+                //open interest activity
+                Intent intent = new Intent(MainActivity.this, PickInterestsActivity.class);
+                startActivity(intent);
+
+                break;
+            case R.id.nav_saved_places:
+                viewSavedPlacesDialog();
+                break;
+            case R.id.nav_facebook_login:
+                facebookLoginLogout();
+                break;
+            case R.id.nav_trending:
+                sendCategoryValues(Constants.MAIN_CATEGORY_TRENDING);
+                break;
+            case R.id.nav_coffee:
+                sendCategoryValues(Constants.MAIN_CATEGORY_COFFEE);
+                break;
+            case R.id.nav_weekend:
+                sendCategoryValues(Constants.MAIN_CATEGORY_WEEKEND);
+                break;
+            case R.id.nav_about:
+                break;
+
+
         }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
-    public void setToolbar(){
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-    }
-    public void setSearchWidget(){
-        // set searchManager and searchableInfo
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchableInfo searchableInfo = searchManager.getSearchableInfo(getComponentName());
 
-        // link searchable info with the SearchView
-        SearchView searchView =(SearchView)menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(searchableInfo);
-    }
     public void setPageView() {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_one_title));
@@ -319,10 +286,191 @@ public class MainActivity extends AppCompatActivity
         });
 
     }
-    public void sendCategoryValues(String category){
+
+
+    //sending nav drawer selected values to SortingActivity, to launch fragment
+
+    public void sendCategoryValues(String category) {
         Intent intent = new Intent(this, SortingActivity.class);
-        intent.putExtra("city", city);
-        intent.putExtra("category",category);
+        intent.putExtra(Constants.MAIN_DRAWER_CITY_KEY, city);
+        intent.putExtra(Constants.MAIN_DRAWER_CATEGORY_KEY, category);
         startActivity(intent);
     }
+
+
+    //method returns selectedValue from cityDialogFragment
+    //calls adapter.setQuery() to pass values to pagerAdapter
+
+    public void onUserSelectValue(String selectedValue) {
+        // TODO add your implementation.
+        menu.findItem(R.id.location).setIcon(R.drawable.ic_location_city_white_24dp);
+        this.city = selectedValue;
+        this.query = null;
+        adapter.setQuery(query, city);
+
+    }
+
+
+    //method launches dialog fragment which allows user to input city when menu item is clicked
+    //allows for toggling between city results and current location, changes icon to specify
+    //current results
+
+    public void cityOrNearDialog() {
+        if (city == null) {
+            cityDialogFragment.show(getSupportFragmentManager(), Constants.CITY_FRAGMENT);
+        } else {
+            menu.findItem(R.id.location).setIcon(R.drawable.ic_near_me_white_24dp);
+            this.city = null;
+            adapter.setQuery(query, city);
+        }
+    }
+
+
+    //checks database to see if there are saved venues,
+    //if so, savedDialogFragment is launched displaying saved venues
+    //else, toast is displayed
+
+    public void viewSavedPlacesDialog() {
+        if (DataBaseHelper.FAVORITES_COLUMNS.length >= 1) {
+            savedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
+            savedDialogFragment.show(getSupportFragmentManager(), Constants.SAVED_VENUES_FRAGMENT);
+        } else {
+            Toast.makeText(this, R.string.main_no_saved_venues_toast, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    //checking for Location permissions, if granted, setup locationManager and get location
+
+    public void setLocationManager() {
+
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Toast.makeText(this, R.string.location_permission_rationale_toast, Toast.LENGTH_LONG).show();
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        SplashActivity.PERMISSION_LOCATION_REQUEST_CODE);
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        SplashActivity.PERMISSION_LOCATION_REQUEST_CODE);
+
+            }
+
+
+        } else {
+            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+            // Define the criteria how to select the location provider -> use
+            // default
+            Criteria criteria = new Criteria();
+            provider = locationManager.getBestProvider(criteria, false);
+
+            location = locationManager.getLastKnownLocation(provider);
+
+            // Initialize the location fields
+            if (location != null) {
+                onLocationChanged(location);
+            } else {
+                Toast.makeText(this, R.string.location_unavailable, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        //Checking the request code of our request
+        if (requestCode == SplashActivity.PERMISSION_LOCATION_REQUEST_CODE) {
+
+            //If permission is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                setLocationManager();
+                //Displaying a toast
+                Toast.makeText(this, R.string.permission_granted_toast, Toast.LENGTH_LONG).show();
+            } else {
+                //Displaying another toast if permission is not granted
+                Toast.makeText(this, R.string.permission_denied_tost, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+        this.location = location;
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(MainActivity.this, R.string.connection_unavailable, Toast.LENGTH_SHORT).show();
+
+    }
+
+
+    @Override
+    public void onItemClicked(String selectedItem) {
+
+    }
+
+
+    //Firebase Login for later use
+    public void loginFirebase() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            Toast.makeText(MainActivity.this, auth.getCurrentUser().getDisplayName() + "signed on", Toast.LENGTH_SHORT).show();
+        } else {
+            startActivityForResult(AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setProviders(
+                            AuthUI.FACEBOOK_PROVIDER)
+                    .build(), 1);
+            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+        }
+    }
+
+    //Firebase signIn result, will implement in later release
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FB_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // user is signed in!
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+            } else {
+                // user is not signed in. Maybe just wait for the user to press
+                Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 }
+

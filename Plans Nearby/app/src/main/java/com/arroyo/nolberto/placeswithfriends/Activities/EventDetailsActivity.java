@@ -1,30 +1,32 @@
 package com.arroyo.nolberto.placeswithfriends.Activities;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.CalendarContract;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arroyo.nolberto.placeswithfriends.Constants;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.EventsServiceInterface;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Models.EventBriteModels.Event;
@@ -46,16 +48,20 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class DetailsActivity extends AppCompatActivity implements ItemClickInterface, View.OnClickListener {
-    private static String baseURL = "https://www.eventbriteapi.com/";
+/**
+ * this activity displays event details
+ */
+public class EventDetailsActivity extends AppCompatActivity implements ItemClickInterface, View.OnClickListener {
+    private static final String CALENDAR_PERMISSION = Manifest.permission.WRITE_CALENDAR;
+    private static final int PERMISSION_REQUEST_CODE = 12345;
     private ImageView eventImage, share, directions;
     private Button tickets;
     private TextView eventTitle, eventAddress, eventCategory, eventDescription, eventDate;
+    private ShareDialog shareDialog;
+    private CallbackManager callbackManager;
+    private EventsServiceInterface eventsServiceInterface;
     private Event event;
     private String eventId;
-    private EventsServiceInterface eventsServiceInterface;
-    private CallbackManager callbackManager;
-    private ShareDialog shareDialog;
 
 
     @Override
@@ -68,17 +74,14 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         setViews();
-        recieveEventSelectedId();
-        getEventFromId();
+        receiveEventSelectedId();
+        getEventById();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addEventToCalendar();
-                Snackbar.make(view, R.string.add_event_calendar, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
             }
         });
         tickets.setOnClickListener(this);
@@ -86,8 +89,9 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
         directions.setOnClickListener(this);
     }
 
-
-    public void getEventFromId() {
+    //get event by id using retrofit
+    //takes results and populates views
+    public void getEventById() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
@@ -95,7 +99,7 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
             return;
         }
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseURL)
+                .baseUrl(Constants.EVENT_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         eventsServiceInterface = retrofit.create(EventsServiceInterface.class);
@@ -107,29 +111,30 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
                 //getting article from api and inserting to database favorites table
                 event = response.body();
 
+                setdateText();
+                //set event title
                 eventTitle.setText(event.getName().getText());
+                //set event description
                 if (event.getDescription().getHtml() != null) {
 
                     eventDescription.setText(Html.fromHtml(event.getDescription().getHtml()));
                     eventDescription.setMovementMethod(LinkMovementMethod.getInstance());
                 }
 
-                setdateText();
-
-
+                //set event address if available
                 if (event.getVenue() != null) {
 
-                    String eventaddressText = getString(R.string.event_address_text) + event.getVenue().getAddress().getLocalizedAddressDisplay();
-                    eventAddress.setText(formatEventText(eventaddressText, 8));
+                    String eventAddressText = getString(R.string.event_address_text) + event.getVenue().getAddress().getLocalizedAddressDisplay();
+                    eventAddress.setText(formatEventText(eventAddressText, 8));
                 }
 
-
+                //set event category if available
                 if (event.getCategory() != null) {
                     eventCategory.setText(event.getCategory().getNameLocalized());
                 }
-
+                //set event logo if available, else set default image
                 if (event.getLogo() != null) {
-                    Picasso.with(DetailsActivity.this).load(event.getLogo().getUrl()).into(eventImage);
+                    Picasso.with(EventDetailsActivity.this).load(event.getLogo().getUrl()).into(eventImage);
                 } else {
                     eventImage.setImageResource(R.drawable.no_images);
                 }
@@ -139,43 +144,49 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
 
             @Override
             public void onFailure(Call<Event> call, Throwable t) {
-                Toast.makeText(DetailsActivity.this, R.string.event_api_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventDetailsActivity.this, R.string.event_api_failed, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     // this method
-    public void recieveEventSelectedId() {
+    public void receiveEventSelectedId() {
         Intent intent = getIntent();
-        eventId = intent.getStringExtra("tag");
+        eventId = intent.getStringExtra(Constants.SELECTED_EVENT_ID_KEY);
     }
 
     //adds current event to calender
     public void addEventToCalendar() {
-        Intent intent = new Intent(Intent.ACTION_INSERT);
-        intent.setType("vnd.android.cursor.item/event");
 
-        Calendar cal = Calendar.getInstance();
-        long startTime = cal.getTimeInMillis();
-        long endTime = cal.getTimeInMillis() + 60 * 60 * 1000;
-        try {
-            Date start = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(event.getStart().getLocal());
-            startTime = start.getTime();
-            Date end = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(event.getEnd().getLocal());
-            endTime = end.getTime();
-        } catch (Exception e) {
+        if (permissionExists()) {
+
+            Intent intent = new Intent(Intent.ACTION_INSERT);
+            intent.setType("vnd.android.cursor.item/event");
+
+            Calendar cal = Calendar.getInstance();
+            long startTime = cal.getTimeInMillis();
+            long endTime = cal.getTimeInMillis() + 60 * 60 * 1000;
+            try {
+                Date start = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(event.getStart().getLocal());
+                startTime = start.getTime();
+                Date end = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(event.getEnd().getLocal());
+                endTime = end.getTime();
+            } catch (Exception e) {
+            }
+
+            intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
+            intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
+            intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
+
+            intent.putExtra(CalendarContract.Events.TITLE, event.getName().getText());
+            intent.putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription().getText());
+            intent.putExtra(CalendarContract.Events.EVENT_LOCATION, event.getVenue().getAddress().getLocalizedAddressDisplay());
+            intent.putExtra(CalendarContract.Events.RRULE, "FREQ=DAILY;COUNT=1");
+
+            startActivity(intent);
+        } else {
+            requestUserForPermission();
         }
-
-        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
-        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
-        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
-
-        intent.putExtra(CalendarContract.Events.TITLE, event.getName().getText());
-        intent.putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription().getText());
-        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, event.getVenue().getAddress().getLocalizedAddressDisplay());
-        intent.putExtra(CalendarContract.Events.RRULE, "FREQ=DAILY;COUNT=1");
-
-        startActivity(intent);
     }
 
     //method prepares shareDialog to share to facebook
@@ -235,7 +246,7 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
 
         return spanEventText;
     }
-
+    // creates simpleDateFormat object to format text from UTC
     public void setdateText() {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         try {
@@ -270,5 +281,53 @@ public class DetailsActivity extends AppCompatActivity implements ItemClickInter
         directions = (ImageView) findViewById(R.id.activity_details_directions_bttn);
         eventDate = (TextView) findViewById(R.id.activity_details_date);
     }
+
+    @TargetApi(23)
+    private boolean permissionExists() {
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion < Build.VERSION_CODES.M) {
+
+            // Permissions are already granted during INSTALL TIME for older OS version
+            return true;
+        }
+
+        int granted = checkSelfPermission(CALENDAR_PERMISSION);
+        if (granted == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        return false;
+    }
+
+
+    @TargetApi(23)
+    private void requestUserForPermission() {
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion < Build.VERSION_CODES.M) {
+            // This OS version is lower then Android M, therefore we have old permission model and should not ask for permission
+            return;
+        }
+        String[] permissions = new String[]{CALENDAR_PERMISSION};
+        requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                if (permissions.length < 0) {
+                    return;
+                }
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //  permission was granted!
+                    addEventToCalendar();
+                } else {
+                    //  permission was denied, display toast
+                    Toast.makeText(getApplicationContext(), R.string.details_calendar_permission_toast, Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+
 }
 

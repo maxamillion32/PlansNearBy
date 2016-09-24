@@ -4,34 +4,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.arroyo.nolberto.placeswithfriends.Activities.DetailsActivity;
-import com.arroyo.nolberto.placeswithfriends.Activities.MainActivity;
 import com.arroyo.nolberto.placeswithfriends.Activities.VenueDetailsActivity;
+import com.arroyo.nolberto.placeswithfriends.Constants;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
-import com.arroyo.nolberto.placeswithfriends.Models.EventBriteModels.Event;
 import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.Item;
-import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.Photo;
-import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.Venue;
 import com.arroyo.nolberto.placeswithfriends.R;
-import com.google.android.gms.location.places.Place;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 /**
  * Created by nolbertoarroyo on 8/19/16.
+ * venues recyclerView adapter
  */
-public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecyclerViewAdapter.ViewHolder> {
+public class CustomRecyclerViewVenuesAdapter extends RecyclerView.Adapter<CustomRecyclerViewVenuesAdapter.ViewHolder> {
     private ArrayList<Item> data;
     private static ItemClickInterface onVenueClickListener;
     private Context context;
@@ -41,7 +34,7 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
         return super.toString();
     }
 
-    public CustomRecyclerViewAdapter(ArrayList<Item> inComingData, ItemClickInterface itemClicked) {
+    public CustomRecyclerViewVenuesAdapter(ArrayList<Item> inComingData, ItemClickInterface itemClicked) {
         this.onVenueClickListener = itemClicked;
         if (inComingData != null) {
             // if there is incoming data, use it
@@ -80,6 +73,8 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
         TextView itemPriceTier = holder.itemPriceTier;
         if (dataItem.getVenue().getRating() != null) {
 
+            //populating views with venue properties
+
             itemRating.setText(dataItem.getVenue().getRating().toString());
             itemRating.setTextColor(Color.WHITE);
             itemRating.setTypeface(itemRating.getTypeface(),Typeface.BOLD);
@@ -87,7 +82,6 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
             itemRating.setBackgroundColor(Color.parseColor(ratingColor));
         }
         if (dataItem.getVenue().getPrice() != null) {
-            //itemPriceTier.setTextSize(14);
             Integer venueCost = dataItem.getVenue().getPrice().getTier();
             if (venueCost == 1) {
 
@@ -104,11 +98,13 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
         itemTitle.setText(dataItem.getVenue().getName());
         itemCategory.setText((CharSequence) dataItem.getVenue().getCategories().get(0).getName());
         itemCity.setText(dataItem.getVenue().getLocation().getCity());
+
+       //set venue photo using picasso
         if (dataItem.getVenue().getFeaturedPhotos()!=null){
         String suffix = dataItem.getVenue().getFeaturedPhotos().getItems().get(0).getSuffix();
         String prefix = dataItem.getVenue().getFeaturedPhotos().getItems().get(0).getPrefix();
 
-        String url = prefix + "original" + suffix;
+        String url = prefix + Constants.VENUE_IMAGE_SIZE + suffix;
         Picasso.with(context).load(url).into(holder.itemImage);
     }
     }
@@ -137,7 +133,7 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
                     String itemClicked = data.get(getLayoutPosition()).getVenue().getId();
                     onVenueClickListener.onItemClicked(itemClicked);
                     Intent intent = new Intent(context, VenueDetailsActivity.class);
-                    intent.putExtra("venueId", itemClicked);
+                    intent.putExtra(Constants.SELECTED_VENUE_ID_KEY, itemClicked);
                     context.startActivity(intent);
                 }
             });
