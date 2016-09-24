@@ -49,7 +49,7 @@ public class EventsFragment extends Fragment {
     private ArrayList<Event> eventArrayList;
     private Call<Events> call;
     private Location location;
-    private String resultQuery, lon, lat, city, categories,weekendOnly,fragName;
+    private String resultQuery, lon, lat, city, categories, weekendOnly, fragName;
 
 
     @Override
@@ -221,7 +221,7 @@ public class EventsFragment extends Fragment {
     }
 
     //this method runs onCreateView, checks which fragment to start
-    public void checkWhichFragmentToStart(){
+    public void checkWhichFragmentToStart() {
         if (weekendOnly != null ||
                 fragName == Constants.TAB_ALL_EVENTS) {
             categories = null;

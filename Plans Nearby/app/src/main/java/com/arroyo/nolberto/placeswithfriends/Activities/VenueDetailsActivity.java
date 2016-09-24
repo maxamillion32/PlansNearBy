@@ -2,6 +2,7 @@ package com.arroyo.nolberto.placeswithfriends.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -20,6 +22,7 @@ import com.arroyo.nolberto.placeswithfriends.DataBaseHelper;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.FourSquareServiceInterface;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.CallBackResult;
+import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.Item__;
 import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.Venue;
 import com.arroyo.nolberto.placeswithfriends.R;
 import com.facebook.CallbackManager;
@@ -43,14 +46,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class VenueDetailsActivity extends AppCompatActivity implements ItemClickInterface, View.OnClickListener {
     private ImageView venueImage,share, directions,saveVenue,venueUrl;
-    private TextView venueTitle, venueAddress, venueCategory, venueDescription,tipsReviews;
+    private TextView venueTitle, venueAddress, venueCategory, venueHours,tipsReviews;
     private ListView listView;
     private DataBaseHelper helper;
     private FourSquareServiceInterface serviceInterface;
     private CallbackManager callbackManager;
     private ShareDialog shareDialog;
-    private ArrayList<String> tipsItems;
-    private ArrayAdapter<String> adapter;
+    private ArrayList<Item__> tipsItems;
+    private ArrayAdapter<Item__> adapter;
     private Venue venue;
     private String venueId;
 
@@ -79,7 +82,7 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
         venueTitle = (TextView) findViewById(R.id.activity_details_venue_title);
         venueCategory = (TextView) findViewById(R.id.activity_details_venue_category);
         venueAddress = (TextView) findViewById(R.id.activity_details_venue_address);
-        venueDescription = (TextView) findViewById(R.id.activity_details_venue_description);
+        venueHours = (TextView) findViewById(R.id.activity_details_venue_hours);
         share = (ImageView) findViewById(R.id.activity_details_venue_share_bttn);
         directions = (ImageView) findViewById(R.id.activity_details_venue_directions_bttn);
         tipsReviews = (TextView) findViewById(R.id.activity_venue_details_tips);
@@ -114,7 +117,7 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
                 venueCategory.setText(venue.getCategories().get(0).getName());
                 tipsReviews.setText(R.string.venues_details_tips);
                 if (venue.getHours()!=null){
-                    venueDescription.setText(venue.getHours().getStatus());
+                    venueHours.setText(venue.getHours().getStatus());
                 }
 
                 setVenueImage();
@@ -205,15 +208,29 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
         Picasso.with(getApplicationContext()).load(imageUrl).into(venueImage);
     }
     public void setTipsReviewsListView(){
-        listView = (ListView)findViewById(R.id.tips_list_view);
-        tipsItems= new ArrayList<String>();
-        for (int i=0; i<venue.getTips().getGroups().get(0).getItems().size();i++){
-            tipsItems.add(venue.getTips().getGroups().get(0).getItems().get(i).getText());
-        }
-        adapter = new ArrayAdapter<String>(VenueDetailsActivity.this,android.R.layout.simple_list_item_1,android.R.id.text1,tipsItems);
-        listView.setDividerHeight(12);
+        listView = (CustomListView)findViewById(R.id.tips_list_view);
+        tipsItems= new ArrayList<>();
+
+            tipsItems = (ArrayList<Item__>) venue.getTips().getGroups().get(0).getItems();
+
+        adapter = new ArrayAdapter<Item__>(VenueDetailsActivity.this,android.R.layout.simple_list_item_2,android.R.id.text1,tipsItems){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+
+
+                TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+                TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+                text1.setText(tipsItems.get(position).getUser().getFirstName());
+                text1.setTypeface(text1.getTypeface(), Typeface.BOLD);
+                text2.setText(tipsItems.get(position).getText());
+                return view;
+            }
+        };
+        listView.setDividerHeight(10);
         listView.setAdapter(adapter);
     }
+
 }
 
 

@@ -49,4 +49,5 @@
     <string name="venue_details_added_venue_favs">Venue added to favorites</string>
     <string name="city_dialog_submit_text">submit</string>
     <string name="city_dialog_cancel_text">CANCEL</string>
+    <string name="venue_details_more_info">More Info</string>
 </resources>
