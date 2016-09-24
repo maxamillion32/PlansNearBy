@@ -13,13 +13,15 @@ import retrofit2.http.Query;
  */
 public interface FourSquareServiceInterface {
 
-
+    //get venue by id
     @GET("venues/{venue_id}?&client_id=" + BuildConfig.FOURSQUARE_CLIENT_ID + "&client_secret=" + BuildConfig.FOURSQUARE_CLIENT_SECRET + "&v=20160913")
     Call<CallBackResult> getVenueById(@Path("venue_id") String venueId);
 
+    //get venues by city, returns only venues that are open now and sorts by default rating
     @GET("venues/explore/?&venuePhotos=1&openNow=1&client_id=" + BuildConfig.FOURSQUARE_CLIENT_ID + "&client_secret=" + BuildConfig.FOURSQUARE_CLIENT_SECRET + "&v=20160913")
     Call<CallBackResult> getVenuesByCity(@Query("near") String near, @Query("section") String section);
 
+    //get venues by current location, sort by distance,takes in section and current location
     @GET("venues/explore/?&venuePhotos=1&openNow=1&sortByDistance=1&client_id=" + BuildConfig.FOURSQUARE_CLIENT_ID + "&client_secret=" + BuildConfig.FOURSQUARE_CLIENT_SECRET + "&v=20160913")
     Call<CallBackResult> getVenuesNearby(@Query("ll") String latLon, @Query("section") String section);
 

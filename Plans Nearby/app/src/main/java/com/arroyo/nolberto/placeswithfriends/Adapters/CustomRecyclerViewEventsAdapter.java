@@ -13,7 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.arroyo.nolberto.placeswithfriends.Activities.DetailsActivity;
+import com.arroyo.nolberto.placeswithfriends.Activities.EventDetailsActivity;
+import com.arroyo.nolberto.placeswithfriends.Constants;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Models.EventBriteModels.Event;
 import com.arroyo.nolberto.placeswithfriends.R;
@@ -21,7 +22,6 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
 
         itemTitle.setText(dataItem.getName().getText());
 
-       setEventDate(dataItem,itemDate);
+        setEventDate(dataItem, itemDate);
 
 
         if (dataItem.getVenue() != null) {
@@ -101,7 +101,6 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
         if (dataItem.getCategory() != null) {
             itemCategory.setText(dataItem.getCategory().getNameLocalized());
         }
-//below code has a bug keep testing, crashes app when you scroll or search for free items
         if (!dataItem.getTicketClasses().isEmpty() && dataItem.getTicketClasses().get(0).getCost() != null) {
             price = dataItem.getTicketClasses().get(0).getCost().getDisplay();
             itemPrice.setText(price);
@@ -119,7 +118,7 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView itemImage;
-        public TextView itemTitle,itemCategory,itemAddress,itemPrice,itemDate;
+        public TextView itemTitle, itemCategory, itemAddress, itemPrice, itemDate;
         public CardView cardView;
 
 
@@ -138,17 +137,17 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
                 @Override
                 public void onClick(View v) {
                     String itemClicked = data.get(getLayoutPosition()).getId();
-                    Log.i("check", itemClicked);
                     onEventClickListener.onItemClicked(itemClicked);
-                    Intent intent = new Intent(context, DetailsActivity.class);
-                    intent.putExtra("tag", itemClicked);
+                    Intent intent = new Intent(context, EventDetailsActivity.class);
+                    intent.putExtra(Constants.SELECTED_EVENT_ID_KEY, itemClicked);
                     context.startActivity(intent);
                 }
             });
 
         }
     }
-    public void setEventDate(Event dataItem, TextView itemDate){
+
+    public void setEventDate(Event dataItem, TextView itemDate) {
 
         final SimpleDateFormat eventDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         try {
@@ -157,13 +156,12 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
 
             formattedEventDate = new SimpleDateFormat("EEE, MMM d, hh:mm a").format(eventDate);
 
-            if (formattedEventDate.charAt(13)!='0'&& formattedEventDate.charAt(12)<=10 || formattedEventDate.charAt(12)!='0'&& formattedEventDate.charAt(11)<=9){
+            if (formattedEventDate.charAt(13) != '0' && formattedEventDate.charAt(12) <= 10 || formattedEventDate.charAt(12) != '0' && formattedEventDate.charAt(11) <= 9) {
                 formattedEventDate = new SimpleDateFormat("EEE, MMM d, hh:mm a").format(eventDate);
 
-            }else{
+            } else {
                 formattedEventDate = new SimpleDateFormat("EEE, MMM d, h:mm a").format(eventDate);
             }
-            //itemDate.setTextSize(14);
             itemDate.setText(formattedEventDate);
         } catch (ParseException e) {
             e.printStackTrace();

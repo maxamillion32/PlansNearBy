@@ -1,16 +1,13 @@
 package com.arroyo.nolberto.placeswithfriends.Fragments;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,13 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.arroyo.nolberto.placeswithfriends.Adapters.CustomRecyclerViewAdapter;
+import com.arroyo.nolberto.placeswithfriends.Activities.MainActivity;
+import com.arroyo.nolberto.placeswithfriends.Adapters.CustomRecyclerViewVenuesAdapter;
+import com.arroyo.nolberto.placeswithfriends.Constants;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.FourSquareServiceInterface;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.CallBackResult;
 import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.Item;
 import com.arroyo.nolberto.placeswithfriends.R;
-import com.google.android.gms.location.LocationListener;
 
 import java.util.ArrayList;
 
@@ -37,22 +35,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by nolbertoarroyo on 9/12/16.
  */
-public class VenuesFragment extends Fragment implements LocationListener {
-    private static String baseURL = "https://api.foursquare.com/v2/";
-    ArrayList<Item> venues;
+public class VenuesFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter rvAdapter;
     private RecyclerView.LayoutManager rvLayoutManager;
-    private LocationManager locationManager;
-    private String provider;
-    private String currentLocation;
-    private String city;
-    ConnectivityManager connMgr;
-    NetworkInfo networkInfo;
-    FourSquareServiceInterface fourSquareServiceInterface;
-    ItemClickInterface onItemClickedListener;
-    private String section;
-
+    private SwipeRefreshLayout onSwipeRefresh;
+    private View root;
+    private FourSquareServiceInterface fourSquareServiceInterface;
+    private ItemClickInterface onItemClickedListener;
+    private ConnectivityManager connMgr;
+    private NetworkInfo networkInfo;
+    private Location location;
+    private Call<CallBackResult> call;
+    private ArrayList<Item> venues;
+    private String currentLocation, section, city;
 
 
     @Override
@@ -65,131 +61,136 @@ public class VenuesFragment extends Fragment implements LocationListener {
         }
     }
 
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_venues, container, false);
-        recyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
-        rvLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(rvLayoutManager);
+        root = inflater.inflate(R.layout.fragment_venues, container, false);
+        setRecyclerView();
         connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         networkInfo = connMgr.getActiveNetworkInfo();
-        setLocationManager();
-            getVenuesList();
+        getLocationFromMain();
+        getLocation(location);
+        getVenuesList();
+        setOnSwipeRefresh();
 
         return root;
     }
 
+    public void setRecyclerView() {
+        onSwipeRefresh = (SwipeRefreshLayout) root.findViewById(R.id.venues_swipe_refresh_layout);
+        recyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
+        rvLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(rvLayoutManager);
+    }
 
+
+    /*
+     * method runs foursquare interface to get venues by city or by current
+     * location depending on which GET method is selected in selectCallMethod()
+     * recyclerView is populated with results and displayed, else if city is not null,
+     * recycler view is populated with result from city callback on foursquare
+     */
     public void getVenuesList() {
-        if (city == null) {
-            if (networkInfo != null && networkInfo.isConnected()) {
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(baseURL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-                fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
 
-                fourSquareServiceInterface.getVenuesNearby(currentLocation,section).enqueue(new Callback<CallBackResult>() {
-                    @Override
-                    public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
-                        //getting article from api and inserting to database favorites table
-
-                        venues = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
-                        rvAdapter = new CustomRecyclerViewAdapter(venues, (ItemClickInterface) getActivity());
-                        recyclerView.setAdapter(rvAdapter);
-
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<CallBackResult> call, Throwable t) {
-
-                    }
-
-
-                });
-            }
-        } else {
-            if (networkInfo != null && networkInfo.isConnected()) {
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(baseURL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-                fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
-
-                fourSquareServiceInterface.getVenuesByCity(city,section).enqueue(new Callback<CallBackResult>() {
-                    @Override
-                    public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
-                        //getting article from api and inserting to database favorites table
-
-                        venues = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
-                        rvAdapter = new CustomRecyclerViewAdapter(venues, (ItemClickInterface) getActivity());
-                        recyclerView.setAdapter(rvAdapter);
-
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<CallBackResult> call, Throwable t) {
-
-                    }
-
-
-                });
-            }
-
+        if (networkInfo == null || !networkInfo.isConnected()){
+            return;
         }
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(Constants.FOURSQUARE_BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
+            // selecting interface method if city is null or not
+
+            selectCallMethod();
+        onSwipeRefresh.setRefreshing(true);
+
+            call.enqueue(new Callback<CallBackResult>() {
+                @Override
+                public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
+                    //getting venues from callback and populating recyclerView
+
+                    venues = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
+                    populateVenuesRecyclerView();
+                    onSwipeRefresh.setRefreshing(false);
+                }
+
+                @Override
+                public void onFailure(Call<CallBackResult> call, Throwable t) {
+                    Toast.makeText(getActivity(), R.string.failed_venue_callback_toast, Toast.LENGTH_SHORT).show();
+                }
+
+            });
+        }
+
+
+
+    //getting current location form MainActivity through getter method
+
+    public void getLocationFromMain() {
+        MainActivity callingActivity = (MainActivity) MainActivity.activity;
+        location = callingActivity.getLocation();
     }
 
-    public void setLocationManager() {
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        // Define the criteria how to select the locatioin provider -> use
-        // default
-        Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, false);
-        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-        }
-        Location location = locationManager.getLastKnownLocation(provider);
 
-        // Initialize the location fields
-        if (location != null) {
-            onLocationChanged(location);
-        } else {
-            Toast.makeText(getActivity(), R.string.location_unavailable, Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
+    public void getLocation(Location location) {
         this.currentLocation = location.getLatitude() + "," + location.getLongitude();
 
     }
 
-    public void setCity(String city,String category) {
+
+    //getting city and section from pager adapter to use in retrofit calls
+    //parameters are used in retrofit call to get venue results
+
+    public void setCity(String city, String section) {
         this.city = city;
-        this.section= category;
-        if (section!=null){
+        this.section = section;
+        if (section != null) {
             getVenuesList();
         }
     }
-    public void setValues(String city, String section){
+
+
+    //getting city and section from SortingActivity to us in retrofit calls
+    public void setValues(String city, String section) {
         this.city = city;
         this.section = section;
     }
+
+
+    //method sets call method for foursquareService depending if city is null or not
+    //runs inside getVenuesList()
+
+    public void selectCallMethod() {
+        if (city == null) {
+            call = fourSquareServiceInterface.getVenuesNearby(currentLocation, section);
+        } else {
+            call = fourSquareServiceInterface.getVenuesByCity(city, section);
+        }
+    }
+
+
+    //populates recyclerView with results from retrofit call, displays Toast if no results
+
+    public void populateVenuesRecyclerView() {
+        rvAdapter = new CustomRecyclerViewVenuesAdapter(venues, (ItemClickInterface) getActivity());
+        recyclerView.setAdapter(rvAdapter);
+
+        //if there are now results display toast
+        if (venues.size() == 0) {
+            Toast.makeText(getActivity(), R.string.venues_no_results_toast, Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void setOnSwipeRefresh() {
+        onSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getLocation(location);
+                getVenuesList();
+            }
+        });
+    }
+
+
 }
 

@@ -21,6 +21,7 @@ import com.arroyo.nolberto.placeswithfriends.R;
 
 /**
  * Created by nolbertoarroyo on 8/30/16.
+ * dialog allows user to insert city
  */
 public class EnterCityDialogFragment extends DialogFragment {
     public EnterCityDialogFragment() {
@@ -31,7 +32,7 @@ public class EnterCityDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),STYLE_NORMAL);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), STYLE_NORMAL);
         builder.setTitle(R.string.dialog_enter_city);
         final EditText input = new EditText(getActivity());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -39,7 +40,7 @@ public class EnterCityDialogFragment extends DialogFragment {
                 LinearLayout.LayoutParams.MATCH_PARENT);
         input.setLayoutParams(lp);
         builder.setView(input);
-        builder.setPositiveButton("submit", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.city_dialog_submit_text, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 String value = input.getText().toString();
@@ -48,7 +49,7 @@ public class EnterCityDialogFragment extends DialogFragment {
 
             }
         })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.city_dialog_cancel_text, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         EnterCityDialogFragment.this.getDialog().cancel();
                     }
