@@ -19,6 +19,7 @@ public class Constants {
     public static final String MAIN_CATEGORY_TRENDING = "trending";
     public static final String MAIN_CATEGORY_WEEKEND = "this_weekend";
     public static final String MAIN_CATEGORY_COFFEE = "coffee";
+    public static final String MAIN_CATEGORY_ABOUT = "about";
 
     //PagerAdapter
     public static final String TAB_DRINKS = "drinks";

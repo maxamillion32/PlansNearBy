@@ -50,4 +50,11 @@
     <string name="city_dialog_submit_text">submit</string>
     <string name="city_dialog_cancel_text">CANCEL</string>
     <string name="venue_details_more_info">More Info</string>
+    <string name="nav_more_categories">More Categories</string>
+    <string name="about_app_description">This application helps you find things to do and places to go in your area. If you like this app please rate it in the Playstore. If you have any suggestions for improvements let me know in the Playstore.</string>
+    <string name="about_plans_nearby_title">About Plans Nearby</string>
+    <string name="about_app_build_info_title">Build Info</string>
+    <string name="about_app_verion_text">version</string>
+    <string name="about_app_powered_by_eventbrite">Powered by Eventbrite</string>
+    <string name="about_app_powered_by">Powered by :</string>
 </resources>
