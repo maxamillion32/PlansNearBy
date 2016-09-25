@@ -53,8 +53,13 @@
         <activity
             android:name=".Activities.PickInterestsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".Activities.VenueDetailsActivity" />
-        <activity android:name=".Activities.SortingActivity"></activity>
+        <activity
+            android:name=".Activities.VenueDetailsActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".Activities.SortingActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
