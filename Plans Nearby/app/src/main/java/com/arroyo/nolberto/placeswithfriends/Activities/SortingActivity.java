@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.arroyo.nolberto.placeswithfriends.Constants;
+import com.arroyo.nolberto.placeswithfriends.Fragments.AboutFragment;
 import com.arroyo.nolberto.placeswithfriends.Fragments.EventsFragment;
 import com.arroyo.nolberto.placeswithfriends.Fragments.VenuesFragment;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
@@ -21,6 +22,7 @@ public class SortingActivity extends AppCompatActivity implements ItemClickInter
     private VenuesFragment venuesFragment;
     private EventsFragment weekendEvents;
     private FragmentTransaction transaction;
+    private AboutFragment aboutFragment;
     private String city,section;
 
     @Override
@@ -45,11 +47,13 @@ public class SortingActivity extends AppCompatActivity implements ItemClickInter
             venuesFragment = new VenuesFragment();
             venuesFragment.setValues(city, section);
             launchFragment(venuesFragment);
-        }else{
+        }else if (section.equalsIgnoreCase(Constants.MAIN_CATEGORY_WEEKEND)){
             weekendEvents = new EventsFragment();
             weekendEvents.setValues(city,section);
             launchFragment(weekendEvents);
-
+        }else {
+            aboutFragment = new AboutFragment();
+            launchFragment(aboutFragment);
         }
 
     }

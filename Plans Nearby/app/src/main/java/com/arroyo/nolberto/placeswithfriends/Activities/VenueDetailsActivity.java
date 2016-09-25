@@ -2,6 +2,7 @@ package com.arroyo.nolberto.placeswithfriends.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -20,6 +22,7 @@ import com.arroyo.nolberto.placeswithfriends.DataBaseHelper;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.FourSquareServiceInterface;
 import com.arroyo.nolberto.placeswithfriends.Interfaces.ItemClickInterface;
 import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.CallBackResult;
+import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.Item__;
 import com.arroyo.nolberto.placeswithfriends.Models.FourSquareModels.Venue;
 import com.arroyo.nolberto.placeswithfriends.R;
 import com.facebook.CallbackManager;
@@ -36,21 +39,20 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- *activity displays venue details by getting id from custom adapter and making a call using
+ * activity displays venue details by getting id from custom adapter and making a call using
  * retrofit
- *
  **/
 
 public class VenueDetailsActivity extends AppCompatActivity implements ItemClickInterface, View.OnClickListener {
-    private ImageView venueImage,share, directions,saveVenue,venueUrl;
-    private TextView venueTitle, venueAddress, venueCategory, venueDescription,tipsReviews;
+    private ImageView venueImage, share, directions, saveVenue, venueUrl;
+    private TextView venueTitle, venueAddress, venueCategory, venueHours, tipsReviews;
     private ListView listView;
     private DataBaseHelper helper;
     private FourSquareServiceInterface serviceInterface;
     private CallbackManager callbackManager;
     private ShareDialog shareDialog;
-    private ArrayList<String> tipsItems;
-    private ArrayAdapter<String> adapter;
+    private ArrayList<Item__> tipsItems;
+    private ArrayAdapter<Item__> adapter;
     private Venue venue;
     private String venueId;
 
@@ -79,12 +81,12 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
         venueTitle = (TextView) findViewById(R.id.activity_details_venue_title);
         venueCategory = (TextView) findViewById(R.id.activity_details_venue_category);
         venueAddress = (TextView) findViewById(R.id.activity_details_venue_address);
-        venueDescription = (TextView) findViewById(R.id.activity_details_venue_description);
+        venueHours = (TextView) findViewById(R.id.activity_details_venue_hours);
         share = (ImageView) findViewById(R.id.activity_details_venue_share_bttn);
         directions = (ImageView) findViewById(R.id.activity_details_venue_directions_bttn);
         tipsReviews = (TextView) findViewById(R.id.activity_venue_details_tips);
-        saveVenue = (ImageView)findViewById(R.id.activity_details_venue_interested_bttn);
-        venueUrl = (ImageView)findViewById(R.id.activity_details_venue_url);
+        saveVenue = (ImageView) findViewById(R.id.activity_details_venue_interested_bttn);
+        venueUrl = (ImageView) findViewById(R.id.activity_details_venue_url);
     }
 
 
@@ -94,7 +96,7 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-        if (networkInfo == null || !networkInfo.isConnected()){
+        if (networkInfo == null || !networkInfo.isConnected()) {
             return;
         }
         Retrofit retrofit = new Retrofit.Builder()
@@ -113,13 +115,12 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
                 venueAddress.setText(venue.getLocation().getAddress());
                 venueCategory.setText(venue.getCategories().get(0).getName());
                 tipsReviews.setText(R.string.venues_details_tips);
-                if (venue.getHours()!=null){
-                    venueDescription.setText(venue.getHours().getStatus());
+                if (venue.getHours() != null) {
+                    venueHours.setText(venue.getHours().getStatus());
                 }
 
                 setVenueImage();
                 setTipsReviewsListView();
-
 
 
             }
@@ -162,7 +163,7 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
 
             case R.id.activity_details_venue_share_bttn:
                 //shares current event to facebook, have option to choose friends
-                  shareToFacebook();
+                shareToFacebook();
                 break;
 
             case R.id.activity_details_venue_directions_bttn:
@@ -176,7 +177,7 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
             case R.id.activity_details_venue_interested_bttn:
                 //checks if venue is already in database, if so deletes item  and displays toast
                 //giving user notice of added venue or deleted venue
-                helper= DataBaseHelper.getInstance(VenueDetailsActivity.this);
+                helper = DataBaseHelper.getInstance(VenueDetailsActivity.this);
                 if (helper.exists(venueId)) {
                     helper.deleteFavoritesItem(venueId);
                     Toast.makeText(VenueDetailsActivity.this, R.string.venue_details_removed_venue_toast, Toast.LENGTH_SHORT).show();
@@ -198,22 +199,38 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
 
         }
     }
-    public void setVenueImage(){
-        String suffix =venue.getPhotos().getGroups().get(0).getItems().get(0).getSuffix();
+
+    public void setVenueImage() {
+        String suffix = venue.getPhotos().getGroups().get(0).getItems().get(0).getSuffix();
         String prefix = venue.getPhotos().getGroups().get(0).getItems().get(0).getPrefix();
-        String imageUrl = prefix+Constants.VENUE_IMAGE_SIZE+suffix;
+        String imageUrl = prefix + Constants.VENUE_IMAGE_SIZE + suffix;
         Picasso.with(getApplicationContext()).load(imageUrl).into(venueImage);
     }
-    public void setTipsReviewsListView(){
-        listView = (ListView)findViewById(R.id.tips_list_view);
-        tipsItems= new ArrayList<String>();
-        for (int i=0; i<venue.getTips().getGroups().get(0).getItems().size();i++){
-            tipsItems.add(venue.getTips().getGroups().get(0).getItems().get(i).getText());
-        }
-        adapter = new ArrayAdapter<String>(VenueDetailsActivity.this,android.R.layout.simple_list_item_1,android.R.id.text1,tipsItems);
-        listView.setDividerHeight(12);
+
+    public void setTipsReviewsListView() {
+        listView = (CustomListView) findViewById(R.id.tips_list_view);
+        tipsItems = new ArrayList<>();
+
+        tipsItems = (ArrayList<Item__>) venue.getTips().getGroups().get(0).getItems();
+
+        adapter = new ArrayAdapter<Item__>(VenueDetailsActivity.this, android.R.layout.simple_list_item_2, android.R.id.text1, tipsItems) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+
+
+                TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+                TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+                text1.setText(tipsItems.get(position).getUser().getFirstName());
+                text1.setTypeface(text1.getTypeface(), Typeface.BOLD);
+                text2.setText(tipsItems.get(position).getText());
+                return view;
+            }
+        };
+        listView.setDividerHeight(10);
         listView.setAdapter(adapter);
     }
+
 }
 
 

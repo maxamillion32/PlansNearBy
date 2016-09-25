@@ -240,6 +240,7 @@ public class MainActivity extends AppCompatActivity
                 sendCategoryValues(Constants.MAIN_CATEGORY_WEEKEND);
                 break;
             case R.id.nav_about:
+                sendCategoryValues(Constants.MAIN_CATEGORY_ABOUT);
                 break;
 
 

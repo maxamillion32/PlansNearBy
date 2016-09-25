@@ -14,19 +14,23 @@
             android:id="@+id/nav_facebook_login"
             android:icon="@drawable/com_facebook_button_icon_white"
             android:title="@string/nav_login_with_facebook_title" />
-        <item
-            android:id="@+id/nav_trending"
-            android:icon="@android:drawable/ic_menu_info_details"
-            android:title="@string/nav_trending_title" />
-        <item
-            android:id="@+id/nav_coffee"
-            android:icon="@android:drawable/ic_menu_info_details"
-            android:title="@string/nav_coffee_title" />
-        <item
-            android:id="@+id/nav_weekend"
-            android:icon="@android:drawable/ic_menu_info_details"
-            android:title="@string/nav_events_this_weekend_title" />
     </group>
+        <item android:title="@string/nav_more_categories">
+        <menu>
+            <item
+                android:id="@+id/nav_trending"
+                android:icon="@drawable/trending_up"
+                android:title="@string/nav_trending_title" />
+            <item
+                android:id="@+id/nav_coffee"
+                android:icon="@drawable/coffee"
+                android:title="@string/nav_coffee_title" />
+            <item
+                android:id="@+id/nav_weekend"
+                android:icon="@drawable/calendar"
+                android:title="@string/nav_events_this_weekend_title" />
+        </menu>
+    </item>
 
     <item android:title="About">
         <menu>
