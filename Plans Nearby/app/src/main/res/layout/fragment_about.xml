@@ -23,6 +23,12 @@
         android:layout_margin="4dp"
         android:text="@string/about_app_description"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dev_email"
+        android:autoLink="email"/>
 
     <TextView
         android:id="@+id/about_app_build_info_title"
