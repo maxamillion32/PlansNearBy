@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity
     private MenuItem item;
     private PagerAdapter adapter;
     private ViewPager viewPager;
+    private EnterCityDialogFragment cityDialogFragment;
+    private FavsFragment savedDialogFragment;
     private LocationManager locationManager;
     private CallbackManager callbackManager;
     private Location location;
@@ -82,6 +84,8 @@ public class MainActivity extends AppCompatActivity
         setDrawer();
         setPageView();
         handleIntent(getIntent());
+        cityDialogFragment = new EnterCityDialogFragment();
+        savedDialogFragment = new FavsFragment();
 
 
     }
@@ -113,7 +117,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    //checking if someone is logged in to facebook, if so, logging out on click and setting new text
+     //checking if someone is logged in to facebook, if so, logging out on click and setting new text
 
     public void facebookLoginLogout() {
         Profile profile = Profile.getCurrentProfile();
@@ -311,7 +315,6 @@ public class MainActivity extends AppCompatActivity
     //current results
 
     public void cityOrNearDialog() {
-        EnterCityDialogFragment cityDialogFragment = new EnterCityDialogFragment();
         if (city == null) {
             cityDialogFragment.show(getSupportFragmentManager(), Constants.CITY_FRAGMENT);
         } else {
@@ -327,7 +330,6 @@ public class MainActivity extends AppCompatActivity
     //else, toast is displayed
 
     public void viewSavedPlacesDialog() {
-        FavsFragment savedDialogFragment = new FavsFragment();
         if (DataBaseHelper.FAVORITES_COLUMNS.length >= 1) {
             savedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
             savedDialogFragment.show(getSupportFragmentManager(), Constants.SAVED_VENUES_FRAGMENT);
