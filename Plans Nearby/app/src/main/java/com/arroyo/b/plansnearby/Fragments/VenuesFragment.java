@@ -70,7 +70,7 @@ public class VenuesFragment extends Fragment {
         networkInfo = connMgr.getActiveNetworkInfo();
         getLocationFromMain();
         getLocation(location);
-        getVenuesList();
+        startFragment();
         setOnSwipeRefresh();
 
         return root;
@@ -92,37 +92,36 @@ public class VenuesFragment extends Fragment {
      */
     public void getVenuesList() {
 
-        if (networkInfo == null || !networkInfo.isConnected()){
+        if (networkInfo == null || !networkInfo.isConnected()) {
             return;
         }
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.FOURSQUARE_BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
-            // selecting interface method if city is null or not
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.FOURSQUARE_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        fourSquareServiceInterface = retrofit.create(FourSquareServiceInterface.class);
+        // selecting interface method if city is null or not
 
-            selectCallMethod();
+        selectCallMethod();
         onSwipeRefresh.setRefreshing(true);
 
-            call.enqueue(new Callback<CallBackResult>() {
-                @Override
-                public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
-                    //getting venues from callback and populating recyclerView
+        call.enqueue(new Callback<CallBackResult>() {
+            @Override
+            public void onResponse(Call<CallBackResult> call, Response<CallBackResult> response) {
+                //getting venues from callback and populating recyclerView
 
-                    venues = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
-                    populateVenuesRecyclerView();
-                    onSwipeRefresh.setRefreshing(false);
-                }
+                venues = (ArrayList<Item>) response.body().getResponse().getGroups().get(0).getItems();
+                populateVenuesRecyclerView();
+                onSwipeRefresh.setRefreshing(false);
+            }
 
-                @Override
-                public void onFailure(Call<CallBackResult> call, Throwable t) {
-                    Toast.makeText(getActivity(), R.string.failed_venue_callback_toast, Toast.LENGTH_SHORT).show();
-                }
+            @Override
+            public void onFailure(Call<CallBackResult> call, Throwable t) {
+                Toast.makeText(getActivity(), R.string.failed_venue_callback_toast, Toast.LENGTH_SHORT).show();
+            }
 
-            });
-        }
-
+        });
+    }
 
 
     //getting current location form MainActivity through getter method
@@ -134,19 +133,31 @@ public class VenuesFragment extends Fragment {
 
 
     public void getLocation(Location location) {
-        this.currentLocation = location.getLatitude() + "," + location.getLongitude();
+        if (location != null) {
+
+            this.currentLocation = location.getLatitude() + "," + location.getLongitude();
+        }
 
     }
 
 
     //getting city and section from pager adapter to use in retrofit calls
     //parameters are used in retrofit call to get venue results
+    //if user doesn't have location on and city has not been selected
+    // display no venues available, prevents app from crashing but allows user to select city
 
     public void setCity(String city, String section) {
         this.city = city;
         this.section = section;
-        if (section != null) {
-            getVenuesList();
+        getLocationFromMain();
+        getLocation(location);
+        if (currentLocation != null || city != null) {
+
+            if (section != null) {
+                getVenuesList();
+            } else {
+                Toast.makeText(getActivity(), R.string.venues_no_results_toast, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -181,6 +192,7 @@ public class VenuesFragment extends Fragment {
             Toast.makeText(getActivity(), R.string.venues_no_results_toast, Toast.LENGTH_SHORT).show();
         }
     }
+
     public void setOnSwipeRefresh() {
         onSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -189,6 +201,17 @@ public class VenuesFragment extends Fragment {
                 getVenuesList();
             }
         });
+    }
+
+    //
+    public void startFragment() {
+        if (location != null || city != null) {
+
+            getVenuesList();
+        } else {
+            //only happens when app is launched without location services on
+            Toast.makeText(getActivity(), R.string.venues_no_results_toast, Toast.LENGTH_SHORT).show();
+        }
     }
 
 

@@ -28,7 +28,7 @@ public interface EventsServiceInterface {
     @GET("events/search/?expand=venue,category,ticket_classes,display_settings&sort_by=date&token=" + BuildConfig.EVENTBRITE_TOKEN + "")
     Call<Events> getEventsCatResults(
             @Query("q") String query,
-            @Query("venue.city") String city, @Query("location.latitude") String lat,
+            @Query("location.address") String city, @Query("location.latitude") String lat,
             @Query("location.longitude") String lon, @Query("start_date.keyword") String weekendOnly,
             @Query("categories") String category);
 

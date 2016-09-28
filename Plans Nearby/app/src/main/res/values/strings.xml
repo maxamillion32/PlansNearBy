@@ -59,6 +59,8 @@
     <string name="about_app_powered_by_eventbrite">Powered by Eventbrite</string>
     <string name="about_app_powered_by">Powered by :</string>
     <string name="frag_weekend_title">Weekend Events</string>
+    <string name="snackbar_text">Turn location on for local events, or view events by city.</string>
     <string name="about_app_location_icon_text">Press this icon to show venues and events by current location or by city. Pressing this icon launches a dialog and asks for a city.</string>
     <string name="about_app_search_text">Search current location for categories or specific events by title.  Currently only able to search events in nearby mode.</string>
+    <string name="snack_bar_action_text_city">"select city "</string>
 </resources>

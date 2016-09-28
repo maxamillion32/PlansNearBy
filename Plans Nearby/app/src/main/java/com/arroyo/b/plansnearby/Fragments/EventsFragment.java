@@ -131,9 +131,11 @@ public class EventsFragment extends Fragment {
 
     //takes location and extracts latitude and longitude to use in api call
     public void getLocation(Location location) {
-        lat = String.valueOf((location.getLatitude()));
-        lon = String.valueOf((location.getLongitude()));
+        if (location != null) {
 
+            lat = String.valueOf((location.getLatitude()));
+            lon = String.valueOf((location.getLongitude()));
+        }
     }
 
 
@@ -153,11 +155,12 @@ public class EventsFragment extends Fragment {
         this.city = city;
         this.fragName = fragmentName;
         //check if location is valid
+        getLocationFromMain();
         if (location != null) {
             getLocation(location);
         }
-        //fun all events api call and set categories to null, so all events are called
-        if (fragName == Constants.TAB_ALL_EVENTS) {
+        //if all events fragment set categories to null, so all events are called
+        if (fragName.equalsIgnoreCase( Constants.TAB_ALL_EVENTS)) {
             categories = null;
         }
         getEventsCategoryList();
@@ -223,7 +226,7 @@ public class EventsFragment extends Fragment {
     //this method runs onCreateView, checks which fragment to start
     public void checkWhichFragmentToStart() {
         if (weekendOnly != null ||
-                fragName == Constants.TAB_ALL_EVENTS) {
+                fragName.equalsIgnoreCase(Constants.TAB_ALL_EVENTS)) {
             categories = null;
         }
     }

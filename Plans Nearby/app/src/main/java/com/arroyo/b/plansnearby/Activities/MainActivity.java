@@ -12,7 +12,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -24,8 +26,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.arroyo.b.plansnearby.Constants;
@@ -64,12 +68,11 @@ public class MainActivity extends AppCompatActivity
     private MenuItem item;
     private PagerAdapter adapter;
     private ViewPager viewPager;
-    private EnterCityDialogFragment cityDialogFragment;
-    private FavsFragment savedDialogFragment;
     private LocationManager locationManager;
     private CallbackManager callbackManager;
     private Location location;
     private String city, query, provider;
+    EnterCityDialogFragment cityDialogFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +87,6 @@ public class MainActivity extends AppCompatActivity
         setDrawer();
         setPageView();
         handleIntent(getIntent());
-        cityDialogFragment = new EnterCityDialogFragment();
-        savedDialogFragment = new FavsFragment();
-
 
     }
 
@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.location:
                 cityOrNearDialog();
+                enterAnotherCity();
                 return true;
 
 
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-     //checking if someone is logged in to facebook, if so, logging out on click and setting new text
+    //checking if someone is logged in to facebook, if so, logging out on click and setting new text
 
     public void facebookLoginLogout() {
         Profile profile = Profile.getCurrentProfile();
@@ -315,6 +316,7 @@ public class MainActivity extends AppCompatActivity
     //current results
 
     public void cityOrNearDialog() {
+        cityDialogFragment = new EnterCityDialogFragment();
         if (city == null) {
             cityDialogFragment.show(getSupportFragmentManager(), Constants.CITY_FRAGMENT);
         } else {
@@ -324,12 +326,25 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //when user is viewing events by city, user has the option to long press city icon in toolbar
+    //and enter another city
+    public void enterAnotherCity() {
+        final View v = findViewById(R.id.location);
+        v.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                cityDialogFragment.show(getSupportFragmentManager(), Constants.CITY_FRAGMENT);
+                return false;
+            }
+        });
+    }
 
     //checks database to see if there are saved venues,
     //if so, savedDialogFragment is launched displaying saved venues
     //else, toast is displayed
 
     public void viewSavedPlacesDialog() {
+        FavsFragment savedDialogFragment = new FavsFragment();
         if (DataBaseHelper.FAVORITES_COLUMNS.length >= 1) {
             savedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
             savedDialogFragment.show(getSupportFragmentManager(), Constants.SAVED_VENUES_FRAGMENT);
@@ -366,18 +381,25 @@ public class MainActivity extends AppCompatActivity
 
         } else {
             locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-            // Define the criteria how to select the location provider -> use
-            // default
+            // Define the criteria how to select the location provider
             Criteria criteria = new Criteria();
             provider = locationManager.getBestProvider(criteria, false);
-
+            locationManager.requestSingleUpdate(provider, MainActivity.this, null);
             location = locationManager.getLastKnownLocation(provider);
 
-            // Initialize the location fields
-            if (location != null) {
-                onLocationChanged(location);
-            } else {
-                Toast.makeText(this, R.string.location_unavailable, Toast.LENGTH_SHORT).show();
+            // check if location is available
+            if (location == null) {
+                //let user know that location is unavailable, show city dialog to display venues by city
+                Toast.makeText(this, R.string.location_unavailable, Toast.LENGTH_LONG).show();
+                View parentView = findViewById(R.id.content_view);
+                Snackbar.make(parentView, R.string.snackbar_text, Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.snack_bar_action_text_city, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                cityOrNearDialog();
+                            }
+                        })
+                        .show();
             }
         }
     }
@@ -400,10 +422,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
+    //if location changes it is passed to fragments through viewpager, tabs are updated
+    //if user is viewing events with location off and then turns location on, we set
+    //new location equal to this.location, and pass values to fragments using viewpager adapter
+    //this updates views as soon as location is available
     @Override
     public void onLocationChanged(Location location) {
-        this.location = location;
+        if (this.location == null) {
+            this.location = location;
+            if (adapter != null) {
+                adapter.setQuery(query, city);
+            }
+        }
 
     }
 
