@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity
     private LocationManager locationManager;
     private CallbackManager callbackManager;
     private Location location;
+    private EnterCityDialogFragment cityDialogFragment;
     private String city, query, provider;
-    EnterCityDialogFragment cityDialogFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
