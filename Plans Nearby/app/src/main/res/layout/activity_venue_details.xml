@@ -137,7 +137,7 @@
             android:layout_margin="4dp"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <com.arroyo.nolberto.placeswithfriends.Activities.CustomListView
+        <com.arroyo.b.plansnearby.Activities.CustomListView
             android:id="@+id/tips_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

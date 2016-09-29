@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.arroyo.nolberto.placeswithfriends">
+    package="com.arroyo.b.plansnearby">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -20,7 +20,7 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".Activities.SplashActivity"
+            android:name="com.arroyo.b.plansnearby.Activities.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.MainActivity"
+            android:name="com.arroyo.b.plansnearby.Activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -48,17 +48,17 @@
             android:value="AIzaSyDPidBCQ6IC8dTrtWn1PJwm_2Y-_9GtddE" />
 
         <activity
-            android:name=".Activities.EventDetailsActivity"
+            android:name="com.arroyo.b.plansnearby.Activities.EventDetailsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.PickInterestsActivity"
+            android:name="com.arroyo.b.plansnearby.Activities.PickInterestsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.VenueDetailsActivity"
+            android:name="com.arroyo.b.plansnearby.Activities.VenueDetailsActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".Activities.SortingActivity"
+            android:name="com.arroyo.b.plansnearby.Activities.SortingActivity"
             android:screenOrientation="portrait"/>
     </application>
 
