@@ -2,129 +2,156 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
 
-    <TextView
-        android:id="@+id/about_app_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:text="@string/about_plans_nearby_title"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/about_app_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:text="@string/about_app_description"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-    <TextView
-        android:id="@+id/email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/dev_email"
-        android:autoLink="email"/>
-
-    <TextView
-        android:id="@+id/about_app_build_info_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:text="@string/about_app_build_info_title"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/about_app_build_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:text="@string/about_app_verion_text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/about_app_how_to"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="How To"
-        android:layout_margin="4dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-
-    <LinearLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/about_app_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="@string/about_plans_nearby_title"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/about_app_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about_app_title"
+            android:layout_marginTop="16dp"
+            android:text="@string/about_app_description"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about_app_description"
+            android:autoLink="email"
+            android:text="@string/dev_email" />
+
+        <TextView
+            android:id="@+id/about_app_build_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/email"
+            android:layout_marginTop="16dp"
+            android:text="@string/about_app_build_info_title"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/about_app_build_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about_app_build_info_title"
+            android:layout_marginTop="16dp"
+            android:text="@string/about_app_verion_text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/about_app_how_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about_app_build_info"
+            android:text="@string/about_app_how_to"
+            android:layout_marginTop="16dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
 
         <ImageView
             android:id="@+id/about_location_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
+            android:layout_below="@+id/about_app_how_to"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorPrimaryDark"
             android:padding="4dp"
-            android:src="@drawable/ic_near_me_white_24dp"
-            android:background="@color/colorPrimaryDark"/>
+            android:src="@drawable/ic_near_me_white_24dp" />
+
         <TextView
             android:id="@+id/about_location_icon_text"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
+            android:layout_below="@+id/about_app_how_to"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_toRightOf="@+id/about_location_icon"
+            android:layout_toEndOf="@+id/about_location_icon"
             android:text="@string/about_app_location_icon_text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/about_city_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about_location_icon_text"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorPrimaryDark"
+            android:padding="4dp"
+            android:src="@drawable/ic_location_city_white_24dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/about_city_icon_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about_location_icon_text"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toRightOf="@+id/about_location_icon"
+            android:layout_toEndOf="@+id/about_location_icon"
+            android:text="@string/about_app_city_icon_text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
 
         <ImageView
             android:id="@+id/about_search_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:src="@android:drawable/ic_menu_search"
-            android:background="@color/colorPrimaryDark" />
+            android:layout_below="@+id/about_city_icon_text"
+            android:background="@color/colorPrimaryDark"
+            android:layout_marginTop="16dp"
+            android:src="@android:drawable/ic_menu_search" />
+
         <TextView
             android:id="@+id/about_search_icon_text"
             android:layout_width="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
+            android:layout_below="@+id/about_city_icon_text"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_toRightOf="@+id/about_city_icon"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_toEndOf="@+id/about_city_icon"
             android:paddingLeft="4dp"
             android:text="@string/about_app_search_text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    </LinearLayout>
 
+        <TextView
+            android:id="@+id/about_app_attribution_eventbrite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about_search_icon_text"
+            android:layout_margin="4dp"
+            android:paddingLeft="4dp"
+            android:paddingTop="16dp"
+            android:text="@string/about_app_powered_by_eventbrite" />
 
-    <TextView
-        android:id="@+id/about_app_attribution_eventbrite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        android:layout_margin="4dp"
-        android:paddingLeft="4dp"
-        android:text="@string/about_app_powered_by_eventbrite" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/about_app_powered_by_fb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/about_app_attribution_eventbrite"
             android:layout_margin="4dp"
             android:paddingLeft="4dp"
             android:text="@string/about_app_powered_by" />
@@ -133,25 +160,31 @@
             android:id="@+id/about_app_attribution_facebook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/about_app_attribution_eventbrite"
             android:layout_margin="4dp"
+            android:layout_toRightOf="@+id/about_app_powered_by_fb"
+            android:layout_toEndOf="@+id/about_app_powered_by_fb"
             android:src="@drawable/com_facebook_button_icon_blue" />
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/about_app_attribution_google"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:paddingLeft="4dp"
-        android:src="@drawable/powered_by_google_light" />
-
-    <ImageView
-        android:id="@+id/about_app_attribution_foursquare"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:src="@drawable/poweredby_foursquare" />
 
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/about_app_attribution_google"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about_app_attribution_facebook"
+            android:layout_margin="4dp"
+            android:paddingLeft="4dp"
+
+            android:src="@drawable/powered_by_google_light" />
+
+        <ImageView
+            android:id="@+id/about_app_attribution_foursquare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about_app_attribution_google"
+
+            android:src="@drawable/poweredby_foursquare" />
+
+
+    </RelativeLayout>
 </ScrollView>

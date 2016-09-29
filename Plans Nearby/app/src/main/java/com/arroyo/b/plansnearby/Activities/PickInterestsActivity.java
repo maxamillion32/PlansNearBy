@@ -225,7 +225,7 @@ public class PickInterestsActivity extends AppCompatActivity implements View.OnC
     }
 
     //converting arraylist to Array and saving array to shareprefs
-    public void convertArraylistToArray(){
+    public void convertArraylistToArray() {
         String[] interests = userInterests.toArray(new String[userInterests.size()]);
         saveArray(interests, Constants.PREFS_INTEREST_ARRAY, this);
     }

@@ -246,6 +246,7 @@ public class EventDetailsActivity extends AppCompatActivity implements ItemClick
 
         return spanEventText;
     }
+
     // creates simpleDateFormat object to format text from UTC
     public void setdateText() {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

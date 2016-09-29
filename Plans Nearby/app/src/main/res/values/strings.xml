@@ -38,7 +38,7 @@
     <string name="nav_my_interests_title">My Interests</string>
     <string name="failed_venue_callback_toast">Problem fetching venues</string>
     <string name="venues_no_results_toast">Sorry, there are no venues available</string>
-    <string name="main_no_saved_venues_toast">You don\'t have any Favorites Yet</string>
+    <string name="main_no_saved_venues_toast">You don\'t have any saved venues yet</string>
     <string name="location_permission_rationale_toast">Location required to show you the best events and places</string>
     <string name="permission_granted_toast">Permission granted</string>
     <string name="permission_denied_tost">Oops you just denied the permission</string>
@@ -57,10 +57,14 @@
     <string name="about_app_build_info_title">Build Info</string>
     <string name="about_app_verion_text">version</string>
     <string name="about_app_powered_by_eventbrite">Powered by Eventbrite</string>
-    <string name="about_app_powered_by">Powered by :</string>
+    <string name="about_app_powered_by">Powered by </string>
     <string name="frag_weekend_title">Weekend Events</string>
     <string name="snackbar_text">Turn location on for local events, or view events by city.</string>
-    <string name="about_app_location_icon_text">Press this icon to show venues and events by current location or by city. Pressing this icon launches a dialog and asks for a city.</string>
+    <string name="about_app_location_icon_text">Displayed when viewing venues and events by current location. Pressing this icon launches a dialog and asks for a city.</string>
     <string name="about_app_search_text">Search current location for categories or specific events by title.  Currently only able to search events in nearby mode.</string>
-    <string name="snack_bar_action_text_city">"select city "</string>
+    <string name="snack_bar_action_text_city">"SELECT CITY "</string>
+    <string name="about_app_how_to">How To</string>
+    <string name="about_app_city_icon_text">Displayed when viewing events and venues by city. Press to go back to nearby events. Long press to search another city.</string>
+    <string name="no_venues_available">No venues available at this time</string>
+    <string name="no_events_available">No events available at this time</string>
 </resources>

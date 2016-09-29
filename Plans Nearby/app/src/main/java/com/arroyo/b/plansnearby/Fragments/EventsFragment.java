@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arroyo.b.plansnearby.Activities.MainActivity;
@@ -41,6 +42,7 @@ public class EventsFragment extends Fragment {
     private RecyclerView.Adapter rvAdapter;
     private RecyclerView.LayoutManager rvLayoutManager;
     private View root;
+    private TextView noResults;
     private SwipeRefreshLayout onSwipeRefresh;
     private ItemClickInterface onItemClickedListener;
     private EventsServiceInterface eventsServiceInterface;
@@ -67,6 +69,7 @@ public class EventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_events, container, false);
         setRecyclerView(root);
+        noResults = (TextView) root.findViewById(R.id.events_empty_view);
         setConnectionManager();
         categories = toDelimitedString(loadArray(Constants.PREFS_INTEREST_ARRAY, getActivity()));
         getLocationFromMain();
@@ -160,7 +163,7 @@ public class EventsFragment extends Fragment {
             getLocation(location);
         }
         //if all events fragment set categories to null, so all events are called
-        if (fragName.equalsIgnoreCase( Constants.TAB_ALL_EVENTS)) {
+        if (fragName.equalsIgnoreCase(Constants.TAB_ALL_EVENTS)) {
             categories = null;
         }
         getEventsCategoryList();
@@ -206,6 +209,7 @@ public class EventsFragment extends Fragment {
 
     /*
      * populates recyclerView with results from retrofit call, displays Toast if no results
+     * sets recyclerView to GONE and makes no results textView visible
      */
     public void populateEventsRecyclerView() {
         rvAdapter = new CustomRecyclerViewEventsAdapter(eventArrayList, (ItemClickInterface) getActivity());
@@ -214,7 +218,12 @@ public class EventsFragment extends Fragment {
         //if there are now results display toast
         if (eventArrayList.size() == 0) {
             Toast.makeText(getActivity(), R.string.venues_no_results_toast, Toast.LENGTH_SHORT).show();
+            recyclerView.setVisibility(View.GONE);
+            noResults.setVisibility(View.VISIBLE);
         }
+        recyclerView.setVisibility(View.VISIBLE);
+        noResults.setVisibility(View.GONE);
+
     }
 
     //gets values from SortingActivity and sets values

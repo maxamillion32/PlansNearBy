@@ -7,6 +7,8 @@ import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -345,7 +347,9 @@ public class MainActivity extends AppCompatActivity
 
     public void viewSavedPlacesDialog() {
         FavsFragment savedDialogFragment = new FavsFragment();
-        if (DataBaseHelper.FAVORITES_COLUMNS.length >= 1) {
+        SQLiteDatabase db = DataBaseHelper.getInstance(this).getReadableDatabase();
+        long numberOfRows = DatabaseUtils.queryNumEntries(db, DataBaseHelper.DataEntryFavorites.TABLE_NAME);
+        if (numberOfRows >= 1) {
             savedDialogFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
             savedDialogFragment.show(getSupportFragmentManager(), Constants.SAVED_VENUES_FRAGMENT);
         } else {
@@ -390,7 +394,7 @@ public class MainActivity extends AppCompatActivity
             // check if location is available
             if (location == null) {
                 //let user know that location is unavailable, show city dialog to display venues by city
-                Toast.makeText(this, R.string.location_unavailable, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.location_unavailable, Toast.LENGTH_SHORT).show();
                 View parentView = findViewById(R.id.content_view);
                 Snackbar.make(parentView, R.string.snackbar_text, Snackbar.LENGTH_INDEFINITE)
                         .setAction(R.string.snack_bar_action_text_city, new View.OnClickListener() {

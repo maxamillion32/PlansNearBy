@@ -77,8 +77,8 @@ public class CustomRecyclerViewVenuesAdapter extends RecyclerView.Adapter<Custom
 
             itemRating.setText(dataItem.getVenue().getRating().toString());
             itemRating.setTextColor(Color.WHITE);
-            itemRating.setTypeface(itemRating.getTypeface(),Typeface.BOLD);
-            String ratingColor = "#"+dataItem.getVenue().getRatingColor();
+            itemRating.setTypeface(itemRating.getTypeface(), Typeface.BOLD);
+            String ratingColor = "#" + dataItem.getVenue().getRatingColor();
             itemRating.setBackgroundColor(Color.parseColor(ratingColor));
         }
         if (dataItem.getVenue().getPrice() != null) {
@@ -99,14 +99,14 @@ public class CustomRecyclerViewVenuesAdapter extends RecyclerView.Adapter<Custom
         itemCategory.setText((CharSequence) dataItem.getVenue().getCategories().get(0).getName());
         itemCity.setText(dataItem.getVenue().getLocation().getCity());
 
-       //set venue photo using picasso
-        if (dataItem.getVenue().getFeaturedPhotos()!=null){
-        String suffix = dataItem.getVenue().getFeaturedPhotos().getItems().get(0).getSuffix();
-        String prefix = dataItem.getVenue().getFeaturedPhotos().getItems().get(0).getPrefix();
+        //set venue photo using picasso
+        if (dataItem.getVenue().getFeaturedPhotos() != null) {
+            String suffix = dataItem.getVenue().getFeaturedPhotos().getItems().get(0).getSuffix();
+            String prefix = dataItem.getVenue().getFeaturedPhotos().getItems().get(0).getPrefix();
 
-        String url = prefix + Constants.VENUE_IMAGE_SIZE + suffix;
-        Picasso.with(context).load(url).into(holder.itemImage);
-    }
+            String url = prefix + Constants.VENUE_IMAGE_SIZE + suffix;
+            Picasso.with(context).load(url).into(holder.itemImage);
+        }
     }
 
     @Override

@@ -7,17 +7,21 @@ import android.widget.ListView;
 
 /**
  * Created by nolbertoarroyo on 9/24/16.
+ * custom listview for venues details activity, list view doesn't scroll
  */
 public class CustomListView extends ListView {
     public CustomListView(Context context) {
         super(context);
     }
+
     public CustomListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
+
     public CustomListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
+
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int heightMeasureSpec_custom = MeasureSpec.makeMeasureSpec(

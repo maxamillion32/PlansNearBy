@@ -49,7 +49,8 @@ public class SplashActivity extends AppCompatActivity {
         }
         finish();
     }
-    public void checkLocationPermissions(){
+
+    public void checkLocationPermissions() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -69,11 +70,12 @@ public class SplashActivity extends AppCompatActivity {
             }
 
 
-        }else {
+        } else {
             setSharedPrefs();
         }
 
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 

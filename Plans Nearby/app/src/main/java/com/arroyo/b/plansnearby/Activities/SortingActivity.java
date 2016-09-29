@@ -18,12 +18,12 @@ import com.arroyo.b.plansnearby.R;
  * activity receives nav drawer selections, and host fragments selected in nav drawer
  * trending, coffee, and about fragments
  */
-public class SortingActivity extends AppCompatActivity implements ItemClickInterface{
+public class SortingActivity extends AppCompatActivity implements ItemClickInterface {
     private VenuesFragment venuesFragment;
     private EventsFragment weekendEvents;
     private FragmentTransaction transaction;
     private AboutFragment aboutFragment;
-    private String city,section;
+    private String city, section;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +33,7 @@ public class SortingActivity extends AppCompatActivity implements ItemClickInter
         startCategoryFragment();
 
     }
+
     //gets category and city from MainActivity intent
     public void receiveCategoryFromMain() {
         Intent intent = getIntent();
@@ -40,25 +41,26 @@ public class SortingActivity extends AppCompatActivity implements ItemClickInter
         this.section = intent.getStringExtra(Constants.MAIN_DRAWER_CATEGORY_KEY);
 
     }
-    //checking which fragment to start using the category received from MainActivity
-    public void startCategoryFragment(){
 
-        if (section.equalsIgnoreCase(Constants.MAIN_CATEGORY_TRENDING)|| section.equalsIgnoreCase(Constants.MAIN_CATEGORY_COFFEE)) {
+    //checking which fragment to start using the category received from MainActivity
+    public void startCategoryFragment() {
+
+        if (section.equalsIgnoreCase(Constants.MAIN_CATEGORY_TRENDING) || section.equalsIgnoreCase(Constants.MAIN_CATEGORY_COFFEE)) {
             venuesFragment = new VenuesFragment();
             venuesFragment.setValues(city, section);
             launchFragment(venuesFragment);
-        }else if (section.equalsIgnoreCase(Constants.MAIN_CATEGORY_WEEKEND)){
+        } else if (section.equalsIgnoreCase(Constants.MAIN_CATEGORY_WEEKEND)) {
             weekendEvents = new EventsFragment();
-            weekendEvents.setValues(city,section);
+            weekendEvents.setValues(city, section);
             launchFragment(weekendEvents);
-        }else {
+        } else {
             aboutFragment = new AboutFragment();
             launchFragment(aboutFragment);
         }
 
-        if (section.equalsIgnoreCase(Constants.MAIN_CATEGORY_WEEKEND)){
+        if (section.equalsIgnoreCase(Constants.MAIN_CATEGORY_WEEKEND)) {
             getSupportActionBar().setTitle(R.string.frag_weekend_title);
-        }else{
+        } else {
 
             getSupportActionBar().setTitle(section);
         }
@@ -66,7 +68,7 @@ public class SortingActivity extends AppCompatActivity implements ItemClickInter
 
     }
 
-    public void launchFragment (Fragment fragment){
+    public void launchFragment(Fragment fragment) {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
@@ -81,8 +83,8 @@ public class SortingActivity extends AppCompatActivity implements ItemClickInter
         super.onPause();
         transaction.detach(venuesFragment);
         transaction.detach(weekendEvents);
-        this.city=null;
-        this.section=null;
+        this.city = null;
+        this.section = null;
     }
 
     @Override

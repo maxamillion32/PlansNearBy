@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arroyo.b.plansnearby.Activities.MainActivity;
@@ -41,6 +42,7 @@ public class VenuesFragment extends Fragment {
     private RecyclerView.LayoutManager rvLayoutManager;
     private SwipeRefreshLayout onSwipeRefresh;
     private View root;
+    private TextView noResults;
     private FourSquareServiceInterface fourSquareServiceInterface;
     private ItemClickInterface onItemClickedListener;
     private ConnectivityManager connMgr;
@@ -66,8 +68,8 @@ public class VenuesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_venues, container, false);
         setRecyclerView();
-        connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        networkInfo = connMgr.getActiveNetworkInfo();
+        noResults = (TextView) root.findViewById(R.id.venues_empty_view);
+        setConnectionManager();
         getLocationFromMain();
         getLocation(location);
         startFragment();
@@ -180,17 +182,20 @@ public class VenuesFragment extends Fragment {
         }
     }
 
-
-    //populates recyclerView with results from retrofit call, displays Toast if no results
-
+    //populates recyclerView with results from retrofit call, displays Toast if no results, sets
+    //recyclerView to GONE and makes no results textView visible
     public void populateVenuesRecyclerView() {
         rvAdapter = new CustomRecyclerViewVenuesAdapter(venues, (ItemClickInterface) getActivity());
         recyclerView.setAdapter(rvAdapter);
 
-        //if there are now results display toast
+        //if there are no results from api, show toast and show no venues textView
         if (venues.size() == 0) {
             Toast.makeText(getActivity(), R.string.venues_no_results_toast, Toast.LENGTH_SHORT).show();
+            recyclerView.setVisibility(View.GONE);
+            noResults.setVisibility(View.VISIBLE);
         }
+        recyclerView.setVisibility(View.VISIBLE);
+        noResults.setVisibility(View.GONE);
     }
 
     public void setOnSwipeRefresh() {
@@ -198,20 +203,31 @@ public class VenuesFragment extends Fragment {
             @Override
             public void onRefresh() {
                 getLocation(location);
-                getVenuesList();
+                startFragment();
+
             }
         });
     }
 
-    //
+    //if location or city is not null displays list of venues, else makes recyclerView GONE and
+    //shows textView
     public void startFragment() {
         if (location != null || city != null) {
 
             getVenuesList();
         } else {
             //only happens when app is launched without location services on
-            Toast.makeText(getActivity(), R.string.venues_no_results_toast, Toast.LENGTH_SHORT).show();
+
+            noResults.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            onSwipeRefresh.setRefreshing(false);
+
         }
+    }
+
+    public void setConnectionManager() {
+        connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkInfo = connMgr.getActiveNetworkInfo();
     }
 
 
