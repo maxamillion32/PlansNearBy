@@ -55,9 +55,6 @@ public class Item__ {
     @SerializedName("disagreeCount")
     @Expose
     private Integer disagreeCount;
-    @SerializedName("todo")
-    @Expose
-    private Todo todo;
     @SerializedName("user")
     @Expose
     private User user;
@@ -135,14 +132,6 @@ public class Item__ {
 
     public void setDisagreeCount(Integer disagreeCount) {
         this.disagreeCount = disagreeCount;
-    }
-
-    public Todo getTodo() {
-        return todo;
-    }
-
-    public void setTodo(Todo todo) {
-        this.todo = todo;
     }
 
     public String getAuthorInteractionType() {

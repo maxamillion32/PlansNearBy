@@ -13,7 +13,6 @@ public class Venue {
     @SerializedName("id")
     @Expose
     private String id;
-    private String discription;
     @SerializedName("name")
     @Expose
     private String name;
@@ -62,15 +61,9 @@ public class Venue {
     @SerializedName("specials")
     @Expose
     private Specials specials;
-    @SerializedName("reasons")
-    @Expose
-    private Reasons reasons;
     @SerializedName("tips")
     @Expose
     private Tip tips;
-    @SerializedName("bestPhoto")
-    @Expose
-    private BestPhoto bestPhoto;
     @SerializedName("photos")
     @Expose
 
@@ -94,29 +87,12 @@ public class Venue {
         this.specials = specials;
     }
 
-
-    public Reasons getReasons() {
-        return reasons;
-    }
-
-    public void setReasons(Reasons reasons) {
-        this.reasons = reasons;
-    }
-
     public Tip getTips() {
         return tips;
     }
 
     public void setTips(Tip tips) {
         this.tips = tips;
-    }
-
-    public BestPhoto getBestPhoto() {
-        return bestPhoto;
-    }
-
-    public void setBestPhoto(BestPhoto bestPhoto) {
-        this.bestPhoto = bestPhoto;
     }
 
     public String getUrl() {
@@ -428,12 +404,5 @@ public class Venue {
         this.hereNow = hereNow;
     }
 
-    public String getDiscription() {
-        return discription;
-    }
-
-    public void setDiscription(String discription) {
-        this.discription = discription;
-    }
 }
 

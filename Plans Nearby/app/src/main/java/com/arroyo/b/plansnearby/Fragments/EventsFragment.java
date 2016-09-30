@@ -217,12 +217,15 @@ public class EventsFragment extends Fragment {
 
         //if there are now results display toast
         if (eventArrayList.size() == 0) {
-            Toast.makeText(getActivity(), R.string.venues_no_results_toast, Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(getActivity(), R.string.no_events_available, Toast.LENGTH_SHORT).show();
             recyclerView.setVisibility(View.GONE);
             noResults.setVisibility(View.VISIBLE);
+        }else{
+
+            recyclerView.setVisibility(View.VISIBLE);
+            noResults.setVisibility(View.GONE);
         }
-        recyclerView.setVisibility(View.VISIBLE);
-        noResults.setVisibility(View.GONE);
 
     }
 
