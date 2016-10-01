@@ -55,3 +55,5 @@
 -keepclassmembers class * {
     @com.squareup.picasso.** *;
 }
+-keepattributes InnerClasses,EnclosingMethod
+-dontoptimize

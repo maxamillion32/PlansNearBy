@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,7 +78,6 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
         TextView itemPrice = holder.itemPrice;
         TextView itemDate = holder.itemDate;
 
-        YoYo.with(Techniques.FadeIn).playOn(holder.cardView);
         //populate the views with dataItem properties
 
         if (dataItem.getLogo() != null) {
@@ -118,7 +116,6 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView itemImage;
         public TextView itemTitle, itemCategory, itemAddress, itemPrice, itemDate;
-        public CardView cardView;
 
 
         public ViewHolder(View itemView) {
@@ -130,7 +127,6 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
             itemAddress = (TextView) itemView.findViewById(R.id.list_item_distance);
             itemPrice = (TextView) itemView.findViewById(R.id.list_item_price);
             itemDate = (TextView) itemView.findViewById(R.id.list_item_date);
-            cardView = (CardView) itemView.findViewById(R.id.list_item_cardview);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
