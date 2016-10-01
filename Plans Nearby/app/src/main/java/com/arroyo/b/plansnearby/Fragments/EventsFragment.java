@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +37,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by nolbertoarroyo on 9/1/16.
+ * sets event tabs,processed data comming from MainActivity and calls api service
+ * to populate recyclerviews
  */
 public class EventsFragment extends Fragment {
+    private static final int VISIBLE_THRESHOLD = 10;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter rvAdapter;
     private RecyclerView.LayoutManager rvLayoutManager;
+    private RecyclerView.OnScrollListener scrollListener;
     private View root;
     private TextView noResults;
     private SwipeRefreshLayout onSwipeRefresh;
@@ -52,7 +57,9 @@ public class EventsFragment extends Fragment {
     private Call<Events> call;
     private Location location;
     private String resultQuery, lon, lat, city, categories, weekendOnly, fragName;
-
+    private boolean isLoading = false;
+    private boolean isLastPage = false;
+    private int page = 1;
 
     @Override
     public void onAttach(Context context) {
@@ -101,11 +108,19 @@ public class EventsFragment extends Fragment {
         call.enqueue(new Callback<Events>() {
             @Override
             public void onResponse(Call<Events> call, Response<Events> response) {
+                isLoading = false;
+                //if page is greater than 1, then we are taking new response and updating eventsArraylist
+                //we notify adapter with new data
+                //to update views, if page is 1 it means it is the first call and will populate views
+                if (page > 1) {
+                    ArrayList<Event> updateList = (ArrayList<Event>) response.body().getEvents();
+                    updateEventsList(updateList);
 
-                eventArrayList = (ArrayList<Event>) response.body().getEvents();
-                populateEventsRecyclerView();
-                onSwipeRefresh.setRefreshing(false);
-
+                } else {
+                    eventArrayList = (ArrayList<Event>) response.body().getEvents();
+                    populateEventsRecyclerView();
+                    onSwipeRefresh.setRefreshing(false);
+                }
             }
 
             @Override
@@ -123,7 +138,29 @@ public class EventsFragment extends Fragment {
         recyclerView = (RecyclerView) v.findViewById(R.id.events_frag_recycler_view);
         rvLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(rvLayoutManager);
+        scrollListener = new RecyclerView.OnScrollListener() {
+            //onScrolled runs loadMore() when it reaches the bottom of the list
 
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = rvLayoutManager.getChildCount();
+                int totalItemCount = rvLayoutManager.getItemCount();
+                int firstVisibleItemPosition = ((LinearLayoutManager)
+                        recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+
+                if (!isLoading && !isLastPage) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= (totalItemCount - VISIBLE_THRESHOLD)
+                            && firstVisibleItemPosition >= 0
+                            && totalItemCount >= Constants.PAGE_SIZE) {
+                        loadMore();
+
+                    }
+                }
+
+            }
+        };
+        recyclerView.addOnScrollListener(scrollListener);
     }
 
     //getting location object from main activity
@@ -154,6 +191,7 @@ public class EventsFragment extends Fragment {
     }
 
     public void setCategoryQuery(String resultQuery, String city, String fragmentName) {
+        this.page = 1;
         this.resultQuery = resultQuery;
         this.city = city;
         this.fragName = fragmentName;
@@ -204,7 +242,8 @@ public class EventsFragment extends Fragment {
             lon = null;
         }
         checkWhichFragmentToStart();
-        call = eventsServiceInterface.getEventsCatResults(resultQuery, city, lat, lon, weekendOnly, categories);
+        String sPage = String.valueOf(page);
+        call = eventsServiceInterface.getEventsCatResults(resultQuery, city, lat, lon, weekendOnly, categories, sPage);
     }
 
     /*
@@ -217,12 +256,15 @@ public class EventsFragment extends Fragment {
 
         //if there are now results display toast
         if (eventArrayList.size() == 0) {
-            Toast.makeText(getActivity(), R.string.venues_no_results_toast, Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(getActivity(), R.string.no_events_available, Toast.LENGTH_SHORT).show();
             recyclerView.setVisibility(View.GONE);
             noResults.setVisibility(View.VISIBLE);
+        } else {
+
+            recyclerView.setVisibility(View.VISIBLE);
+            noResults.setVisibility(View.GONE);
         }
-        recyclerView.setVisibility(View.VISIBLE);
-        noResults.setVisibility(View.GONE);
 
     }
 
@@ -237,6 +279,28 @@ public class EventsFragment extends Fragment {
         if (weekendOnly != null ||
                 fragName.equalsIgnoreCase(Constants.TAB_ALL_EVENTS)) {
             categories = null;
+        }
+    }
+
+    //changes increments page and makes a new call to update data
+    public void loadMore() {
+        isLoading = true;
+        this.page++;
+        getEventsCategoryList();
+
+    }
+
+    //takes new list returned from api call, and added to existing list if it has data
+    public void updateEventsList(ArrayList<Event> updateList) {
+        if (!updateList.isEmpty()) {
+            for (Event event : updateList) {
+                eventArrayList.add(event);
+                rvAdapter.notifyDataSetChanged();
+                onSwipeRefresh.setRefreshing(false);
+            }
+        } else {
+            onSwipeRefresh.setRefreshing(false);
+            isLastPage = true;
         }
     }
 

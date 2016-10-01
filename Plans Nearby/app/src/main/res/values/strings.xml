@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Plans Nearby</string>
-    <string name="facebook_application_id" translatable="false">545613042230072</string>
+    <string name="facebook_application_id">545613042230072</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
@@ -55,7 +55,7 @@
     <string name="dev_email">bArroyoDev@gmail.com</string>
     <string name="about_plans_nearby_title">About Plans Nearby</string>
     <string name="about_app_build_info_title">Build Info</string>
-    <string name="about_app_verion_text">version</string>
+    <string name="about_app_version_text">1.0</string>
     <string name="about_app_powered_by_eventbrite">Powered by Eventbrite</string>
     <string name="about_app_powered_by">Powered by </string>
     <string name="frag_weekend_title">Weekend Events</string>

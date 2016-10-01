@@ -191,11 +191,13 @@ public class VenuesFragment extends Fragment {
         //if there are no results from api, show toast and show no venues textView
         if (venues.size() == 0) {
             Toast.makeText(getActivity(), R.string.venues_no_results_toast, Toast.LENGTH_SHORT).show();
-            recyclerView.setVisibility(View.GONE);
             noResults.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }else{
+
+            recyclerView.setVisibility(View.VISIBLE);
+            noResults.setVisibility(View.GONE);
         }
-        recyclerView.setVisibility(View.VISIBLE);
-        noResults.setVisibility(View.GONE);
     }
 
     public void setOnSwipeRefresh() {

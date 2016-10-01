@@ -42,5 +42,7 @@ public class Constants {
     public static final String SELECTED_VENUE_ID_KEY = "selected venue id";
     public static final String VENUE_IMAGE_SIZE = "original";
 
+    public static final int PAGE_SIZE= 50;
+
 
 }

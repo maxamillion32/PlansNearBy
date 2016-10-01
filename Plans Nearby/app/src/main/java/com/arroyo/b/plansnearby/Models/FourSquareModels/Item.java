@@ -10,10 +10,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class Item {
 
-    @SerializedName("reasons")
-    @Expose
-    private Reasons reasons;
-    @SerializedName("venue")
     @Expose
     private Venue venue;
     @SerializedName("referralId")
@@ -23,23 +19,6 @@ public class Item {
     @Expose
     private List<Tip> tips = new ArrayList<Tip>();
 
-    /**
-     *
-     * @return
-     * The reasons
-     */
-    public Reasons getReasons() {
-        return reasons;
-    }
-
-    /**
-     *
-     * @param reasons
-     * The reasons
-     */
-    public void setReasons(Reasons reasons) {
-        this.reasons = reasons;
-    }
 
     /**
      *

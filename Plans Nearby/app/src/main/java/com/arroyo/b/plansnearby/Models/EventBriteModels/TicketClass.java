@@ -14,12 +14,6 @@ public class TicketClass {
     @SerializedName("cost")
     @Expose
     private Cost cost;
-    @SerializedName("fee")
-    @Expose
-    private Fee fee;
-    @SerializedName("tax")
-    @Expose
-    private Tax tax;
     @SerializedName("resource_uri")
     @Expose
     private String resourceUri;
@@ -88,42 +82,6 @@ public class TicketClass {
      */
     public void setCost(Cost cost) {
         this.cost = cost;
-    }
-
-    /**
-     *
-     * @return
-     * The fee
-     */
-    public Fee getFee() {
-        return fee;
-    }
-
-    /**
-     *
-     * @param fee
-     * The fee
-     */
-    public void setFee(Fee fee) {
-        this.fee = fee;
-    }
-
-    /**
-     *
-     * @return
-     * The tax
-     */
-    public Tax getTax() {
-        return tax;
-    }
-
-    /**
-     *
-     * @param tax
-     * The tax
-     */
-    public void setTax(Tax tax) {
-        this.tax = tax;
     }
 
     /**

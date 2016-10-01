@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "184161971036",
-    "firebase_url": "https://plans-nearby.firebaseio.com",
-    "project_id": "plans-nearby",
-    "storage_bucket": "plans-nearby.appspot.com"
+    "project_number": "119762574175",
+    "firebase_url": "https://places-with-friends-6942.firebaseio.com",
+    "project_id": "places-with-friends-6942",
+    "storage_bucket": "places-with-friends-6942.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:184161971036:android:1826db0f49afe788",
+        "mobilesdk_app_id": "1:119762574175:android:e6ef02d6f6474079",
         "android_client_info": {
-          "package_name": "com.arroyo.b.plansNearby"
+          "package_name": "com.arroyo.b.plansnearby"
         }
       },
       "oauth_client": [
         {
-          "client_id": "184161971036-tldf3k2v833hisr3o0ng00oqs2me9u13.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.arroyo.b.plansNearby",
-            "certificate_hash": "032DE90180D992A0336346D2C6C7F18B7028862C"
-          }
-        },
-        {
-          "client_id": "184161971036-95kp6s4i0ms5gpsfmea3guhc738dv90a.apps.googleusercontent.com",
+          "client_id": "119762574175-80lt3vh0oggic5kleg26npuap862hdue.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyALPmAjtv07M1PeoGrVKpzoz1QUSvY9RU8"
+          "current_key": "AIzaSyDPidBCQ6IC8dTrtWn1PJwm_2Y-_9GtddE"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "184161971036-95kp6s4i0ms5gpsfmea3guhc738dv90a.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

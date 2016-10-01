@@ -14,7 +14,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -28,12 +27,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
 import com.arroyo.b.plansnearby.Constants;
 import com.arroyo.b.plansnearby.DataBaseHelper;
 import com.arroyo.b.plansnearby.Fragments.EnterCityDialogFragment;
@@ -48,10 +45,8 @@ import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 
@@ -63,7 +58,6 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener, ItemClickInterface, LocationListener {
-    private static final int FB_SIGN_IN = 1;
     public static Activity activity;
     private Toolbar toolbar;
     private Menu menu;
@@ -128,8 +122,8 @@ public class MainActivity extends AppCompatActivity
             LoginManager.getInstance().logOut();
             item.setTitle(R.string.com_facebook_loginview_log_in_button_long);
         } else {
-            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
             item.setTitle(R.string.com_facebook_loginview_log_out_action);
+            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
         }
     }
 
@@ -473,35 +467,9 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
-    //Firebase Login for later use
-    public void loginFirebase() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
-            Toast.makeText(MainActivity.this, auth.getCurrentUser().getDisplayName() + "signed on", Toast.LENGTH_SHORT).show();
-        } else {
-            startActivityForResult(AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setProviders(
-                            AuthUI.FACEBOOK_PROVIDER)
-                    .build(), 1);
-            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
-        }
-    }
-
-    //Firebase signIn result, will implement in later release
+    //facebook login result being passed to callback manager
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == FB_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                // user is signed in!
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
-            } else {
-                // user is not signed in. Maybe just wait for the user to press
-                Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
-            }
-        }
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
 

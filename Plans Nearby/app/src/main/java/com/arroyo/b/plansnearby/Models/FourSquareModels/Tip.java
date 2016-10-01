@@ -46,9 +46,6 @@ public class Tip {
     @SerializedName("disagreeCount")
     @Expose
     private Integer disagreeCount;
-    @SerializedName("todo")
-    @Expose
-    private Todo todo;
     @SerializedName("user")
     @Expose
     private User user;
@@ -167,20 +164,6 @@ public class Tip {
      */
     public void setDisagreeCount(Integer disagreeCount) {
         this.disagreeCount = disagreeCount;
-    }
-
-    /**
-     * @return The todo
-     */
-    public Todo getTodo() {
-        return todo;
-    }
-
-    /**
-     * @param todo The todo
-     */
-    public void setTodo(Todo todo) {
-        this.todo = todo;
     }
 
     /**

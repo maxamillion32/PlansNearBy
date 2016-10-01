@@ -30,7 +30,7 @@ public interface EventsServiceInterface {
             @Query("q") String query,
             @Query("location.address") String city, @Query("location.latitude") String lat,
             @Query("location.longitude") String lon, @Query("start_date.keyword") String weekendOnly,
-            @Query("categories") String category);
+            @Query("categories") String category,@Query("page")String page);
 
 
 }

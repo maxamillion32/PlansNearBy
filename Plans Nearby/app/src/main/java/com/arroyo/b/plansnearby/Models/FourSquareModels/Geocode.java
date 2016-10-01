@@ -15,9 +15,7 @@ public class Geocode {
     @SerializedName("where")
     @Expose
     private String where;
-    @SerializedName("center")
-    @Expose
-    private Center center;
+
     @SerializedName("displayString")
     @Expose
     private String displayString;
@@ -54,20 +52,6 @@ public class Geocode {
      */
     public void setWhere(String where) {
         this.where = where;
-    }
-
-    /**
-     * @return The center
-     */
-    public Center getCenter() {
-        return center;
-    }
-
-    /**
-     * @param center The center
-     */
-    public void setCenter(Center center) {
-        this.center = center;
     }
 
     /**
