@@ -3,10 +3,10 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-            keyAlias 'plansNearbyApp'
-            keyPassword 'it5yaboyB$1'
-            storeFile file('/Users/nolbertoarroyo/Desktop/key/plansNearbyKey.jks')
-            storePassword 'it5yaboyB$1'
+            keyAlias myKeyAlias
+            keyPassword myKeyPassword
+            storeFile file(myStoreFile)
+            storePassword myStorePassword
         }
     }
     compileSdkVersion 24
