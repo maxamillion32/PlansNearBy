@@ -388,7 +388,7 @@ public class EventDetailsActivity extends AppCompatActivity implements ItemClick
             if (bitmap != null) {
                 BitmapDrawable d = new BitmapDrawable(bitmap);
                 loadedDrawable.addLevel(1, 1, d);
-                int width = eventDescription.getWidth() < bitmap.getWidth() ? eventDescription.getWidth() : bitmap.getWidth();
+                int width = eventDescription.getWidth();
                 int height = bitmap.getHeight() * width / bitmap.getWidth();
                 loadedDrawable.setBounds(0, 0, width, height);
                 loadedDrawable.setLevel(1);

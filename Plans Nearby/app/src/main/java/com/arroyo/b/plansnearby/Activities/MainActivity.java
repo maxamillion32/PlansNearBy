@@ -300,6 +300,7 @@ public class MainActivity extends AppCompatActivity
     public void onUserSelectValue(String selectedValue) {
         // TODO add your implementation.
         menu.findItem(R.id.location).setIcon(R.drawable.ic_location_city_white_24dp);
+        menu.findItem(R.id.location).setTitle(selectedValue);
         this.city = selectedValue;
         this.query = null;
         adapter.setQuery(query, city);
@@ -317,6 +318,7 @@ public class MainActivity extends AppCompatActivity
             cityDialogFragment.show(getSupportFragmentManager(), Constants.CITY_FRAGMENT);
         } else {
             menu.findItem(R.id.location).setIcon(R.drawable.ic_near_me_white_24dp);
+            menu.findItem(R.id.location).setTitle(R.string.menu_nearby_title);
             this.city = null;
             adapter.setQuery(query, city);
         }
