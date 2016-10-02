@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.arroyo.b.plansnearby.Constants;
+import com.arroyo.b.plansnearby.Utils.Constants;
 import com.arroyo.b.plansnearby.Fragments.AboutFragment;
 import com.arroyo.b.plansnearby.Fragments.EventsFragment;
 import com.arroyo.b.plansnearby.Fragments.VenuesFragment;

@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.arroyo.b.plansnearby.Activities.VenueDetailsActivity;
-import com.arroyo.b.plansnearby.Constants;
+import com.arroyo.b.plansnearby.Utils.Constants;
 import com.arroyo.b.plansnearby.Interfaces.ItemClickInterface;
 import com.arroyo.b.plansnearby.Models.FourSquareModels.Item;
 import com.arroyo.b.plansnearby.R;
@@ -123,7 +123,7 @@ public class CustomRecyclerViewVenuesAdapter extends RecyclerView.Adapter<Custom
             itemImage = (ImageView) itemView.findViewById(R.id.list_item_image);
             itemTitle = (TextView) itemView.findViewById(R.id.list_item_title);
             itemCategory = (TextView) itemView.findViewById(R.id.list_item_category);
-            itemCity = (TextView) itemView.findViewById(R.id.list_item_distance);
+            itemCity = (TextView) itemView.findViewById(R.id.list_item_address);
             itemRating = (TextView) itemView.findViewById(R.id.list_item_price);
             itemPriceTier = (TextView) itemView.findViewById(R.id.list_item_date);
 

@@ -4,7 +4,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.arroyo.b.plansnearby.Constants;
+import com.arroyo.b.plansnearby.Utils.Constants;
 import com.arroyo.b.plansnearby.Fragments.VenuesFragment;
 import com.arroyo.b.plansnearby.Fragments.EventsFragment;
 

@@ -1,4 +1,4 @@
-package com.arroyo.b.plansnearby;
+package com.arroyo.b.plansnearby.Utils;
 
 import android.content.ContentValues;
 import android.content.Context;
