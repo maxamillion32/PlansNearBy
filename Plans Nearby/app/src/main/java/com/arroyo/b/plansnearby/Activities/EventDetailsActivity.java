@@ -350,7 +350,7 @@ public class EventDetailsActivity extends AppCompatActivity implements ItemClick
     public Drawable getDrawable(String source) {
         //setting a default drawable and starting async task to download event images
         LevelListDrawable d = new LevelListDrawable();
-        Drawable empty = getResources().getDrawable(R.drawable.plansnearbylogo);
+        Drawable empty = getResources().getDrawable(android.R.drawable.stat_sys_download);
         d.addLevel(0, 0, empty);
         d.setBounds(0, 0, empty.getIntrinsicWidth(), empty.getIntrinsicHeight());
 

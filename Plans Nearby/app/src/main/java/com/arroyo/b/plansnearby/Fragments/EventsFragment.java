@@ -40,7 +40,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * to populate recyclerviews
  */
 public class EventsFragment extends Fragment {
-    private static final int VISIBLE_THRESHOLD = 10;
+    private static final int VISIBLE_THRESHOLD = 5;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter rvAdapter;
     private RecyclerView.LayoutManager rvLayoutManager;
