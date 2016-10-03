@@ -16,8 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.arroyo.b.plansnearby.Activities.VenueDetailsActivity;
-import com.arroyo.b.plansnearby.Constants;
-import com.arroyo.b.plansnearby.DataBaseHelper;
+import com.arroyo.b.plansnearby.Utils.Constants;
+import com.arroyo.b.plansnearby.Utils.DataBaseHelper;
 import com.arroyo.b.plansnearby.R;
 
 /**

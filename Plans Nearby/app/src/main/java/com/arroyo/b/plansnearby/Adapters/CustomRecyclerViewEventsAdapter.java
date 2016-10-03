@@ -12,12 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.arroyo.b.plansnearby.Activities.EventDetailsActivity;
-import com.arroyo.b.plansnearby.Constants;
+import com.arroyo.b.plansnearby.Utils.Constants;
 import com.arroyo.b.plansnearby.Interfaces.ItemClickInterface;
 import com.arroyo.b.plansnearby.Models.EventBriteModels.Event;
 import com.arroyo.b.plansnearby.R;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -124,7 +122,7 @@ public class CustomRecyclerViewEventsAdapter extends RecyclerView.Adapter<Custom
             itemImage = (ImageView) itemView.findViewById(R.id.list_item_image);
             itemTitle = (TextView) itemView.findViewById(R.id.list_item_title);
             itemCategory = (TextView) itemView.findViewById(R.id.list_item_category);
-            itemAddress = (TextView) itemView.findViewById(R.id.list_item_distance);
+            itemAddress = (TextView) itemView.findViewById(R.id.list_item_address);
             itemPrice = (TextView) itemView.findViewById(R.id.list_item_price);
             itemDate = (TextView) itemView.findViewById(R.id.list_item_date);
 

@@ -55,7 +55,7 @@
     <string name="dev_email">bArroyoDev@gmail.com</string>
     <string name="about_plans_nearby_title">About Plans Nearby</string>
     <string name="about_app_build_info_title">Build Info</string>
-    <string name="about_app_version_text">1.0</string>
+    <string name="about_app_version_text">Version 1.0</string>
     <string name="about_app_powered_by_eventbrite">Powered by Eventbrite</string>
     <string name="about_app_powered_by">Powered by </string>
     <string name="frag_weekend_title">Weekend Events</string>
@@ -67,4 +67,6 @@
     <string name="about_app_city_icon_text">Displayed when viewing events and venues by city. Press to go back to nearby events. Long press to search another city.</string>
     <string name="no_venues_available">No venues available at this time</string>
     <string name="no_events_available">No events available at this time</string>
+    <string name="menu_search_title">Search</string>
+    <string name="menu_nearby_title">Nearby</string>
 </resources>

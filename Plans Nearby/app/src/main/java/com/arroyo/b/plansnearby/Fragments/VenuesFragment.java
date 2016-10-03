@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.arroyo.b.plansnearby.Activities.MainActivity;
 import com.arroyo.b.plansnearby.Adapters.CustomRecyclerViewVenuesAdapter;
-import com.arroyo.b.plansnearby.Constants;
+import com.arroyo.b.plansnearby.Utils.Constants;
 import com.arroyo.b.plansnearby.Interfaces.FourSquareServiceInterface;
 import com.arroyo.b.plansnearby.Interfaces.ItemClickInterface;
 import com.arroyo.b.plansnearby.Models.FourSquareModels.CallBackResult;

@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.arroyo.b.plansnearby.Constants;
+import com.arroyo.b.plansnearby.Utils.Constants;
 import com.arroyo.b.plansnearby.R;
 
 public class SplashActivity extends AppCompatActivity {

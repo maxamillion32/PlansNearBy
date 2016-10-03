@@ -1,4 +1,6 @@
-package com.arroyo.b.plansnearby;
+package com.arroyo.b.plansnearby.Utils;
+
+import com.arroyo.b.plansnearby.BuildConfig;
 
 /**
  * Created by nolbertoarroyo on 9/16/16.

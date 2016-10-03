@@ -5,10 +5,16 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LevelListDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.CalendarContract;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +23,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
@@ -26,7 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.arroyo.b.plansnearby.Constants;
+import com.arroyo.b.plansnearby.Utils.Constants;
 import com.arroyo.b.plansnearby.Interfaces.EventsServiceInterface;
 import com.arroyo.b.plansnearby.Interfaces.ItemClickInterface;
 import com.arroyo.b.plansnearby.Models.EventBriteModels.Event;
@@ -36,6 +43,11 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.squareup.picasso.Picasso;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -51,7 +63,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * this activity displays event details
  */
-public class EventDetailsActivity extends AppCompatActivity implements ItemClickInterface, View.OnClickListener {
+public class EventDetailsActivity extends AppCompatActivity implements ItemClickInterface, View.OnClickListener, Html.ImageGetter {
     private static final String CALENDAR_PERMISSION = Manifest.permission.WRITE_CALENDAR;
     private static final int PERMISSION_REQUEST_CODE = 12345;
     private ImageView eventImage, share, directions;
@@ -115,11 +127,13 @@ public class EventDetailsActivity extends AppCompatActivity implements ItemClick
                 //set event title
                 eventTitle.setText(event.getName().getText());
                 //set event description
+                String source = event.getDescription().getHtml();
                 if (event.getDescription().getHtml() != null) {
-
-                    eventDescription.setText(Html.fromHtml(event.getDescription().getHtml()));
+                    Spanned spanHtml = Html.fromHtml(source, EventDetailsActivity.this, null);
+                    eventDescription.setText(spanHtml);
                     eventDescription.setMovementMethod(LinkMovementMethod.getInstance());
                 }
+
 
                 //set event address if available
                 if (event.getVenue() != null) {
@@ -255,7 +269,9 @@ public class EventDetailsActivity extends AppCompatActivity implements ItemClick
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
             String formattedEventDate = new SimpleDateFormat("EEE, MMM d, hh:mm a").format(date);
-            if (formattedEventDate.charAt(13) != '0' && formattedEventDate.charAt(12) <= 10 || formattedEventDate.charAt(12) != '0' && formattedEventDate.charAt(11) <= 9) {
+            if (formattedEventDate.charAt(13) != '0' && formattedEventDate.charAt(12) <= 10 ||
+                    formattedEventDate.charAt(12) != '0' &&
+                            formattedEventDate.charAt(11) <= 9) {
                 formattedEventDate = new SimpleDateFormat("EEE, MMM d, hh:mm a").format(date);
 
             } else {
@@ -327,6 +343,58 @@ public class EventDetailsActivity extends AppCompatActivity implements ItemClick
                     Toast.makeText(getApplicationContext(), R.string.details_calendar_permission_toast, Toast.LENGTH_SHORT).show();
                 }
                 break;
+        }
+    }
+
+    @Override
+    public Drawable getDrawable(String source) {
+        //setting a default drawable and starting async task to download event images
+        LevelListDrawable d = new LevelListDrawable();
+        Drawable empty = getResources().getDrawable(android.R.drawable.stat_sys_download);
+        d.addLevel(0, 0, empty);
+        d.setBounds(0, 0, empty.getIntrinsicWidth(), empty.getIntrinsicHeight());
+
+        new LoadImage().execute(source, d);
+
+        return d;
+    }
+
+    class LoadImage extends AsyncTask<Object, Void, Bitmap> {
+
+        private LevelListDrawable loadedDrawable;
+
+        @Override
+        protected Bitmap doInBackground(Object... params) {
+            //getting event images
+            String source = (String) params[0];
+            loadedDrawable = (LevelListDrawable) params[1];
+            try {
+                InputStream is = new URL(source).openStream();
+                return BitmapFactory.decodeStream(is);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            //set new drawable and reload textview, tried invalidate() for textview but didn't load
+            //set width and height to match textview width and height
+            if (bitmap != null) {
+                BitmapDrawable d = new BitmapDrawable(bitmap);
+                loadedDrawable.addLevel(1, 1, d);
+                int width = eventDescription.getWidth();
+                int height = bitmap.getHeight() * width / bitmap.getWidth();
+                loadedDrawable.setBounds(0, 0, width, height);
+                loadedDrawable.setLevel(1);
+                CharSequence invalidateView = eventDescription.getText();
+                eventDescription.setText(invalidateView);
+            }
         }
     }
 
