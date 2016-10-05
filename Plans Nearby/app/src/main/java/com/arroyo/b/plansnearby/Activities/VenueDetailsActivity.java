@@ -200,10 +200,14 @@ public class VenueDetailsActivity extends AppCompatActivity implements ItemClick
     }
 
     public void setVenueImage() {
-        String suffix = venue.getPhotos().getGroups().get(0).getItems().get(0).getSuffix();
-        String prefix = venue.getPhotos().getGroups().get(0).getItems().get(0).getPrefix();
-        String imageUrl = prefix + Constants.VENUE_IMAGE_SIZE + suffix;
-        Picasso.with(getApplicationContext()).load(imageUrl).into(venueImage);
+        if (venue.getPhotos() != null) {
+
+            String suffix = venue.getPhotos().getGroups().get(0).getItems().get(0).getSuffix();
+            String prefix = venue.getPhotos().getGroups().get(0).getItems().get(0).getPrefix();
+            String imageUrl = prefix + Constants.VENUE_IMAGE_SIZE + suffix;
+            Picasso.with(getApplicationContext()).load(imageUrl).into(venueImage);
+
+        }
     }
 
     public void setTipsReviewsListView() {

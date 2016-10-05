@@ -62,16 +62,16 @@
         android:id="@+id/nearby_frag_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/nearby_frag_address"
         android:layout_centerInParent="true"
-        android:layout_margin="2dp"
-        android:layout_below="@+id/nearby_frag_address" />
+        android:layout_margin="2dp" />
 
     <TextView
         android:id="@+id/nearby_frag_url"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_below="@id/nearby_frag_phone" />
+        android:layout_below="@id/nearby_frag_phone"
+        android:layout_centerInParent="true" />
 
     <Button
         android:id="@+id/pickerButton"
@@ -80,7 +80,7 @@
         android:layout_below="@+id/nearby_frag_phone"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:text="@string/nearby_button"/>
+        android:text="@string/nearby_button" />
 
     <TextView
         android:id="@+id/nearby_frag_attributions"

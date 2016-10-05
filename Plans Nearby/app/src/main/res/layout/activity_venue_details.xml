@@ -6,32 +6,30 @@
     android:fadingEdgeLength="0dp"
     android:fillViewport="true"
     android:overScrollMode="never"
-    android:scrollbars="none" >
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:focusableInTouchMode="true"
-    tools:context=".Activities.EventDetailsActivity">
+    android:scrollbars="none">
 
-
-    <ImageView
-        android:id="@+id/activity_details_venue_image"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:elevation="4dp"
-        android:scaleType="fitXY" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
         android:orientation="vertical"
-        android:padding="8dp">
+        tools:context=".Activities.EventDetailsActivity">
+
+
+        <ImageView
+            android:id="@+id/activity_details_venue_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="8dp"
+            android:elevation="4dp"
+            android:scaleType="fitXY" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:padding="8dp">
 
             <TextView
@@ -66,9 +64,10 @@
                 android:id="@+id/activity_details_venue_url"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/activity_details_venue_title"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/activity_details_venue_title"
+                android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:scaleX="2"
                 android:scaleY="2"
@@ -78,79 +77,91 @@
                 android:id="@+id/activity_details_venue_more_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:layout_below="@+id/activity_details_venue_url"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_marginTop="8dp"
                 android:layout_marginRight="4dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginTop="4dp"
-                android:text="@string/venue_details_more_info" />
-        </RelativeLayout>
+                android:text="@string/venue_details_more_info"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="8dp">
 
             <ImageView
                 android:id="@+id/activity_details_venue_interested_bttn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/activity_details_venue_more_info"
                 android:layout_margin="4dp"
+                android:layout_toLeftOf="@+id/activity_details_venue_share_bttn"
+                android:layout_toStartOf="@+id/activity_details_venue_share_bttn"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
                 android:src="@drawable/ic_bookmark_black_48dp"
                 android:text="@string/details_interested"
-                android:tint="@color/colorPrimary"/>
+                android:tint="@color/colorPrimary" />
 
             <ImageView
                 android:id="@+id/activity_details_venue_share_bttn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/activity_details_venue_more_info"
+                android:layout_centerHorizontal="true"
                 android:layout_margin="4dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
                 android:src="@drawable/ic_share_black_48dp"
                 android:text="@string/details_share"
-                android:tint="@color/colorPrimary"/>
+                android:tint="@color/colorPrimary" />
 
             <ImageView
                 android:id="@+id/activity_details_venue_directions_bttn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/activity_details_venue_more_info"
                 android:layout_margin="4dp"
+                android:layout_toEndOf="@+id/activity_details_venue_share_bttn"
+                android:layout_toRightOf="@+id/activity_details_venue_share_bttn"
                 android:elevation="4dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
                 android:src="@drawable/ic_directions_black_48dp"
                 android:text="@string/details_directions"
-                android:tint="@color/colorPrimary"/>
+                android:tint="@color/colorPrimary" />
 
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/activity_venue_details_tips"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="4dp"
+            android:paddingStart="4dp"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <com.arroyo.b.plansnearby.Activities.CustomListView
             android:id="@+id/tips_list_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingEnd="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingStart="8dp" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_gravity="end"
-            android:src="@drawable/poweredby_foursquare"/>
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/poweredby_foursquare" />
 
 
     </LinearLayout>
-</LinearLayout>
 
 </ScrollView>

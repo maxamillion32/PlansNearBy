@@ -16,234 +16,234 @@
 
     <TextView
         android:id="@+id/select_interests"
-        android:text="Select Your Interests"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Select Your Interests" />
+
     <TextView
         android:id="@+id/business_professional"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/gray"
-        android:textColor="@color/white"
-        android:gravity="center"
         android:layout_margin="2dp"
+        android:background="@color/gray"
+        android:gravity="center"
         android:text="Business  Professional"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/food_drink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Food and Drink"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/community_culture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Community &amp; Culture"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/other"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Other"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/performing_visual_arts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Performing &amp; Visual Arts"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/sports_fitness"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Sports &amp; Fitness"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
 
     <TextView
         android:id="@+id/film_media_entertainment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Film, Media &amp; Entertainment"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/music"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Music"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
 
     <TextView
         android:id="@+id/health_wellness"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Health &amp; Wellness"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/science_tech"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Science &amp; Technology"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/travel_outdoor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Travel &amp; Outdoors"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/auto_air_boat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Auto, Air, &amp; Boat"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/hobbies_special_interests"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Hobbies &amp; Special Interests"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
+
     <TextView
         android:id="@+id/charity_causes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Charity"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
 
     <TextView
         android:id="@+id/religion_spirituality"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Religion &amp; Spirituality"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/family_education"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Family &amp; Education"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/seasonal_holiday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Seasonal &amp; Holiday"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/gov_politics"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Government &amp; Politics"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/fashion_beauty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Fashion &amp; Beauty"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
 
     <TextView
         android:id="@+id/home_lifestyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="2dp"
         android:background="@color/gray"
-        android:textColor="@color/white"
+        android:gravity="center"
         android:text="Home &amp; Lifestyle"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/finishButton"

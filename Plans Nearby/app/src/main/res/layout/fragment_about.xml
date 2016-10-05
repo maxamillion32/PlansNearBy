@@ -57,8 +57,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/about_app_build_info"
-            android:text="@string/about_app_how_to"
             android:layout_marginTop="16dp"
+            android:text="@string/about_app_how_to"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
 
@@ -81,8 +81,8 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:layout_toRightOf="@+id/about_location_icon"
             android:layout_toEndOf="@+id/about_location_icon"
+            android:layout_toRightOf="@+id/about_location_icon"
             android:text="@string/about_app_location_icon_text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -101,12 +101,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/about_location_icon_text"
-            android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_toRightOf="@+id/about_location_icon"
+            android:layout_marginTop="16dp"
             android:layout_toEndOf="@+id/about_location_icon"
+            android:layout_toRightOf="@+id/about_location_icon"
             android:text="@string/about_app_city_icon_text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -116,8 +116,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/about_city_icon_text"
-            android:background="@color/colorPrimaryDark"
             android:layout_marginTop="16dp"
+            android:background="@color/colorPrimaryDark"
             android:src="@android:drawable/ic_menu_search" />
 
         <TextView
@@ -126,11 +126,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/about_city_icon_text"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_toRightOf="@+id/about_city_icon"
-            android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
             android:layout_toEndOf="@+id/about_city_icon"
+            android:layout_toRightOf="@+id/about_city_icon"
             android:paddingLeft="4dp"
             android:text="@string/about_app_search_text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -162,8 +162,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/about_app_attribution_eventbrite"
             android:layout_margin="4dp"
-            android:layout_toRightOf="@+id/about_app_powered_by_fb"
             android:layout_toEndOf="@+id/about_app_powered_by_fb"
+            android:layout_toRightOf="@+id/about_app_powered_by_fb"
             android:src="@drawable/com_facebook_button_icon_blue" />
 
 
