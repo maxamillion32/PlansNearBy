@@ -1,2 +1,4 @@
 # PlansNearBy
-project 4 app helps you find things to do nearby search events and places
+
+PlansNearby is your one source to finding the best events and places to go in your area.  Find the best places to drink, eat, or just go sight seeing.  
+
